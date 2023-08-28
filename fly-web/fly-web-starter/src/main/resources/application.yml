@@ -2,11 +2,18 @@ server:
   port: 8000
 
 spring:
-  docker:
-    compose:
-      enabled: true
-      file: "compose.yaml"
   application:
     name: fly-kit
-
-
+  docker:
+    compose:
+      readiness:
+        tcp:
+          connect-timeout: 10s
+          read-timeout: 5s
+      enabled: false
+      file: "compose.yaml"
+  data:
+    redis:
+      password:
+      host: 127.0.0.1
+      port: 6379

@@ -1,13 +1,13 @@
 services:
-#  redis:
-#    image: "redis:alpine"
-#    ports:
-#      - '6397'
+  redis:
+    image: "redis"
+    ports:
+      - '6397'
   database:
     image: "mysql"
     ports:
       - '3306'
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ALLOW_EMPTY_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: mzEM2St3DFsSmeRs
+      MYSQL_ALLOW_EMPTY_PASSWORD: mzEM2St3DFsSmeRs
       MYSQL_DATABASE: kit-db
