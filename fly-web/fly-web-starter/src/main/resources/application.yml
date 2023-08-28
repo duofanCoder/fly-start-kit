@@ -1,0 +1,12 @@
+server:
+  port: 8000
+
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: "compose.yaml"
+  application:
+    name: fly-kit
+
+
