@@ -1,6 +1,11 @@
 server:
   port: 8000
 
+fly:
+  security:
+    authUrls:
+      - /greet/**
+
 spring:
   application:
     name: fly-kit
@@ -10,7 +15,7 @@ spring:
         tcp:
           connect-timeout: 10s
           read-timeout: 5s
-      enabled: false
+      enabled: true
       file: "compose.yaml"
   data:
     redis:
