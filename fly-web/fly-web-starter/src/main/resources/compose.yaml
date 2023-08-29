@@ -5,18 +5,18 @@ services:
       - 6379:6379
     restart: always
     container_name: docker_redis
-    volumes:
-      - /home/duofan/devProgram/dockerConfs/redis/redis.conf:/etc/redis/redis.conf
-      - /home/duofan/devProgram/dockerConfs/redis/data:/data
-      - /home/duofan/devProgram/dockerConfs/redis/logs:/logs
+#    volumes:
+#      - /home/duofan/devProgram/dockerConfs/redis/redis.conf:/etc/redis/redis.conf
+#      - /home/duofan/devProgram/dockerConfs/redis/data:/data
+#      - /home/duofan/devProgram/dockerConfs/redis/logs:/logs
 #    command:
 #      - sysctl vm.overcommit_memory=1
   mysql:
     image: mysql:latest
     restart: always
     container_name: "mysql"
-    volumes:
-      - "./db:/var/lib/mysql"
+#    volumes:
+#      - "./db:/var/lib/mysql"
     ports:
       - 3306:3306
     environment:

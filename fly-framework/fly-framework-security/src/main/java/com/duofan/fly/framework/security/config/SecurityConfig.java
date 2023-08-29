@@ -1,6 +1,8 @@
 package com.duofan.fly.framework.security.config;
 
+import cn.hutool.core.collection.CollUtil;
 import com.duofan.fly.framework.security.property.SecurityProperties;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,41 +12,63 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityConfig {
-    private final SecurityProperties securityProperties;
-
-    public SecurityConfig(SecurityProperties securityProperties) {
-        this.securityProperties = securityProperties;
-    }
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        List<String> noAuthUrls = securityProperties.getFilter().getNoAuthUrls();
-        String[] noAuth = new String[noAuthUrls.size()];
-
-
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .rememberMe(Customizer.withDefaults());
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers(securityProperties.getNoAuthUrls()).permitAll()
+                                .anyRequest().authenticated()
+                );
 
         return http.build();
     }
+    @Configuration
+    public static class FormLoginSecurityConfig {
+
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                    .authorizeRequests((authorizeRequests) ->
+                            authorizeRequests
+                                    .requestMatchers("/authentication/**").permitAll()
+                    )
+                    .formLogin((formLogin) ->
+                            formLogin
+                                    .usernameParameter("username")
+                                    .passwordParameter("password")
+                                    .loginPage("/authentication/login")
+                                    .failureUrl("/authentication/login?failed")
+                                    .loginProcessingUrl("/authentication/login/process")
+                    );
+            return http.build();
+        }
+
+        @Bean
+        public UserDetailsService userDetailsService() {
+            UserDetails user = User.withDefaultPasswordEncoder()
+                    .username("user")
+                    .password("password")
+                    .roles("USER")
+                    .build();
+            return new InMemoryUserDetailsManager(user);
+        }
+    }
+
 }

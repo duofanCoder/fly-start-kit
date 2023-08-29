@@ -14,12 +14,9 @@ import org.w3c.dom.html.HTMLLegendElement;
 @SpringBootTest
 class FlyStarterApplicationTests {
 
-    @Resource(name = "redisService")
-    private RedisService redisService;
 
     @Test
     void contextLoads() {
-        redisService.set("hello","nmihoa");
         listOps.leftPush("greet:hello", "222");
         listOps.leftPush("greet:baga", "2222");
         ops.set("duofan", "zhizhizhi");

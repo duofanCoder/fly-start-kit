@@ -1,0 +1,8 @@
+server:
+  port: 8000
+
+fly:
+  security:
+    no-auth-urls:
+      - /greet/**
+
