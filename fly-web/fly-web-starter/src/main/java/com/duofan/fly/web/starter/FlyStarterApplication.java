@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 
 @Slf4j
 @ConfigurationPropertiesScan
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.duofan.fly"})
 public class FlyStarterApplication {
 
     @SneakyThrows

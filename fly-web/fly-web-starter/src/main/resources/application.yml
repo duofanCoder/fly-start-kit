@@ -35,7 +35,7 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: com.github.xiaoymin.boot3
+      packages-to-scan: com.duofan.fly.web.starter
   default-flat-param-object: true
 
 knife4j:
@@ -43,10 +43,10 @@ knife4j:
   setting:
     language: zh_cn
     swagger-model-name: 实体类列表
-  documents:
-    - name: 标题1
-      locations: classpath:markdown/*
-      group: default
+#  documents:
+#    - name: 标题1
+#      locations: classpath:markdown/*
+#      group: default
 
   basic:
     enable: false

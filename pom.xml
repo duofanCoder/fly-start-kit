@@ -13,6 +13,7 @@
         <module>fly-web</module>
         <module>fly-framework</module>
         <module>fly-commons</module>
+        <module>fly-web-core</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
