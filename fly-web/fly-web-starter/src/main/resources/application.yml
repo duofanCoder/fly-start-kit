@@ -20,9 +20,35 @@ spring:
       password:
       host: 127.0.0.1
       port: 6379
-
   security:
     user:
-      name: user
-      password: 123456
+      password: root
+      name: root
       roles: ADMIN
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    #operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.github.xiaoymin.boot3
+  default-flat-param-object: true
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+  documents:
+    - name: 标题1
+      locations: classpath:markdown/*
+      group: default
+
+  basic:
+    enable: false
+    username: abc
+    password: 123
