@@ -39,15 +39,18 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Configuration
     public static class FormLoginSecurityConfig {
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http
-                    .authorizeRequests((authorizeRequests) ->
+                    .authorizeHttpRequests((authorizeRequests) ->
                             authorizeRequests
-                                    .requestMatchers("/authentication/**").permitAll()
+                                    .requestMatchers("/authentication/login/**").permitAll()
+                                    .requestMatchers("/authentication/login").permitAll()
+                                    .requestMatchers("/authentication/**").authenticated()
                     )
                     .formLogin((formLogin) ->
                             formLogin
