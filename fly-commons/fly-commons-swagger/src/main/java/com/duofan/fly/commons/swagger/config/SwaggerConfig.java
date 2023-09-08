@@ -41,12 +41,12 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("XXX用户系统API")
+                        .title("fly - boot 快速开发框架")
                         .version("1.0")
-                        .description("Knife4j集成springdoc-openapi示例")
-                        .termsOfService("http://doc.xiaominfo.com")
-                        .license(new License().name("Apache 2.0")
-                                .url("http://doc.xiaominfo.com")));
+                        .description("Knife4j集成springdoc-openapi")
+                        .termsOfService("http://duofan.top")
+                        .license(new License().name("")
+                                .url("http://duofan.top")));
     }
 
 

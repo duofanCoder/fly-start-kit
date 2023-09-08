@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Configuration
 @ConfigurationProperties(prefix = "fly.security")
 public class SecurityProperties {
 

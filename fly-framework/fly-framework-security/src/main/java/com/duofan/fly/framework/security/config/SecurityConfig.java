@@ -25,7 +25,7 @@ import java.util.Optional;
 @EnableWebSecurity
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityConfig {
-    @Autowired
+    @Resource
     private SecurityProperties securityProperties;
 
     @Bean
@@ -33,8 +33,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(securityProperties.getNoAuthUrls()).permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers(securityProperties.getNoAuthUrls())
+                                .permitAll()
                 );
 
         return http.build();
@@ -50,28 +50,25 @@ public class SecurityConfig {
                             authorizeRequests
                                     .requestMatchers("/authentication/login/**").permitAll()
                                     .requestMatchers("/authentication/login").permitAll()
-                                    .requestMatchers("/authentication/**").authenticated()
-                    )
-                    .formLogin((formLogin) ->
-                            formLogin
-                                    .usernameParameter("username")
-                                    .passwordParameter("password")
-                                    .loginPage("/authentication/login")
-                                    .failureUrl("/authentication/login?failed")
-                                    .loginProcessingUrl("/authentication/login/process")
                     );
+//                    .formLogin((formLogin) ->
+//                            formLogin
+//                                    .loginPage("/authentication/login")
+//                                    .failureUrl("/authentication/login?failed")
+//                                    .loginProcessingUrl("/authentication/login/process")
+//                    );
             return http.build();
         }
 
-        @Bean
-        public UserDetailsService userDetailsService() {
-            UserDetails user = User.withDefaultPasswordEncoder()
-                    .username("user")
-                    .password("password")
-                    .roles("USER")
-                    .build();
-            return new InMemoryUserDetailsManager(user);
-        }
+//        @Bean
+//        public UserDetailsService userDetailsService() {
+//            UserDetails user = User.withDefaultPasswordEncoder()
+//                    .username("user")
+//                    .password("password")
+//                    .roles("USER")
+//                    .build();
+//            return new InMemoryUserDetailsManager(user);
+//        }
     }
 
 }
