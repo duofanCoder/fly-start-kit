@@ -8,3 +8,8 @@ fly:
       - /authentication/**
       - /doc.html
 
+debug: true
+logging:
+  level:
+    org.springframework.security:
+      TRACE
