@@ -10,12 +10,28 @@
     </parent>
 
     <groupId>com.duofan.fly.core</groupId>
-    <artifactId>fly-web-core</artifactId>
+    <packaging>pom</packaging>
+    <name>起飞 - 核心</name>
+    <modules>
+        <module>fly-core-base</module>
+    </modules>
+    <artifactId>fly-core</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus}</version>
+        </dependency>
+    </dependencies>
 </project>

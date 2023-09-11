@@ -1,6 +1,10 @@
 server:
   port: 8000
-
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 fly:
   security:
     no-auth-urls:
@@ -13,3 +17,6 @@ logging:
   level:
     org.springframework.security:
       TRACE
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true

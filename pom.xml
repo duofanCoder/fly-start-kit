@@ -13,7 +13,7 @@
         <module>fly-web</module>
         <module>fly-framework</module>
         <module>fly-commons</module>
-        <module>fly-web-core</module>
+        <module>fly-core</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -24,14 +24,13 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-
         <hutool.version>5.8.10</hutool.version>
         <poi-ooxml>4.1.2</poi-ooxml>
+        <mybatis-plus>3.4.1</mybatis-plus>
         <fastjson2.version>2.0.12</fastjson2.version>
         <fastjson2-extension-spring5.version>2.0.39</fastjson2-extension-spring5.version>
-
-
+        <mysql.version>8.0.25</mysql.version>
+        <druid.version>1.2.14</druid.version>
     </properties>
 
     <dependencyManagement>
