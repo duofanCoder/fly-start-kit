@@ -33,7 +33,6 @@
             <artifactId>fly-commons-swagger</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>com.duofan.fly.core</groupId>
             <artifactId>fly-core-base</artifactId>

@@ -21,7 +21,8 @@
 	</properties>
 	<modules>
 		<module>fly-framework-security</module>
-	</modules>
+        <module>fly-framework-mybatis</module>
+    </modules>
 
 	<dependencies>
 		<dependency>

@@ -5,11 +5,6 @@ server:
 spring:
   application:
     name: fly-kit
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: kit-db
-    password: mzEM2St3DFsSmeRs
-    url: jdbc:mysql://localhost:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
   profiles:
     active: dev
   docker:
@@ -41,7 +36,14 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: com.duofan.fly.web.starter
+    - group: 'fly'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.fly.framework.security
+
   default-flat-param-object: true
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
 
 knife4j:
   enable: true

@@ -1,6 +1,5 @@
 package com.duofan.fly.core.base.domain;
 
-import ch.qos.logback.core.joran.action.PreconditionValidator;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
