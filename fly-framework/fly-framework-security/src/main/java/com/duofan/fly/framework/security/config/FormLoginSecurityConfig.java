@@ -24,7 +24,8 @@ public class FormLoginSecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/**").hasRole("USER")
                 )
-                .formLogin(Customizer.withDefaults())
+//                .formLogin(Customizer.withDefaults())
+//                .httpBasic(Customizer.withDefaults())
                 .logout(Customizer.withDefaults())
         ;
         return http.build();
