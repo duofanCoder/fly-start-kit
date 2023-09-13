@@ -2,9 +2,7 @@ package com.duofan.fly.framework.security.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +11,8 @@ import java.util.List;
 public class SecurityProperties {
 
     private List<String> noAuthUrls = new ArrayList<>();
+
+    private boolean captchaEnabled = true;
 
     public String[] getNoAuthUrls() {
         return noAuthUrls.toArray(new String[noAuthUrls.size()]);
