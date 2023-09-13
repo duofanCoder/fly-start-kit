@@ -10,7 +10,7 @@ spring:
     url: jdbc:mysql://localhost:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 fly:
   security:
@@ -19,7 +19,7 @@ fly:
       - /authentication/**
       - /doc.html
 
-debug: true
+debug: false
 logging:
   level:
     org.springframework.security:

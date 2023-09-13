@@ -4,10 +4,11 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ import java.util.Date;
 public class EntityBase implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @TableId
     private String id;
     @JSONField(deserialize = false)

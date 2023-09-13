@@ -22,6 +22,7 @@
 	<modules>
 		<module>fly-framework-security</module>
         <module>fly-framework-mybatis</module>
+        <module>fly-framework-jpa</module>
     </modules>
 
 	<dependencies>

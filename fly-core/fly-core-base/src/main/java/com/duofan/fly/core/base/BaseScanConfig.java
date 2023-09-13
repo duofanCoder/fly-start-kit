@@ -4,7 +4,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
 
-
 /**
  * @author duofan
  * @version 1.0
@@ -13,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
  * @date 2023/9/11
  */
 @Configuration
-@EntityScan(basePackages = "com.duofan.fly.core.base")
-public class JpaEntityConfig {
+@MapperScan(basePackages = "com.duofan.fly")
+@EntityScan(basePackages = "com.duofan.fly")
+public class BaseScanConfig {
 
 }

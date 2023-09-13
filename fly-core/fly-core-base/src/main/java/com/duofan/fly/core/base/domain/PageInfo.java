@@ -1,11 +1,8 @@
 package com.duofan.fly.core.base.domain;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.security.PrivilegedAction;
 
 /**
  * 分页信息
@@ -17,7 +14,7 @@ import java.security.PrivilegedAction;
  * @date 2023/9/11
  */
 @Data
-public class PageInfo implements  Serializable{
+public class PageInfo implements Serializable {
     /**
      * 分页大小
      */
