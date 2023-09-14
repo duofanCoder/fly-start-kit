@@ -4,7 +4,6 @@ import com.duofan.fly.core.base.access.FlyAccessInfo;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
@@ -26,23 +25,18 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class AuthenticationEndpointAnalysis implements CommandLineRunner {
+public class AuthenticationEndpointAnalysis {
 
 //PreAuthorizeAuthorizationManager
 
     @Resource
     private ApplicationContext applicationContext;
 
+    private Map<String, Module> modules;
+//    private List<Operation> grantToAll;
+
     @PostConstruct
     public void analysis() {
-
-
-//        AnnotationUtils.findAnnotation()
-
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
         System.out.println("hello");
         log.info("认证端点模块分析开始");
         Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(Controller.class);
@@ -58,5 +52,9 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
                 System.out.println(flyMethod.getName());
             }
         }
+
+//        AnnotationUtils.findAnnotation()
+
     }
+
 }
