@@ -1,4 +1,4 @@
-package com.duofan.fly.validate;
+package com.duofan.fly.validate.constraint;
 
 /**
  * 长度校验
