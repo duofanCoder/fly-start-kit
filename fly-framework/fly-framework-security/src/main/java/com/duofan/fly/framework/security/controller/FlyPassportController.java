@@ -7,7 +7,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author duofan
@@ -23,6 +25,7 @@ public class FlyPassportController {
 
     @PostMapping("/login")
     public void fakeLogin(@RequestBody LoginRequest loginRequest) {
+        System.out.println(loginRequest);
         throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
     }
 
@@ -30,6 +33,7 @@ public class FlyPassportController {
     public void fakeLogout() {
         throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
     }
+
     @Getter
     @Setter
     @Accessors(chain = true)

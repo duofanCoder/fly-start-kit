@@ -4,16 +4,26 @@ import cn.hutool.core.util.RandomUtil;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.tags.Tag;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 public class SwaggerConfig {
+    public static final String HEADER_STRING = "x-access-token";
+
     /**
      * 根据@Tag 上的排序，写入x-order
      *
@@ -35,6 +45,29 @@ public class SwaggerConfig {
             }
 
         };
+    }
+
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.duofan.fly.framework.security.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiInfo())
+                .securitySchemes(Collections.singletonList(apiKey()));
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("导航测试文档-接口文档")
+                .description("测试接口文档")
+                .contact(new Contact("duofan", "https://duofan.top", "2441051071@qq.com"))
+                .version("1.0").build();
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("apiKey", HEADER_STRING, "header");
     }
 
     @Bean

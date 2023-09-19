@@ -32,13 +32,13 @@ springdoc:
     #operations-sorter: order
   api-docs:
     path: /v3/api-docs
-  group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      packages-to-scan: com.duofan.fly.web.starter
-    - group: 'fly'
-      paths-to-match: '/**'
-      packages-to-scan: com.duofan.fly.framework.security
+  #  group-configs:
+  #    - group: 'default'
+  #      paths-to-match: '/**'
+  #      packages-to-scan: com.duofan.fly.web.starter
+  #    - group: 'fly'
+  #      paths-to-match: '/**'
+  #      packages-to-scan: com.duofan.fly.framework.security
 
   default-flat-param-object: true
 mybatis-plus:
@@ -50,10 +50,10 @@ knife4j:
   setting:
     language: zh_cn
     swagger-model-name: 实体类列表
-#  documents:
-#    - name: 标题1
-#      locations: classpath:markdown/*
-#      group: default
+  #  documents:
+  #    - name: 标题1
+  #      locations: classpath:markdown/*
+  #      group: default
 
   basic:
     enable: false
