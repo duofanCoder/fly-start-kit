@@ -4,25 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.duofan.fly</groupId>
-        <artifactId>fly-commons</artifactId>
+        <groupId>com.duofan</groupId>
+        <artifactId>fly-start-kit</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fly-commons-swagger</artifactId>
+    <artifactId>fly-manage</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>fly-manage-api</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-        </dependency>
-    </dependencies>
-
 
 </project>

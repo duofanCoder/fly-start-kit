@@ -15,47 +15,10 @@ spring:
           read-timeout: 5s
       enabled: true
       file: "compose.yaml"
-  data:
-    redis:
-      password:
-      host: 127.0.0.1
-      port: 6379
-  security:
-    user:
-      password: root
-      name: root
-      roles: ADMIN
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    #operations-sorter: order
-  api-docs:
-    path: /v3/api-docs
-  #  group-configs:
-  #    - group: 'default'
-  #      paths-to-match: '/**'
-  #      packages-to-scan: com.duofan.fly.web.starter
-  #    - group: 'fly'
-  #      paths-to-match: '/**'
-  #      packages-to-scan: com.duofan.fly.framework.security
 
-  default-flat-param-object: true
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
 
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
-    swagger-model-name: 实体类列表
-  #  documents:
-  #    - name: 标题1
-  #      locations: classpath:markdown/*
-  #      group: default
 
-  basic:
-    enable: false
-    username: abc
-    password: 123

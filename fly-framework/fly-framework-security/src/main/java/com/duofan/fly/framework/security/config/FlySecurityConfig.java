@@ -33,9 +33,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableConfigurationProperties(SecurityProperties.class)
 public class FlySecurityConfig {
 
-    private static final AntPathRequestMatcher DEFAULT_LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
+    private static final AntPathRequestMatcher DEFAULT_LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/passport/login",
             "POST");
-    private static final AntPathRequestMatcher DEFAULT_LOGOUT_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
+    private static final AntPathRequestMatcher DEFAULT_LOGOUT_REQUEST_MATCHER = new AntPathRequestMatcher("/passport/logout",
             "POST");
     @Resource
     private SecurityProperties securityProperties;
@@ -54,7 +54,7 @@ public class FlySecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(DEFAULT_LOGIN_REQUEST_MATCHER)
@@ -73,9 +73,10 @@ public class FlySecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> {
             web.ignoring()
-                    .requestMatchers("/v3/api-docs/**")
+                    .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html")
                     .requestMatchers("/webjars/**")
-                    .requestMatchers("/doc.html");
+                    .requestMatchers("/favicon.ico")
+                    .requestMatchers("/error");
         };
 
     }

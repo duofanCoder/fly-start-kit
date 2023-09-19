@@ -57,6 +57,11 @@
             <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.duofan.fly</groupId>
+            <artifactId>fly-commons-swagger</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
