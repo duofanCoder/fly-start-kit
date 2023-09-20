@@ -1,6 +1,11 @@
 package com.duofan.fly.manage.api.controller.v1;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.duofan.fly.core.base.domain.FlyResult;
+import com.duofan.fly.framework.security.constraint.FlyLoginService;
+import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginServiceImpl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,16 +29,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("passport")
 public class FlyPassportController {
 
-    @PostMapping("/login")
-    public void fakeLogin(@RequestBody LoginRequest loginRequest) {
-        System.out.println(loginRequest);
+    @Resource(type = FlyDefaultLoginServiceImpl.class)
+    private FlyLoginService loginService;
 
-        return;
+    @PostMapping("/login")
+    public FlyResult login(@RequestBody JSONObject loginRequest) {
+        loginService.login(loginRequest);
+        System.out.println(loginRequest);
+        return FlyResult.SUCCESS;
     }
 
     @PostMapping("/logout")
-    public void fakeLogout() {
-        return;
+    public FlyResult logout() {
+        return FlyResult.SUCCESS;
     }
 
     @Getter

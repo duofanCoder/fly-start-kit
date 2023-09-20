@@ -1,4 +1,4 @@
-package com.duofan.fly.framework.security.handler;
+package com.duofan.fly.framework.security.constraint.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

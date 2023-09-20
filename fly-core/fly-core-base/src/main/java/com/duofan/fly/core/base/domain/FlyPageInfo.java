@@ -17,14 +17,18 @@ import java.util.List;
  * @date 2023/9/11
  */
 @Data
-public class PageResult implements Serializable {
+public class FlyPageInfo implements Serializable {
     private long pageSize = 20;
     private long pageIndex = 1;
     private long pageCount = 0;
     private List<T> list;
+    /**
+     * 排序 columnName desc,columnName2 asc
+     */
+    private String order = "updateTime desc";
 
-    public static PageResult to(Page<T> page) {
-        PageResult result = new PageResult();
+    public static FlyPageInfo to(Page<T> page) {
+        FlyPageInfo result = new FlyPageInfo();
         result.pageCount = page.getPages();
         result.pageSize = page.getSize();
         result.list = page.getRecords();

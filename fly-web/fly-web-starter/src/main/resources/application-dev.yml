@@ -17,11 +17,11 @@ spring:
       password:
       host: 127.0.0.1
       port: 6379
-  security:
-    user:
-      password: root
-      name: root
-      roles: ADMIN
+    #  security:
+    #    user:
+    #      password: root
+    #      name: root
+    #      roles: ADMIN
     #springdoc:
     #  swagger-ui:
     #    path: /swagger-ui.html
@@ -37,12 +37,6 @@ spring:
   #      paths-to-match: '/**'
   #      packages-to-scan: com.duofan.fly.manage.api.controller.v1
 #  default-flat-param-object: true
-fly:
-  security:
-    no-auth-urls:
-      - /greet/**
-      - /authentication/**
-      - /doc.html
 
 debug: false
 logging:
