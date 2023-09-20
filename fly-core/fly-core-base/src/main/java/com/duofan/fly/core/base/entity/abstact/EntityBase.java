@@ -23,7 +23,7 @@ import java.util.Date;
 public class EntityBase implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @TableId
     private String id;
     @JSONField(deserialize = false)

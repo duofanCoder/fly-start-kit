@@ -2,7 +2,7 @@ package com.duofan.fly.web.starter.controller.api;
 
 import com.duofan.fly.core.base.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.base.mapper.FlyUserMapper;
+import com.duofan.fly.core.mapper.FlyUserMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

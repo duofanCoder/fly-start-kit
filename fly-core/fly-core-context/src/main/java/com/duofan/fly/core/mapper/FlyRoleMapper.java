@@ -1,4 +1,4 @@
-package com.duofan.fly.core.base.mapper;
+package com.duofan.fly.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.duofan.fly.core.base.entity.FlyRole;
@@ -13,4 +13,7 @@ import com.duofan.fly.core.base.entity.FlyRole;
  * @date 2023/9/13
  */
 public interface FlyRoleMapper extends BaseMapper<FlyRole> {
+
+//    FlyResourceInfo loadRoleResource(String roleNo);
+
 }

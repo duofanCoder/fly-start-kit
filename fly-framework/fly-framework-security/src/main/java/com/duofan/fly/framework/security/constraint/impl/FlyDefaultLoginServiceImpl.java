@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FlyDefaultLoginServiceImpl extends AbstractLoginService {
 
+    
     @Override
     public JSONObject login(JSONObject data) {
         return super.login(data);

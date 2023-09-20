@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "fly.security")
 public class SecurityProperties {
 
-    private LoginProperties login;
+    private LoginProperties login = new LoginProperties();
 
     @Data
     public static class LoginProperties {

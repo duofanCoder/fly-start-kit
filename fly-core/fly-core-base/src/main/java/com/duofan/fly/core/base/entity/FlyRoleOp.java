@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Entity
-@Table
+@Table(uniqueConstraints = {})
 @Accessors(chain = true)
 public class FlyRoleOp extends EntityBase {
     private String roleNo;

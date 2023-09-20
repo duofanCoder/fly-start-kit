@@ -1,10 +1,10 @@
-package com.duofan.fly.core.base.mapper;
+package com.duofan.fly.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.base.entity.FlyLog;
 
 /**
- * user
+ * 日志操作
  *
  * @author duofan
  * @version 1.0
@@ -12,5 +12,5 @@ import com.duofan.fly.core.base.entity.FlyUser;
  * @website duofan.top
  * @date 2023/9/13
  */
-public interface FlyUserMapper extends BaseMapper<FlyUser> {
+public interface FlyLogMapper extends BaseMapper<FlyLog> {
 }

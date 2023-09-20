@@ -1,4 +1,4 @@
-package com.duofan.fly.core.base.domain;
+package com.duofan.fly.core.base.domain.common;
 
 import com.duofan.fly.core.base.enums.FlyHttpStatus;
 import lombok.AllArgsConstructor;

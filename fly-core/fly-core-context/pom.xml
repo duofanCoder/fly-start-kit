@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.duofan.fly</groupId>
+    <groupId>com.duofan.fly.core</groupId>
     <artifactId>fly-core-context</artifactId>
 
     <properties>
@@ -18,5 +18,13 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.duofan.fly.core</groupId>
+            <artifactId>fly-core-base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 </project>

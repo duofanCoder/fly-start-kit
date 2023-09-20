@@ -1,7 +1,7 @@
 package com.duofan.fly.manage.api.controller.v1;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.duofan.fly.core.base.domain.FlyResult;
+import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginServiceImpl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,11 +31,13 @@ public class FlyPassportController {
 
     @Resource(type = FlyDefaultLoginServiceImpl.class)
     private FlyLoginService loginService;
+//    @Resource(type = AuthenticationManager.class)
+//    private AuthenticationManager authenticationManager;
+
 
     @PostMapping("/login")
     public FlyResult login(@RequestBody JSONObject loginRequest) {
         loginService.login(loginRequest);
-        System.out.println(loginRequest);
         return FlyResult.SUCCESS;
     }
 

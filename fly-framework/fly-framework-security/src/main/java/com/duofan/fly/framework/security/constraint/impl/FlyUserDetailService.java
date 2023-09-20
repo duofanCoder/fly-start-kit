@@ -1,10 +1,16 @@
 package com.duofan.fly.framework.security.constraint.impl;
 
+import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.storage.FlyUserStorage;
+import com.duofan.fly.core.storage.impl.FlyDefaultUserStorage;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * 用户查询
@@ -18,16 +24,14 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class FlyUserDetailService implements UserDetailsService {
+    @Resource(type = FlyDefaultUserStorage.class)
+    private FlyUserStorage userStorage;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        UserDetails user = this.users.get(username.toLowerCase());
-//        if (user == null) {
-//            throw new UsernameNotFoundException(username);
-//        }
-//        return new User(user.getUsername(), user.getPassword(), user.isEnabled(), user.isAccountNonExpired(),
-//                user.isCredentialsNonExpired(), user.isAccountNonLocked(), user.getAuthorities());
-        return null;
+        FlyUser user = Optional.of(this.userStorage.selectByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
 
+        return null;
     }
 }

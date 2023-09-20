@@ -1,7 +1,8 @@
-package com.duofan.fly.core.base.domain;
+package com.duofan.fly.core.base.domain.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import java.util.List;
  * @date 2023/9/11
  */
 @Data
+@Accessors(chain = true)
 public class FlyPageInfo implements Serializable {
     private long pageSize = 20;
     private long pageIndex = 1;

@@ -1,8 +1,5 @@
-package com.duofan.fly.core.base.entity;
+package com.duofan.fly.core.base.domain.permission;
 
-import com.duofan.fly.core.base.entity.abstact.EntityBase;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,10 +15,10 @@ import lombok.experimental.Accessors;
  */
 @Setter
 @Getter
-@Entity
-@Table
 @Accessors(chain = true)
-public class FlyResource extends EntityBase {
+public class FlyResourceInfo {
+    private String roleName;
+    private String roleNo;
     private String moduleName;
     private String module;
     private String op;
