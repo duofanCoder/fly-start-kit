@@ -1,6 +1,6 @@
 package com.duofan.fly.web.starter.controller.api;
 
-import com.duofan.fly.core.base.access.FlyAccessInfo;
+import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.mapper.FlyUserMapper;
 import jakarta.annotation.Resource;

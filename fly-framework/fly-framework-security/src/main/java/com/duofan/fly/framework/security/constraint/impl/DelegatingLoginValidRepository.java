@@ -3,10 +3,11 @@ package com.duofan.fly.framework.security.constraint.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,18 +21,20 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public final class DelegatingLoginValidRepository implements FlyLoginValidRepository {
+public class DelegatingLoginValidRepository {
 
-    @Resource
-    private List<FlyLoginValidRepository> delegates;
+    private final List<FlyLoginValidRepository> delegates;
+
+    public DelegatingLoginValidRepository(FlyLoginValidRepository... delegates) {
+        val rep = Arrays.stream(delegates).filter(i -> true).toList();
+        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
+    }
 //
-//    public DelegatingLoginValidRepository(FlyLoginValidRepository... delegates) {
-//        val rep = Arrays.stream(delegates).filter(i -> !i.getClass().equals(DelegatingLoginValidRepository.class)).toList();
-////        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
-//        this.delegates = rep;
+//    public DelegatingLoginValidRepository(List<FlyLoginValidRepository> delegates) {
+//        val rep = delegates.stream().filter(i -> true).toList();
+//        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
 //    }
 
-    @Override
     public void doCheck(JSONObject data) throws LoginValidException {
         for (FlyLoginValidRepository delegate : this.delegates) {
             delegate.doCheck(data);
@@ -40,7 +43,6 @@ public final class DelegatingLoginValidRepository implements FlyLoginValidReposi
     }
 
 
-    @Override
     public int order() {
         return 0;
     }

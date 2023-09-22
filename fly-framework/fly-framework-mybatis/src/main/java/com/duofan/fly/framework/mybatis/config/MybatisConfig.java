@@ -11,8 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2023/9/11
  */
 @Configuration("mybatisConfig")
-@MapperScan(basePackages = "com.duofan.fly")
+@MapperScan(basePackages = "com.duofan.fly.core.mapper")
 public class MybatisConfig {
-
 
 }

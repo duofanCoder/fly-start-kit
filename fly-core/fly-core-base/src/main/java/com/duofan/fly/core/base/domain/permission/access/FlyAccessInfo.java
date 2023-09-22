@@ -1,4 +1,4 @@
-package com.duofan.fly.core.base.access;
+package com.duofan.fly.core.base.domain.permission.access;
 
 import java.lang.annotation.*;
 

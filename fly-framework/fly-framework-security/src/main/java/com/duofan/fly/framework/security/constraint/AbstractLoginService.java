@@ -3,7 +3,6 @@ package com.duofan.fly.framework.security.constraint;
 import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.property.SecurityProperties;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,14 +21,17 @@ import java.util.Collection;
 @Slf4j
 public abstract class AbstractLoginService implements FlyLoginService {
 
+    private final DelegatingLoginValidRepository loginValidRepository;
+    private final SecurityProperties properties;
 
-    @Resource(type = DelegatingLoginValidRepository.class)
-    private FlyLoginValidRepository loginValidRepository;
-    @Resource
-    private SecurityProperties properties;
+    private final AuthenticationProvider authenticationProvider;
 
-    @Resource(type = AuthenticationProvider.class)
-    private AuthenticationProvider authenticationProvider;
+
+    public AbstractLoginService(DelegatingLoginValidRepository loginValidRepository, SecurityProperties properties, AuthenticationProvider authenticationProvider) {
+        this.loginValidRepository = loginValidRepository;
+        this.properties = properties;
+        this.authenticationProvider = authenticationProvider;
+    }
 
     @Override
     public JSONObject login(JSONObject data) throws RuntimeException {
