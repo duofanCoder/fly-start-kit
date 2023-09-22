@@ -1,7 +1,9 @@
 package com.duofan.fly.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyRole;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 角色mapper
@@ -14,6 +16,6 @@ import com.duofan.fly.core.base.entity.FlyRole;
  */
 public interface FlyRoleMapper extends BaseMapper<FlyRole> {
 
-//    FlyResourceInfo loadRoleResource(String roleNo);
+    FlyResourceInfo loadRoleResource(@Param("roleNo") String roleNo);
 
 }

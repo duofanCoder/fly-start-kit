@@ -10,7 +10,7 @@ spring:
     url: jdbc:mysql://localhost:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   data:
     redis:
@@ -38,6 +38,7 @@ spring:
   #      packages-to-scan: com.duofan.fly.manage.api.controller.v1
 #  default-flat-param-object: true
 
+
 debug: false
 logging:
   level:
@@ -57,3 +58,9 @@ knife4j:
     enable: false
     username: abc
     password: 123
+fly:
+  security:
+    captcha-enabled: true
+  jpa:
+    ddl-auto:
+      enabled: true

@@ -3,10 +3,10 @@ package com.duofan.fly.framework.security.constraint.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,14 +19,17 @@ import java.util.List;
  * @date 2023/9/20
  */
 @Slf4j
+@Component
 public final class DelegatingLoginValidRepository implements FlyLoginValidRepository {
 
-    private final List<FlyLoginValidRepository> delegates;
-
-    public DelegatingLoginValidRepository(FlyLoginValidRepository... delegates) {
-        val rep = Arrays.stream(delegates).filter(i -> !i.getClass().equals(DelegatingLoginValidRepository.class)).toList();
-        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
-    }
+    @Resource
+    private List<FlyLoginValidRepository> delegates;
+//
+//    public DelegatingLoginValidRepository(FlyLoginValidRepository... delegates) {
+//        val rep = Arrays.stream(delegates).filter(i -> !i.getClass().equals(DelegatingLoginValidRepository.class)).toList();
+////        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
+//        this.delegates = rep;
+//    }
 
     @Override
     public void doCheck(JSONObject data) throws LoginValidException {

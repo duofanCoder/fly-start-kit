@@ -1,5 +1,12 @@
 package com.duofan.fly.core.base.entity;
 
+import com.duofan.fly.core.base.entity.abstact.EntityBase;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 /**
  * 角色关系
  *
@@ -9,7 +16,12 @@ package com.duofan.fly.core.base.entity;
  * @website duofan.top
  * @date 2023/9/20
  */
-public class FlyRoleRel {
+@Setter
+@Getter
+@Entity
+@Table
+@Accessors(chain = true)
+public class FlyRoleRel extends EntityBase {
     private String username;
     private String roleNo;
 

@@ -22,7 +22,9 @@ import java.util.Collection;
 @Slf4j
 public abstract class AbstractLoginService implements FlyLoginService {
 
-    private final FlyLoginValidRepository loginValidRepository = new DelegatingLoginValidRepository();
+
+    @Resource(type = DelegatingLoginValidRepository.class)
+    private FlyLoginValidRepository loginValidRepository;
     @Resource
     private SecurityProperties properties;
 
