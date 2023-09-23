@@ -3,6 +3,7 @@ package com.duofan.fly.manage.api.controller.v1;
 import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.cache.constraint.CacheService;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -33,7 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("passport")
 public class FlyPassportController {
-
+    @Resource
+    private CacheService cacheService;
     @Resource
     private FlyLoginService loginService;
 
@@ -42,6 +44,7 @@ public class FlyPassportController {
 
     @PostMapping("/login")
     public FlyResult login(@RequestBody JSONObject loginRequest) {
+        cacheService.set("asdads", "asd");
         loginService.login(loginRequest);
         return FlyResult.SUCCESS;
     }

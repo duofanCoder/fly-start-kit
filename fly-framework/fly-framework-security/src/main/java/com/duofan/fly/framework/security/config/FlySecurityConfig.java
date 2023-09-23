@@ -48,6 +48,8 @@ public class FlySecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/passport/**")
+                            .permitAll()
+                            .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
                             .permitAll();
                 })
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -77,11 +79,7 @@ public class FlySecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> {
-            web.ignoring()
-                    .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html")
-                    .requestMatchers("/webjars/**")
-                    .requestMatchers("/favicon.ico")
-                    .requestMatchers("/error");
+            web.ignoring();
         };
 
     }

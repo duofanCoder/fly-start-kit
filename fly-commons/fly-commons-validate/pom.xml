@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.duofan.fly</groupId>
+    <groupId>com.duofan.fly.commons</groupId>
     <artifactId>fly-commons-validate</artifactId>
 
     <properties>

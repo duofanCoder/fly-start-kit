@@ -1,17 +1,11 @@
 package com.duofan.fly.commons.redis.service;
 
-import jakarta.annotation.Resource;
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.duofan.fly.core.cache.constraint.CacheService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -22,11 +16,14 @@ import java.util.concurrent.TimeUnit;
  * @author geshanzsq
  * @date 2022/3/20
  */
-@Component
-public class RedisService {
+@Slf4j
+public class RedisService implements CacheService {
 
-    @Resource(name = "redisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public RedisService(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * 设置缓存基本对象

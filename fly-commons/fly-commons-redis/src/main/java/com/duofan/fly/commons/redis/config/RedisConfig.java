@@ -5,12 +5,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.JSONWriter;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurer;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.interceptor.CacheErrorHandler;
-import org.springframework.cache.interceptor.CacheResolver;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.cache.jcache.config.JCacheConfigurer;
@@ -18,7 +14,6 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -41,6 +36,7 @@ public class RedisConfig implements JCacheConfigurer {
 
     /**
      * 配置缓存管理器
+     *
      * @return
      */
     @Bean
@@ -58,8 +54,15 @@ public class RedisConfig implements JCacheConfigurer {
         // configure and return an implementation of Spring's KeyGenerator SPI
         return new SimpleKeyGenerator();
     }
+
+    /**
+     * 创建redis 连接工厂
+     *
+     * @return
+     */
     @Bean
     LettuceConnectionFactory redisConnectionFactory() {
+//        return new LettuceConnectionFactory((new RedisStandaloneConfiguration("server", 6379));
         return new LettuceConnectionFactory();
     }
 
@@ -67,8 +70,8 @@ public class RedisConfig implements JCacheConfigurer {
      * 序列化配置
      */
     @Bean
-    RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
+    RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         FastJson2JsonRedisSerializer<Object> serializer = new FastJson2JsonRedisSerializer<>(Object.class);

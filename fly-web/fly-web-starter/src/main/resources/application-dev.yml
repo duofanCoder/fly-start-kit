@@ -12,6 +12,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: false
   data:
     redis:
       password:
@@ -40,10 +41,10 @@ spring:
 
 
 debug: false
-logging:
-  level:
-    org.springframework.security:
-      TRACE
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
 knife4j:
   enable: true
   setting:
