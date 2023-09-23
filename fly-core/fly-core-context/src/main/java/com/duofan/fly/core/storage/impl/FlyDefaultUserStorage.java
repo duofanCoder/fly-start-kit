@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> implements FlyUserStorage {
 
-    @Resource(type = FlyUserMapper.class)
+    @Resource
     private FlyUserMapper userMapper;
 
     @Override
-    public FlyUser selectByUsername(String username) {
+    public FlyUser getByUsername(String username) {
         LambdaQueryWrapper<FlyUser> wp = new LambdaQueryWrapper<FlyUser>();
         wp.eq(FlyUser::getUsername, username);
         return userMapper.selectOne(wp);

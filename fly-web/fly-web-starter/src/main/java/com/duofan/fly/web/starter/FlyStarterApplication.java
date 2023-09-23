@@ -11,6 +11,7 @@ import java.net.InetAddress;
 
 @Slf4j
 @SpringBootApplication(scanBasePackages = {"com.duofan.fly"})
+//@MapperScan(basePackages = "com.duofan.fly.core.mapper")
 public class FlyStarterApplication {
 
     @SneakyThrows

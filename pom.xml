@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.3</version>
+        <version>3.1.4</version>
     </parent>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -29,7 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hutool.version>5.8.10</hutool.version>
         <poi-ooxml>4.1.2</poi-ooxml>
-        <mybatis-plus>3.4.1</mybatis-plus>
+        <mybatis-plus>3.5.3</mybatis-plus>
         <fastjson2.version>2.0.12</fastjson2.version>
         <fastjson2-extension-spring5.version>2.0.39</fastjson2-extension-spring5.version>
         <mysql.version>8.0.25</mysql.version>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.duofan.fly.core.mapper.FlyRoleMapper">
-    <select id="loadRoleResource" parameterType="string"
-            resultType="com.duofan.fly.core.base.domain.permission.FlyResourceInfo">
+
+    <select id="loadRoleResource" resultType="com.duofan.fly.core.base.domain.permission.FlyResourceInfo">
         select r.*, o.*
         from fly_user u
-                 left join fly_role_rel r on u.username = #{username}
+                 right join fly_role_rel r on u.username = #{username}
                  left join fly_role_op o on o.role_no = r.role_no
-        ;
     </select>
 </mapper>

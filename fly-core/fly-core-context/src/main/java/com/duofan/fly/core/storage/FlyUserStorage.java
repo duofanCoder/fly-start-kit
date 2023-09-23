@@ -13,5 +13,5 @@ import com.duofan.fly.core.base.entity.FlyUser;
  * @date 2023/9/20
  */
 public interface FlyUserStorage extends IService<FlyUser> {
-    FlyUser selectByUsername(String username);
+    FlyUser getByUsername(String username);
 }

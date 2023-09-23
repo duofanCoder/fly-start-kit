@@ -29,16 +29,11 @@ public class DelegatingLoginValidRepository {
         val rep = Arrays.stream(delegates).filter(i -> true).toList();
         this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
     }
-//
-//    public DelegatingLoginValidRepository(List<FlyLoginValidRepository> delegates) {
-//        val rep = delegates.stream().filter(i -> true).toList();
-//        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
-//    }
 
     public void doCheck(JSONObject data) throws LoginValidException {
         for (FlyLoginValidRepository delegate : this.delegates) {
             delegate.doCheck(data);
-            log.info("登陆校验器-{},完成校验成功", delegate.getClass());
+            log.info("登陆校验器-{},完成校验成功", delegate.getClass().getSimpleName());
         }
     }
 

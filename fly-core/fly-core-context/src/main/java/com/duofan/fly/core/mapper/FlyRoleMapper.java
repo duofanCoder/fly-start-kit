@@ -5,6 +5,8 @@ import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyRole;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 角色mapper
  *
@@ -16,6 +18,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface FlyRoleMapper extends BaseMapper<FlyRole> {
 
-    FlyResourceInfo loadRoleResource(@Param("roleNo") String roleNo);
+    List<FlyResourceInfo> loadRoleResource(@Param("username") String username);
 
 }

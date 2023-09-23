@@ -1,17 +1,23 @@
 package com.duofan.fly.framework.security.config;
 
 import com.duofan.fly.core.constant.log.LogConstant;
+import com.duofan.fly.core.storage.FlyRoleStorage;
+import com.duofan.fly.core.storage.FlyUserStorage;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
+import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.duofan.fly.framework.security.constraint.impl.CaptchaLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginService;
+import com.duofan.fly.framework.security.constraint.impl.FlyDefaultRegisterService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 /**
@@ -25,7 +31,18 @@ import org.springframework.security.authentication.AuthenticationProvider;
  */
 @Slf4j
 @Configuration
-public class SecurityAutoConfiguration {
+public class FlySecurityAutoConfiguration {
+
+    private final SecurityProperties properties;
+    private final AuthenticationProvider authenticationProvider;
+    private final FlyUserStorage userStorage;
+
+    public FlySecurityAutoConfiguration(SecurityProperties properties, AuthenticationProvider authenticationProvider, FlyUserStorage userStorage) {
+        this.properties = properties;
+        this.authenticationProvider = authenticationProvider;
+        this.userStorage = userStorage;
+    }
+
     @Bean("captchaLoginValidRepository")
     @ConditionalOnProperty(prefix = "fly.security.login", name = "captchaEnabled", matchIfMissing = true)
     FlyLoginValidRepository captchaLoginValidRepository() {
@@ -33,11 +50,20 @@ public class SecurityAutoConfiguration {
         return new CaptchaLoginValidRepository();
     }
 
-    //    @Bean("flyLoginService")
-//    @ConditionalOnProperty(prefix = "fly.security.login", name = "captchaEnabled", matchIfMissing = true)
-//    @ConditionalOnBean
-    FlyLoginService flyLoginService(DelegatingLoginValidRepository loginValidRepository, SecurityProperties properties, AuthenticationProvider authenticationProvider) {
+    @Bean("flyLoginService")
+    @ConditionalOnMissingBean
+    FlyLoginService flyLoginService(DelegatingLoginValidRepository loginValidRepository) {
         log.info(LogConstant.COMPONENT_LOG, "默认登陆组件", "自动配置");
         return new FlyDefaultLoginService(loginValidRepository, properties, authenticationProvider);
     }
+
+
+    @Bean("flyRegisterService")
+    @ConditionalOnMissingBean
+    FlyRegisterService flyRegisterService(PasswordEncoder passwordEncoder, FlyRoleStorage roleStorage) {
+        log.info(LogConstant.COMPONENT_LOG, "默认注册组件", "自动配置");
+        return new FlyDefaultRegisterService(userStorage, roleStorage, passwordEncoder);
+    }
+
+
 }

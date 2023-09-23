@@ -3,7 +3,6 @@ package com.duofan.fly.framework.security.config;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +12,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * json登陆配置
@@ -36,38 +32,28 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableConfigurationProperties(SecurityProperties.class)
 public class FlySecurityConfig {
 
-    private static final AntPathRequestMatcher DEFAULT_LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/passport/login",
-            "POST");
-    private static final AntPathRequestMatcher DEFAULT_LOGOUT_REQUEST_MATCHER = new AntPathRequestMatcher("/passport/logout",
-            "POST");
     @Resource
     private SecurityProperties securityProperties;
 
+
     @Bean
-    UserDetailsService userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("123")
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y);
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(DEFAULT_LOGIN_REQUEST_MATCHER)
-                            .permitAll()
-                            .requestMatchers(DEFAULT_LOGOUT_REQUEST_MATCHER)
+                    req.requestMatchers("/passport/**")
                             .permitAll();
                 })
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
-                .userDetailsService(userDetailsService())
+                .userDetailsService(userDetailsService)
                 .build();
     }
 
@@ -81,15 +67,14 @@ public class FlySecurityConfig {
      * @return
      */
     @Bean
-    DaoAuthenticationProvider daoAuthenticationProvider(@Qualifier("userDetailsService") UserDetailsService userDetails) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y));
+    DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetails, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetails);
         return daoAuthenticationProvider;
     }
 
 
     @Bean
-
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> {
             web.ignoring()

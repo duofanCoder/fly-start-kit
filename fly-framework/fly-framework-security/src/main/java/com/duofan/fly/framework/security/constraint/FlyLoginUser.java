@@ -1,13 +1,18 @@
 package com.duofan.fly.framework.security.constraint;
 
-import com.duofan.fly.core.base.domain.permission.FlyOperation;
+import cn.hutool.core.collection.CollUtil;
+import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
+import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * security 登录用户
@@ -23,16 +28,19 @@ import java.util.Collection;
 public class FlyLoginUser implements UserDetails {
 
     private FlyUser user;
-    private FlyOperation operation;
+    private List<FlyResourceInfo> operations;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if (CollUtil.isEmpty(operations)) {
+            return Collections.singleton(new SimpleGrantedAuthority(FlyRoleEnums.DEFAULT.getRoleNo()));
+        }
+        return operations.stream().map(FlyResourceInfo::getRoleNo).distinct().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getPassword();
     }
 
     @Override

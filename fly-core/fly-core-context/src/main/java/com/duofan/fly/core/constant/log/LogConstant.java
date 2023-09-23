@@ -10,6 +10,6 @@ package com.duofan.fly.core.constant.log;
  * @date 2023/9/22
  */
 public class LogConstant {
-    public static final String COMPONENT_LOG = "FLY 组件 - [{}]:{}";
-    public static final String MODULE_LOG = "FLY 模块 - [{}]:{}";
+    public static final String COMPONENT_LOG = "FLY 组件 - 【{}】 : {}";
+    public static final String MODULE_LOG = "FLY 模块 - 【{}】 : {}";
 }

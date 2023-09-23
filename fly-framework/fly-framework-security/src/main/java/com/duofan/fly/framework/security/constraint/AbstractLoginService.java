@@ -1,6 +1,8 @@
 package com.duofan.fly.framework.security.constraint;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +44,12 @@ public abstract class AbstractLoginService implements FlyLoginService {
                         data.getString(properties.getLogin().getPasswordParameter())
                 );
         Authentication authenticate = authenticationProvider.authenticate(unauthenticated);
-        Object details = authenticate.getDetails();
+        FlyLoginUser user = (FlyLoginUser) authenticate.getDetails();
         Collection<? extends GrantedAuthority> authorities = authenticate.getAuthorities();
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
+            System.out.println(role);
         }
-        return null;
+        return JSON.parseObject(JSONObject.toJSONString(user, JSONWriter.Feature.FieldBased));
     }
 }
