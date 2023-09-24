@@ -9,7 +9,7 @@ package com.duofan.fly.framework.security.exception;
  * @website duofan.top
  * @date 2023/9/23
  */
-public class RegisterException extends RuntimeException {
+public class RegisterException extends FlySecurityException {
     public RegisterException() {
     }
 

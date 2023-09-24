@@ -1,7 +1,5 @@
 package com.duofan.fly.framework.security.exception;
 
-import com.duofan.fly.core.base.domain.exception.FlyException;
-
 /**
  * 自定义校验异常
  *
@@ -11,7 +9,7 @@ import com.duofan.fly.core.base.domain.exception.FlyException;
  * @website duofan.top
  * @date 2023/9/20
  */
-public class LoginValidException extends FlyException {
+public class LoginValidException extends FlySecurityException {
     public LoginValidException() {
     }
 

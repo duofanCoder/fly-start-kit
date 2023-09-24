@@ -4,8 +4,6 @@ import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
-import com.duofan.fly.core.storage.impl.FlyDefaultRoleStorage;
-import com.duofan.fly.core.storage.impl.FlyDefaultUserStorage;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +27,10 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class FlyUserDetailService implements UserDetailsService {
-    @Resource(type = FlyDefaultUserStorage.class)
+    @Resource(type = FlyUserStorage.class)
     private FlyUserStorage userStorage;
 
-    @Resource(type = FlyDefaultRoleStorage.class)
+    @Resource(type = FlyRoleStorage.class)
     private FlyRoleStorage roleStorage;
 
 

@@ -38,13 +38,11 @@ public class FlyPassportController {
     private CacheService cacheService;
     @Resource
     private FlyLoginService loginService;
-
     @Resource
     private FlyRegisterService registerService;
 
     @PostMapping("/login")
     public FlyResult login(@RequestBody JSONObject loginRequest) {
-        cacheService.set("asdads", "asd");
         loginService.login(loginRequest);
         return FlyResult.SUCCESS;
     }

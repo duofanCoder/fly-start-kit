@@ -1,4 +1,4 @@
-package com.duofan.fly.core.storage.impl;
+package com.duofan.fly.manage.api.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
