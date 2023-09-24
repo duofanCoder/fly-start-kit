@@ -8,7 +8,7 @@
         <artifactId>fly-framework</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
+    <groupId>com.duofan.fly.security</groupId>
     <artifactId>fly-framework-security</artifactId>
 
     <properties>

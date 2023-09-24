@@ -3,8 +3,11 @@ package com.duofan.fly.framework.security.constraint.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.framework.security.constraint.AbstractLoginService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 /**
  * 默认登陆实现
@@ -15,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
  * @website duofan.top
  * @date 2023/9/20
  */
+@Slf4j
 public class FlyDefaultLoginService extends AbstractLoginService {
 
     public FlyDefaultLoginService(@Qualifier("delegatingLoginValidRepository") DelegatingLoginValidRepository loginValidRepository, SecurityProperties properties, AuthenticationProvider authenticationProvider) {
@@ -23,6 +27,12 @@ public class FlyDefaultLoginService extends AbstractLoginService {
 
     @Override
     public JSONObject login(JSONObject data) {
-        return super.login(data);
+        try {
+            return super.login(data);
+        } catch (Exception e) {
+            if (e instanceof AccountNotFoundException) {
+                
+            }
+        }
     }
 }
