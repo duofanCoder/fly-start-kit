@@ -1,9 +1,10 @@
 package com.duofan.fly.core.base.entity.abstact;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,19 +27,17 @@ public class EntityBase implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @TableId
     private String id;
-    @JSONField(deserialize = false)
+    @JsonDeserialize
     @TableField(fill = FieldFill.INSERT)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
-    @JSONField(deserialize = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @JsonDeserialize
     private Date updateTime;
-    @JSONField(deserialize = false)
     private String createBy;
-    @JSONField(deserialize = false)
     private String updateBy;
-    @JSONField(deserialize = false, serialize = false)
+    @JsonIgnore
     @Column(columnDefinition = "varchar(32) default 0")
     private String isDeleted;
     private String remark;

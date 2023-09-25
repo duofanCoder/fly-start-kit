@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 
@@ -25,7 +24,7 @@ import java.io.Serializable;
 public class FlyResult implements Serializable {
     private String code;
     private String msg;
-    private T data;
+    private Object data;
 
 
     public static FlyResult SUCCESS = of(FlyHttpStatus.SUCCESS);
@@ -36,6 +35,13 @@ public class FlyResult implements Serializable {
         return new FlyResult()
                 .setCode(status.getCode())
                 .setMsg(status.getMsg())
+                .setData(null);
+    }
+
+    public static FlyResult of(FlyHttpStatus status, String msg) {
+        return new FlyResult()
+                .setCode(status.getCode())
+                .setMsg(msg)
                 .setData(null);
     }
 }

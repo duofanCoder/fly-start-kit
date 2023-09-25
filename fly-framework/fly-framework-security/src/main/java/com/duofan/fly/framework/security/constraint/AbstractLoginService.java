@@ -1,17 +1,16 @@
 package com.duofan.fly.framework.security.constraint;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.JSONWriter;
+import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.property.SecurityProperties;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author duofan
@@ -28,28 +27,34 @@ public abstract class AbstractLoginService implements FlyLoginService {
 
     private final AuthenticationProvider authenticationProvider;
 
+    private final FlyTokenService tokenService;
 
-    public AbstractLoginService(DelegatingLoginValidRepository loginValidRepository, SecurityProperties properties, AuthenticationProvider authenticationProvider) {
+    public AbstractLoginService(DelegatingLoginValidRepository loginValidRepository, SecurityProperties properties, AuthenticationProvider authenticationProvider, FlyTokenService tokenService) {
         this.loginValidRepository = loginValidRepository;
         this.properties = properties;
         this.authenticationProvider = authenticationProvider;
+        this.tokenService = tokenService;
     }
 
+    @SneakyThrows
     @Override
-    public JSONObject login(JSONObject data) throws RuntimeException {
+    public FlyToken login(Map<String, Object> data) throws RuntimeException {
         loginValidRepository.doCheck(data);
+        val username = data.get(properties.getLogin().getUsernameParameter()).toString();
+        val password = data.get(properties.getLogin().getPasswordParameter()).toString();
+        FlyLoginUser loginUser = authenticate(username, password);
+
+//        tokenService.create()
+        return new FlyToken(properties.getToken().getPrefix(), "", properties.getToken().getPrefix());
+    }
+
+    protected FlyLoginUser authenticate(String username, String password) {
         UsernamePasswordAuthenticationToken unauthenticated =
                 UsernamePasswordAuthenticationToken.unauthenticated(
-                        data.getString(properties.getLogin().getUsernameParameter()),
-                        data.getString(properties.getLogin().getPasswordParameter())
+                        username,
+                        password
                 );
         Authentication authenticate = authenticationProvider.authenticate(unauthenticated);
-        FlyLoginUser user = (FlyLoginUser) authenticate.getDetails();
-        Collection<? extends GrantedAuthority> authorities = authenticate.getAuthorities();
-        for (GrantedAuthority authority : authorities) {
-            String role = authority.getAuthority();
-            System.out.println(role);
-        }
-        return JSON.parseObject(JSONObject.toJSONString(user, JSONWriter.Feature.FieldBased));
+        return (FlyLoginUser) authenticate.getPrincipal();
     }
 }

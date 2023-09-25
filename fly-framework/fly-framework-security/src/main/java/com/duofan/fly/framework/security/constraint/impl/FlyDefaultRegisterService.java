@@ -38,8 +38,7 @@ public class FlyDefaultRegisterService implements FlyRegisterService {
     public void register(FlyUser data) {
         // 密码加密保存
         data.setPassword(passwordEncoder.encode(data.getPassword()));
-
-        Optional.of(userStorage.getByUsername(data.getUsername())).ifPresent((i) -> {
+        Optional.ofNullable(userStorage.getByUsername(data.getUsername())).ifPresent((i) -> {
             throw new RegisterException("用户名已存在");
         });
         userStorage.save(data);

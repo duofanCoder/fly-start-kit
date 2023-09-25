@@ -9,6 +9,8 @@ public class SecurityProperties {
 
     private LoginProperties login = new LoginProperties();
 
+    private TokenProperties token = new TokenProperties();
+
     @Data
     public static class LoginProperties {
         private boolean captchaEnabled = true;
@@ -18,5 +20,13 @@ public class SecurityProperties {
 
     }
 
-    private boolean captchaEnabled = true;
+    @Data
+    public static class TokenProperties {
+        private String prefix = "x-access-token";
+        private long expired = 60 * 24 * 30;
+
+        private String key = "fly-boot-by-duofan";
+        private String algorithm = "RS256";
+    }
+
 }

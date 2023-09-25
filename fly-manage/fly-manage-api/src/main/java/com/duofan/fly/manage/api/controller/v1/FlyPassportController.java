@@ -1,6 +1,5 @@
 package com.duofan.fly.manage.api.controller.v1;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.cache.constraint.CacheService;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * @author duofan
  * @version 1.0
@@ -42,9 +43,8 @@ public class FlyPassportController {
     private FlyRegisterService registerService;
 
     @PostMapping("/login")
-    public FlyResult login(@RequestBody JSONObject loginRequest) {
-        loginService.login(loginRequest);
-        return FlyResult.SUCCESS;
+    public FlyResult login(@RequestBody Map<String, Object> loginRequest) {
+        return FlyResult.SUCCESS.setData(loginService.login(loginRequest));
     }
 
     @PostMapping("/register")

@@ -1,7 +1,8 @@
 package com.duofan.fly.framework.security.constraint;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
+
+import java.util.Map;
 
 /**
  * jwt token 操作
@@ -14,11 +15,11 @@ import com.duofan.fly.core.base.domain.permission.FlyToken;
  */
 public interface FlyTokenService {
 
-    FlyToken create(JSONObject payloads);
+    FlyToken create(Map<String, Object> payloads);
 
-    JSONObject parse(String token);
+    Map<String, Object> parse(String token);
 
-    default JSONObject parse(String token, String prefix) {
+    default Map<String, Object> parse(String token, String prefix) {
         return null;
     }
 

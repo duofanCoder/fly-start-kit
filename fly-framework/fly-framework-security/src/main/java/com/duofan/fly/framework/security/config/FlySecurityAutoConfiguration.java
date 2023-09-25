@@ -6,6 +6,7 @@ import com.duofan.fly.core.storage.FlyUserStorage;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
+import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.constraint.impl.CaptchaLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginService;
@@ -31,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Slf4j
 @Configuration
+//@ConditionalOnBean(value = {AuthenticationProvider.class, FlyUserStorage.class})
 public class FlySecurityAutoConfiguration {
 
     private final SecurityProperties properties;
@@ -52,9 +54,9 @@ public class FlySecurityAutoConfiguration {
 
     @Bean("flyLoginService")
     @ConditionalOnMissingBean
-    FlyLoginService flyLoginService(DelegatingLoginValidRepository loginValidRepository) {
+    FlyLoginService flyLoginService(DelegatingLoginValidRepository loginValidRepository, FlyTokenService tokenService) {
         log.info(LogConstant.COMPONENT_LOG, "默认登陆组件", "自动配置");
-        return new FlyDefaultLoginService(loginValidRepository, properties, authenticationProvider);
+        return new FlyDefaultLoginService(loginValidRepository, properties, authenticationProvider, tokenService);
     }
 
 

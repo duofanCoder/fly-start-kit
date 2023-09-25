@@ -1,7 +1,8 @@
 package com.duofan.fly.framework.security.constraint;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.framework.security.exception.LoginValidException;
+
+import java.util.Map;
 
 /**
  * 自定义登陆校验接口
@@ -14,7 +15,7 @@ import com.duofan.fly.framework.security.exception.LoginValidException;
  */
 public interface FlyLoginValidRepository {
 
-    void doCheck(JSONObject data) throws LoginValidException;
+    void doCheck(Map<String, Object> data) throws LoginValidException;
 
     int order();
 }

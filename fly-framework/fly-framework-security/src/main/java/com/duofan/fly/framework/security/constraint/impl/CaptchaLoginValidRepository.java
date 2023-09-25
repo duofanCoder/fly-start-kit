@@ -1,9 +1,10 @@
 package com.duofan.fly.framework.security.constraint.impl;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 /**
  * 验证码校验器
@@ -19,7 +20,7 @@ public class CaptchaLoginValidRepository implements FlyLoginValidRepository {
 
 
     @Override
-    public void doCheck(JSONObject data) throws LoginValidException {
+    public void doCheck(Map<String, Object> data) throws LoginValidException {
         log.info("校验验证码成功");
     }
 

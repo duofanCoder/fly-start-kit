@@ -1,6 +1,9 @@
 package com.duofan.fly.framework.security.constraint;
 
-import com.alibaba.fastjson2.JSONObject;
+
+import com.duofan.fly.core.base.domain.permission.FlyToken;
+
+import java.util.Map;
 
 /**
  * 登陆操作接口约束
@@ -12,6 +15,6 @@ import com.alibaba.fastjson2.JSONObject;
  * @date 2023/9/20
  */
 public interface FlyLoginService {
-    JSONObject login(JSONObject data);
+    FlyToken login(Map<String, Object> data);
 
 }

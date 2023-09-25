@@ -1,13 +1,14 @@
 package com.duofan.fly.framework.security.constraint.impl;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.framework.security.constraint.AbstractLoginService;
+import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 
-import javax.security.auth.login.AccountNotFoundException;
+import java.util.Map;
 
 /**
  * 默认登陆实现
@@ -21,18 +22,14 @@ import javax.security.auth.login.AccountNotFoundException;
 @Slf4j
 public class FlyDefaultLoginService extends AbstractLoginService {
 
-    public FlyDefaultLoginService(@Qualifier("delegatingLoginValidRepository") DelegatingLoginValidRepository loginValidRepository, SecurityProperties properties, AuthenticationProvider authenticationProvider) {
-        super(loginValidRepository, properties, authenticationProvider);
+    public FlyDefaultLoginService(@Qualifier("delegatingLoginValidRepository") DelegatingLoginValidRepository loginValidRepository,
+                                  SecurityProperties properties,
+                                  AuthenticationProvider authenticationProvider, FlyTokenService tokenService) {
+        super(loginValidRepository, properties, authenticationProvider, tokenService);
     }
 
     @Override
-    public JSONObject login(JSONObject data) {
-        try {
-            return super.login(data);
-        } catch (Exception e) {
-            if (e instanceof AccountNotFoundException) {
-                
-            }
-        }
+    public FlyToken login(Map<String, Object> data) {
+        return super.login(data);
     }
 }

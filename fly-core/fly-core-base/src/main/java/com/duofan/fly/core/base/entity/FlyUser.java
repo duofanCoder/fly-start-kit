@@ -1,7 +1,7 @@
 package com.duofan.fly.core.base.entity;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.duofan.fly.core.base.entity.abstact.EntityBase;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class FlyUser extends EntityBase {
     private String username;
-    @JSONField(serialize = false)
+    @JsonDeserialize
     private String password;
     private String gender;
     private String age;
