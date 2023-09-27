@@ -37,6 +37,9 @@ spring:
   #    - group: 'fly'
   #      paths-to-match: '/**'
   #      packages-to-scan: com.duofan.fly.manage.api.controller.v1
+  devtools:
+    livereload:
+      enabled: false
 #  default-flat-param-object: true
 
 

@@ -21,6 +21,8 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class AbstractLoginService implements FlyLoginService {
+    static final String LOGIN_FAIL_LOG = "登陆失败:  用户名称 = {} , 失败信息 = {}";
+    static final String LOGIN_SUCCESS_LOG = "登陆成功:  用户名称 = {} ";
 
     private final DelegatingLoginValidRepository loginValidRepository;
     private final SecurityProperties properties;

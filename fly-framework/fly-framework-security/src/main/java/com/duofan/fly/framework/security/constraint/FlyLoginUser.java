@@ -7,6 +7,7 @@ import com.duofan.fly.core.base.entity.FlyUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,7 +36,7 @@ public class FlyLoginUser implements UserDetails {
         if (CollUtil.isEmpty(operations)) {
             return Collections.singleton(new SimpleGrantedAuthority(FlyRoleEnums.DEFAULT.getRoleNo()));
         }
-        return operations.stream().map(FlyResourceInfo::getRoleNo).distinct().map(SimpleGrantedAuthority::new).toList();
+        return AuthorityUtils.createAuthorityList(operations.stream().map(FlyResourceInfo::getRoleNo).distinct().toList());
     }
 
     @Override

@@ -4,8 +4,11 @@ import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 
 /**
@@ -28,8 +31,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider, Initia
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        authentication.setAuthenticated(true);
-        return authentication;
+        UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(authentication.getPrincipal(),
+                authentication.getCredentials(), authentication.getAuthorities());
+        // TODO 添加上下文用户信息到detail 里
+        result.setDetails(authentication.getDetails());
+        SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
+        context.setAuthentication(result);
+        SecurityContextHolder.getContextHolderStrategy().setContext(context);
+        return result;
     }
 
     @Override

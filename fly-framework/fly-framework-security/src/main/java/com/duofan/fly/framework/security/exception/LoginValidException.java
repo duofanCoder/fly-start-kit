@@ -2,6 +2,7 @@ package com.duofan.fly.framework.security.exception;
 
 /**
  * 自定义校验异常
+ * 自定义组件实现校验组件，校验失败抛出继承该异常或其子类
  *
  * @author duofan
  * @version 1.0

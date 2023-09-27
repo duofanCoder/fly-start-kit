@@ -3,6 +3,7 @@ package com.duofan.fly.framework.security.constraint.impl;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.framework.security.constraint.AbstractLoginService;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
+import com.duofan.fly.framework.security.exception.LoginFailException;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +37,12 @@ public class FlyDefaultLoginService extends AbstractLoginService {
         try {
             return super.login(data);
         } catch (Exception e) {
-            log.info(LOGIN_FAIL_LOG, data.get("username"), e.getMessage());
+            for (LoginFailException.LoginFailStatus value : LoginFailException.LoginFailStatus.values()) {
+                Class<?> clazz = value.getClazz();
+                if (clazz.isAssignableFrom(e.getClass())) {
+                    throw new LoginFailException(value);
+                }
+            }
             throw e;
         }
     }
