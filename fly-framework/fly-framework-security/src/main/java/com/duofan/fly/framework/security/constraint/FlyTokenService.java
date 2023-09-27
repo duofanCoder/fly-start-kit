@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface FlyTokenService {
 
-    FlyToken create(Map<String, Object> payloads);
+    FlyToken create(FlyLoginUser loginUser);
 
     Map<String, Object> parse(String token);
 
@@ -23,4 +23,19 @@ public interface FlyTokenService {
         return null;
     }
 
+    /**
+     * 校验TOKEN是否过期
+     *
+     * @param token
+     * @return
+     */
+    boolean validate(String token);
+
+    /**
+     * 校验TOKEN是否被篡改
+     *
+     * @param token
+     * @return
+     */
+    boolean verify(String token);
 }

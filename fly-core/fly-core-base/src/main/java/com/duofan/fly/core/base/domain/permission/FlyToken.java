@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * jwt token
  *
@@ -19,7 +21,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class FlyToken {
-    private String prefix;
+    private String headerKey;
     private String token;
-    private String expired;
+    private Date expiredAt;
 }

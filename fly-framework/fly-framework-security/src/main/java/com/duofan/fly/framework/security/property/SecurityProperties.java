@@ -22,11 +22,11 @@ public class SecurityProperties {
 
     @Data
     public static class TokenProperties {
-        private String prefix = "x-access-token";
         private long expired = 60 * 24 * 30;
 
-        private String key = "fly-boot-by-duofan";
-        private String algorithm = "RS256";
+        // 签名密钥
+        private String signSecret = "fly-boot-by-duofan";
+        private String algorithm = "HS256";
     }
 
 }

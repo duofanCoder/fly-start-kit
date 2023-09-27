@@ -40,11 +40,11 @@ spring:
 #  default-flat-param-object: true
 
 
-debug: false
-#logging:
-#  level:
-#    org.springframework.security:
-#      TRACE
+debug: true
+logging:
+  level:
+    org.springframework.security:
+      TRACE
 knife4j:
   enable: true
   setting:

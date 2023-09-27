@@ -22,6 +22,9 @@ import java.util.Map;
 @Slf4j
 public class FlyDefaultLoginService extends AbstractLoginService {
 
+    static final String LOGIN_FAIL_LOG = "登陆失败:  用户名称 = {} , 失败信息 = {}";
+    static final String LOGIN_SUCCESS_LOG = "登陆成功:  用户名称 = {} ";
+
     public FlyDefaultLoginService(@Qualifier("delegatingLoginValidRepository") DelegatingLoginValidRepository loginValidRepository,
                                   SecurityProperties properties,
                                   AuthenticationProvider authenticationProvider, FlyTokenService tokenService) {
@@ -30,6 +33,11 @@ public class FlyDefaultLoginService extends AbstractLoginService {
 
     @Override
     public FlyToken login(Map<String, Object> data) {
-        return super.login(data);
+        try {
+            return super.login(data);
+        } catch (Exception e) {
+            log.info(LOGIN_FAIL_LOG, data.get("username"), e.getMessage());
+            throw e;
+        }
     }
 }

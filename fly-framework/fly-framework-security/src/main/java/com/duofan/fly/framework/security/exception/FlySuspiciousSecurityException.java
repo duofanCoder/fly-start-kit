@@ -1,4 +1,4 @@
-package com.duofan.fly.core.base.domain.exception;
+package com.duofan.fly.framework.security.exception;
 
 /**
  * 可疑触犯安全类操作异常
@@ -9,7 +9,7 @@ package com.duofan.fly.core.base.domain.exception;
  * @website duofan.top
  * @date 2023/9/24
  */
-public class FlySuspiciousSecurityException extends FlyException {
+public class FlySuspiciousSecurityException extends FlySecurityException {
 
     public FlySuspiciousSecurityException() {
     }

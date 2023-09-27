@@ -1,5 +1,8 @@
 package com.duofan.fly.framework.security.config;
 
+import com.duofan.fly.framework.security.constraint.FlyTokenService;
+import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationFilter;
+import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -36,6 +38,9 @@ public class FlySecurityConfig {
     @Resource
     private SecurityProperties securityProperties;
 
+    @Resource
+    private FlyTokenService tokenService;
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -46,9 +51,12 @@ public class FlySecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+//                .cors(Customizer.withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/passport/**")
+                            .permitAll()
+                            .requestMatchers("/passport/login")
                             .permitAll()
                             .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
                             .permitAll();
@@ -57,6 +65,7 @@ public class FlySecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetailsService)
+//                .addFilterBefore(jwtAuthenticationFilter(), AnonymousAuthenticationFilter.class)
                 .build();
     }
 
@@ -75,4 +84,14 @@ public class FlySecurityConfig {
         daoAuthenticationProvider.setUserDetailsService(userDetails);
         return daoAuthenticationProvider;
     }
+
+    private JwtAuthenticationFilter jwtAuthenticationFilter() {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
+        JwtAuthenticationProvider provider = new JwtAuthenticationProvider();
+        provider.setTokenService(tokenService);
+        filter.setTokenService(tokenService);
+        filter.setAuthenticationProvider(provider);
+        return filter;
+    }
+
 }

@@ -43,9 +43,7 @@ public abstract class AbstractLoginService implements FlyLoginService {
         val username = data.get(properties.getLogin().getUsernameParameter()).toString();
         val password = data.get(properties.getLogin().getPasswordParameter()).toString();
         FlyLoginUser loginUser = authenticate(username, password);
-
-//        tokenService.create()
-        return new FlyToken(properties.getToken().getPrefix(), "", properties.getToken().getPrefix());
+        return tokenService.create(loginUser);
     }
 
     protected FlyLoginUser authenticate(String username, String password) {

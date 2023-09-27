@@ -5,6 +5,7 @@ import com.duofan.fly.framework.security.exception.FlySecurityException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,11 +17,14 @@ import java.util.Optional;
  * @website duofan.top
  * @date 2023/9/24
  */
-public class FlySecurityContext {
+public class FlySecurityContextHolder {
 
+    private final ThreadLocal<FlyLoginUser> loginUser = new ThreadLocal<FlyLoginUser>();
+
+    private final ThreadLocal<List<String>> roles = new ThreadLocal<>();
 
     public static FlyLoginUser currentUser() {
-        return (FlyLoginUser) Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getDetails()).orElseThrow(
+        return (FlyLoginUser) Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).orElseThrow(
                 () -> new FlySecurityException("当前用户信息不存在")
         );
     }
