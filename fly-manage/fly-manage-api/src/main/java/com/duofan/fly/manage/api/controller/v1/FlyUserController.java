@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class FlyUserController {
 
     @Resource
     private FlyUserStorage userStorage;
 
-    
+
     @PostMapping("/password/reset")
     public FlyResult passwdReset(PasswdResetRequest request) {
         userStorage.passwdReset(BeanUtil.copyProperties(request, FlyUserDto.class));

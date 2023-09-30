@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+
+import java.io.PrintWriter;
 
 /**
  * json登陆配置
@@ -34,7 +35,6 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(SecurityProperties.class)
-@Order(value = Integer.MIN_VALUE)
 public class FlySecurityConfig {
 
     @Resource
@@ -49,25 +49,49 @@ public class FlySecurityConfig {
         return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y);
     }
 
+    /**
+     * <a href="https://www.baeldung.com/csrf-stateless-rest-api#3-credentials-stored-in-cookies" > jwt认证方式无需使用csrf防御配置 </href>
+     *
+     * @param http
+     * @param userDetailsService
+     * @return
+     * @throws Exception
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         return http
+                // 跨站攻击关闭
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())
                 .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/passport/**")
-                            .permitAll()
-                            .requestMatchers("/passport/login")
-                            .permitAll()
-                            .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
-                            .permitAll();
-                })
-                .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
-                .logout(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
+                        .permitAll()
+                        .requestMatchers("/api/v1/passport/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .logout(Customizer.withDefaults())
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(jwtAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+                .exceptionHandling(exceptionHandlingConfigurer ->
+                        exceptionHandlingConfigurer.accessDeniedHandler(
+                                        (request, response, accessDeniedException) -> {
+                                            System.out.println("aaaa");
+                                            log.error(accessDeniedException.getLocalizedMessage());
+                                        }
+                                )
+                                .authenticationEntryPoint((request, response, authException) -> {
+                                    // TODO token处理失败 在这里处理
+                                    PrintWriter writer = response.getWriter();
+                                    writer.println("hllo");
+                                    writer.flush();
+                                    writer.close();
+                                })
+                )
                 .build();
     }
 
@@ -91,7 +115,6 @@ public class FlySecurityConfig {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
         JwtAuthenticationProvider provider = new JwtAuthenticationProvider();
         provider.setTokenService(tokenService);
-        filter.setTokenService(tokenService);
         filter.setAuthenticationProvider(provider);
         return filter;
     }

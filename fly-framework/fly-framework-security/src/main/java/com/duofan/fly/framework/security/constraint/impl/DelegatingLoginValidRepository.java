@@ -3,7 +3,6 @@ package com.duofan.fly.framework.security.constraint.impl;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -26,8 +25,7 @@ public class DelegatingLoginValidRepository {
     private final List<FlyLoginValidRepository> delegates;
 
     public DelegatingLoginValidRepository(FlyLoginValidRepository... delegates) {
-        val rep = Arrays.stream(delegates).filter(i -> true).toList();
-        this.delegates = rep.stream().sorted((o1, o2) -> o2.order() - o1.order()).toList();
+        this.delegates = Arrays.stream(delegates).sorted((o1, o2) -> o2.order() - o1.order()).toList();
     }
 
     public void doCheck(Map<String, Object> data) throws LoginValidException {
@@ -37,9 +35,15 @@ public class DelegatingLoginValidRepository {
         }
     }
 
-
-    public int order() {
-        return 0;
+    public void doErrHandle(Map<String, Object> data, Exception e) {
+        if (e instanceof LoginValidException loginValidException) {
+            this.delegates.stream().filter(d ->
+                            d.supportError(loginValidException))
+                    .forEach(i -> i.errorHandle(data, loginValidException));
+        }
     }
 
+    public void doSuccessHandle(Map<String, Object> data) {
+        this.delegates.forEach(a -> a.successHandle(data));
+    }
 }

@@ -1,4 +1,4 @@
-package com.duofan.fly.framework.exception;
+package com.duofan.fly.framework.security.exception.handle;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.enums.FlyHttpStatus;
@@ -39,6 +39,7 @@ public class SecurityExceptionHandler {
     @ExceptionHandler(LoginFailException.class)
     public FlyResult handleLoginFailException(LoginFailException e) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal);
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
         return FlyResult.of(FlyHttpStatus.FAIL);
     }

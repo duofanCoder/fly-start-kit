@@ -1,5 +1,6 @@
 package com.duofan.fly.framework.security.exception;
 
+import com.duofan.fly.framework.security.exception.loginValid.LoginParamException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.authentication.AccountStatusException;
@@ -42,7 +43,8 @@ public class LoginFailException extends FlySecurityException {
         ACCOUNT_STATUS_ERROR("4", "账户状态异常", AccountStatusException.class),
         ACCOUNT_DISABLED("5", "账户未激活", DisabledException.class),
         ACCOUNT_LOCKED("6", "账户已锁", AccountLockedException.class),
-        ERROR("6", "认证错误", AuthenticationException.class);
+        ERROR("6", "认证错误", AuthenticationException.class),
+        PARAM_ERROR("7", "入参校验失败", LoginParamException.class);
 
         private final String code;
         private final String text;

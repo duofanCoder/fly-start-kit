@@ -13,6 +13,7 @@ import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginService;
 import com.duofan.fly.framework.security.constraint.impl.FlyDefaultRegisterService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Slf4j
 @Configuration
-//@ConditionalOnBean(value = {AuthenticationProvider.class, FlyUserStorage.class})
+@ConditionalOnBean(value = {FlyUserStorage.class})
 public class FlySecurityAutoConfiguration {
 
     private final SecurityProperties properties;

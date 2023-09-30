@@ -17,5 +17,11 @@ public interface FlyLoginValidRepository {
 
     void doCheck(Map<String, Object> data) throws LoginValidException;
 
+    boolean supportError(LoginValidException e);
+
+    void errorHandle(Map<String, Object> data, LoginValidException e);
+
+    void successHandle(Map<String, Object> data);
+
     int order();
 }

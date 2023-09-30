@@ -2,7 +2,6 @@ package com.duofan.fly.manage.api.controller.v1;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.cache.constraint.CacheService;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -35,10 +34,8 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("passport")
+@RequestMapping("/api/v1/passport")
 public class FlyPassportController {
-    @Resource
-    private CacheService cacheService;
     @Resource
     private FlyLoginService loginService;
     @Resource
@@ -46,6 +43,7 @@ public class FlyPassportController {
 
     @PostMapping("/login")
     public FlyResult login(@RequestBody Map<String, Object> loginRequest) {
+        System.out.println("hellologin");
         return FlyResult.SUCCESS.setData(loginService.login(loginRequest));
     }
 

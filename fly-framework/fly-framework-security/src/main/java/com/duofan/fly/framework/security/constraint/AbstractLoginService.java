@@ -1,9 +1,11 @@
 package com.duofan.fly.framework.security.constraint;
 
+import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
+import com.duofan.fly.framework.security.exception.LoginFailException;
+import com.duofan.fly.framework.security.exception.loginValid.LoginParamException;
 import com.duofan.fly.framework.security.property.SecurityProperties;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -38,23 +40,49 @@ public abstract class AbstractLoginService implements FlyLoginService {
         this.tokenService = tokenService;
     }
 
-    @SneakyThrows
+    protected void loginParamValid(Map<String, Object> data) {
+        if (!Boolean.logicalAnd(data.containsKey(obtainUsernameParam()),
+                data.containsKey(obtainPasswordParam()))) {
+            throw new LoginParamException(LoginFailException.LoginFailStatus.PARAM_ERROR);
+        }
+        if (!StrUtil.isAllNotBlank(data.get(obtainUsernameParam()).toString(),
+                data.get(obtainPasswordParam()).toString())) {
+            throw new LoginParamException(LoginFailException.LoginFailStatus.PARAM_ERROR);
+        }
+    }
+
     @Override
     public FlyToken login(Map<String, Object> data) throws RuntimeException {
         loginValidRepository.doCheck(data);
-        val username = data.get(properties.getLogin().getUsernameParameter()).toString();
-        val password = data.get(properties.getLogin().getPasswordParameter()).toString();
-        FlyLoginUser loginUser = authenticate(username, password);
+        loginParamValid(data);
+        val username = data.get(obtainUsernameParam()).toString();
+        val password = data.get(obtainPasswordParam()).toString();
+
+        FlyLoginUser loginUser = null;
+        try {
+            loginUser = authenticate(username, password);
+        } catch (Exception e) {
+            loginValidRepository.doErrHandle(data, e);
+            throw e;
+        }
+        loginValidRepository.doSuccessHandle(data);
         return tokenService.create(loginUser);
     }
 
+
     protected FlyLoginUser authenticate(String username, String password) {
         UsernamePasswordAuthenticationToken unauthenticated =
-                UsernamePasswordAuthenticationToken.unauthenticated(
-                        username,
-                        password
-                );
+                UsernamePasswordAuthenticationToken.unauthenticated(username, password);
         Authentication authenticate = authenticationProvider.authenticate(unauthenticated);
         return (FlyLoginUser) authenticate.getPrincipal();
+    }
+
+
+    protected String obtainUsernameParam() {
+        return properties.getLogin().getUsernameParameter();
+    }
+
+    protected String obtainPasswordParam() {
+        return properties.getLogin().getPasswordParameter();
     }
 }

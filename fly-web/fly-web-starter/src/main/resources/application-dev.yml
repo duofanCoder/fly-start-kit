@@ -37,17 +37,17 @@ spring:
   #    - group: 'fly'
   #      paths-to-match: '/**'
   #      packages-to-scan: com.duofan.fly.manage.api.controller.v1
-  devtools:
-    livereload:
-      enabled: false
+#  devtools:
+#    livereload:
+#      enabled: false
 #  default-flat-param-object: true
 
 
-debug: true
-logging:
-  level:
-    org.springframework.security:
-      TRACE
+debug: false
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
 knife4j:
   enable: true
   setting:
