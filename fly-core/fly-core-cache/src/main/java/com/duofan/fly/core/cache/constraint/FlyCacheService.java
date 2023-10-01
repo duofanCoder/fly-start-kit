@@ -1,6 +1,8 @@
 package com.duofan.fly.core.cache.constraint;
 
+import java.time.Duration;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -12,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @website duofan.top
  * @date 2023/9/23
  */
-public interface CacheService {
+public interface FlyCacheService {
 
 
     /**
@@ -33,6 +35,8 @@ public interface CacheService {
      */
     void set(String key, Object value, long expire, TimeUnit timeUnit);
 
+    void set(String key, Object value, Duration duration);
+
     /**
      * 设置缓存有效期
      *
@@ -40,6 +44,8 @@ public interface CacheService {
      * @param expire 过期时间
      */
     boolean expire(String key, long expire);
+
+    boolean expireAt(String key, Date expire);
 
     /**
      * 设置缓存有效期
@@ -85,5 +91,6 @@ public interface CacheService {
      */
     Long getExpireTime(String key);
 
+    boolean hasKey(String key);
 
 }

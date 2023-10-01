@@ -1,13 +1,15 @@
 package com.duofan.fly.commons.redis.service;
 
-import com.duofan.fly.core.cache.constraint.CacheService;
+import com.duofan.fly.core.cache.constraint.FlyCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2022/3/20
  */
 @Slf4j
-public class RedisService implements CacheService {
+public class RedisService implements FlyCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -47,6 +49,11 @@ public class RedisService implements CacheService {
         redisTemplate.opsForValue().set(key, value, expire, timeUnit);
     }
 
+    @Override
+    public void set(String key, Object value, Duration duration) {
+        redisTemplate.opsForValue().set(key, value, duration);
+    }
+
     /**
      * 设置缓存有效期
      *
@@ -55,6 +62,10 @@ public class RedisService implements CacheService {
      */
     public boolean expire(String key, long expire) {
         return Boolean.TRUE.equals(redisTemplate.expire(key, expire, TimeUnit.SECONDS));
+    }
+
+    public boolean expireAt(String key, Date expire) {
+        return Boolean.TRUE.equals(redisTemplate.expireAt(key, expire));
     }
 
     /**
@@ -112,6 +123,11 @@ public class RedisService implements CacheService {
      */
     public Long getExpireTime(String key) {
         return redisTemplate.opsForValue().getOperations().getExpire(key);
+    }
+
+    @Override
+    public boolean hasKey(String key) {
+        return redisTemplate.hasKey(key);
     }
 
     /**

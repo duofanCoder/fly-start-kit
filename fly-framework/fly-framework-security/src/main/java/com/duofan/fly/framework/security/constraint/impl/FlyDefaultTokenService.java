@@ -10,6 +10,8 @@ import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.HMacJWTSigner;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.cache.constraint.FlyCacheService;
+import com.duofan.fly.core.constant.log.LogConstant;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.property.SecurityConstant;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -36,8 +39,11 @@ public class FlyDefaultTokenService implements FlyTokenService {
 
     private final SecurityProperties properties;
 
-    public FlyDefaultTokenService(SecurityProperties properties) {
+    private final FlyCacheService cacheService;
+
+    public FlyDefaultTokenService(SecurityProperties properties, FlyCacheService cacheService) {
         this.properties = properties;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -53,6 +59,7 @@ public class FlyDefaultTokenService implements FlyTokenService {
                 .setSigner(AlgorithmUtil.getAlgorithm(properties.getToken().getAlgorithm()),
                         properties.getToken().getSignSecret().getBytes())
                 .sign();
+        cacheService.set(token, loginUser.getUsername(), Duration.ofHours(1));
         return new FlyToken().setToken(token)
                 .setExpiredAt(new Date(DateUtil.offsetHour(new Date(), 1).getTime()))
                 .setHeaderKey(SecurityConstant.TOKEN_HEADER_KEY);
@@ -112,7 +119,18 @@ public class FlyDefaultTokenService implements FlyTokenService {
      */
     @Override
     public boolean verify(String token) {
-        return JWTUtil.verify(token, properties.getToken().getSignSecret().getBytes());
+        try {
+            return JWTUtil.verify(token, properties.getToken().getSignSecret().getBytes());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void refresh(String token) {
+        if (!cacheService.expireAt(token, DateUtil.offsetHour(new Date(), 1))) {
+            log.info(LogConstant.COMMON_OPERATION_LOG, "刷新缓存", "操作失败");
+        }
     }
 
 

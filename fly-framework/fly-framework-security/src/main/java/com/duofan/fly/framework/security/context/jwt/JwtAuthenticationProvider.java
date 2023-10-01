@@ -2,8 +2,11 @@ package com.duofan.fly.framework.security.context.jwt;
 
 import com.duofan.fly.core.constant.log.LogConstant;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
-import com.duofan.fly.framework.security.exception.FlySecurityException;
 import com.duofan.fly.framework.security.exception.FlySuspiciousSecurityException;
+import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,12 +14,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * jwt认证校验其
@@ -28,13 +34,12 @@ import java.util.Optional;
  * @date 2023/9/27
  */
 @Slf4j
+@AllArgsConstructor
 public class JwtAuthenticationProvider implements InitializingBean {
 
-    public void setTokenService(FlyTokenService tokenService) {
-        this.tokenService = tokenService;
-    }
-
-    private FlyTokenService tokenService;
+    private final FlyTokenService tokenService;
+    private final UserDetailsService detailService;
+    private final HandlerExceptionResolver exceptionResolver;
 
 
     @Override
@@ -42,16 +47,29 @@ public class JwtAuthenticationProvider implements InitializingBean {
         Assert.notNull(this.tokenService, "JWT管理服务未配置");
     }
 
-    private void checkToken(String token) {
+    private HttpServletRequest request() {
+        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+    }
+
+    private HttpServletResponse response() {
+        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getResponse();
+    }
+
+    private boolean checkToken(String token) {
         // 是否篡改
         if (!tokenService.verify(token)) {
             log.info("JWT篡改 TOKEN内容:{}", token);
-            throw new FlySuspiciousSecurityException("JWT篡改");
+            FlySuspiciousSecurityException ex = new FlySuspiciousSecurityException("JWT篡改");
+            exceptionResolver.resolveException(request(), response(), null, ex);
+            return false;
         }
         // expired
         if (!tokenService.validate(token)) {
-            throw new FlySecurityException("JWT过期");
+            TokenExpiredException ex = new TokenExpiredException("JWT过期");
+            exceptionResolver.resolveException(request(), response(), null, ex);
+            return false;
         }
+        return true;
     }
 
 
@@ -70,15 +88,24 @@ public class JwtAuthenticationProvider implements InitializingBean {
                 .map(SimpleGrantedAuthority::new).toList();
     }
 
-    public void authenticate(String token) throws AuthenticationException {
-        checkToken(token);
+    public boolean authenticate(String token) throws AuthenticationException {
+        if (!checkToken(token)) {
+            return false;
+        }
         Map<String, Object> info = tokenService.parse(token);
-        UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(info.get("sub").toString(),
+        // TODO use cache
+        UserDetails userDetails = detailService.loadUserByUsername(info.get("sub").toString());
+        UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(
+                userDetails,
                 null,
                 grantedAuthorities(info.get("roles").toString()));
-        // TODO 添加上下文用户信息 loadUserDetails 到detail 里
+        result.setDetails(
+                new WebAuthenticationDetailsSource().buildDetails(((ServletRequestAttributes)
+                        Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest())
+        );
         SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
         context.setAuthentication(result);
         SecurityContextHolder.getContextHolderStrategy().setContext(context);
+        return true;
     }
 }

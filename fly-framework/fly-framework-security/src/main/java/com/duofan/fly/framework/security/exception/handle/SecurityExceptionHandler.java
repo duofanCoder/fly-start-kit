@@ -5,6 +5,7 @@ import com.duofan.fly.core.base.enums.FlyHttpStatus;
 import com.duofan.fly.framework.security.exception.FlySecurityException;
 import com.duofan.fly.framework.security.exception.LoginFailException;
 import com.duofan.fly.framework.security.exception.RegisterException;
+import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.security.auth.login.LoginException;
 
 /**
- * 全局异常处理
+ * 安全全局异常处理
  *
  * @author duofan
  * @version 1.0
@@ -28,11 +29,12 @@ import javax.security.auth.login.LoginException;
 public class SecurityExceptionHandler {
     private final String AUTH_EXCEPTION_LOG = "安全认证统一异常处理：{}";
 
+
     @ResponseBody
-    @ExceptionHandler(FlySecurityException.class)
-    public FlyResult handleValidException(FlySecurityException e) {
+    @ExceptionHandler(TokenExpiredException.class)
+    public FlyResult handleTokenExpiredException(TokenExpiredException e) {
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.FAIL);
+        return FlyResult.of(FlyHttpStatus.UNAUTHORIZED);
     }
 
     @ResponseBody
@@ -59,5 +61,11 @@ public class SecurityExceptionHandler {
         return FlyResult.of(FlyHttpStatus.FAIL, e.getMessage());
     }
 
+    @ResponseBody
+    @ExceptionHandler(FlySecurityException.class)
+    public FlyResult handleValidException(FlySecurityException e) {
+        log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.FAIL);
+    }
 
 }

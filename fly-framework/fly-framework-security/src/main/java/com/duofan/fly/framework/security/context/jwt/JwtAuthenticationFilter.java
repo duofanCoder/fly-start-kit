@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -23,6 +24,7 @@ import java.io.IOException;
  * @date 2023/9/27
  */
 @Slf4j
+@AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter implements InitializingBean {
 
     private JwtAuthenticationProvider authenticationProvider;
@@ -30,10 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Ini
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(SecurityConstant.TOKEN_HEADER_KEY);
-        if (StrUtil.isNotBlank(token)) {
-            authenticationProvider.authenticate(token);
+        // 如果认证失败，返回false内部会自动解析异常返回
+        if (StrUtil.isNotBlank(token) && authenticationProvider.authenticate(token)) {
+            doFilter(request, response, filterChain);
         }
-        doFilter(request, response, filterChain);
+        // 无TOKEN直接通过
+        if (StrUtil.isBlank(token)) {
+            doFilter(request, response, filterChain);
+        }
     }
 
 
@@ -43,7 +49,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Ini
     }
 
 
-    public void setAuthenticationProvider(JwtAuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
 }

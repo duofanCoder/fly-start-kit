@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,9 +19,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-
-import java.io.PrintWriter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 /**
  * json登陆配置
@@ -38,11 +38,10 @@ import java.io.PrintWriter;
 public class FlySecurityConfig {
 
     @Resource
-    private SecurityProperties securityProperties;
-
-    @Resource
     private FlyTokenService tokenService;
 
+    @Resource(name = "handlerExceptionResolver")
+    private HandlerExceptionResolver exceptionResolver;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -53,12 +52,11 @@ public class FlySecurityConfig {
      * <a href="https://www.baeldung.com/csrf-stateless-rest-api#3-credentials-stored-in-cookies" > jwt认证方式无需使用csrf防御配置 </href>
      *
      * @param http
-     * @param userDetailsService
      * @return
      * @throws Exception
      */
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetails) throws Exception {
         return http
                 // 跨站攻击关闭
                 .csrf(AbstractHttpConfigurer::disable)
@@ -75,24 +73,16 @@ public class FlySecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(Customizer.withDefaults())
-                .userDetailsService(userDetailsService)
-                .addFilterBefore(jwtAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+                .userDetailsService(userDetails)
+                .addFilterBefore(jwtAuthenticationFilter(userDetails, exceptionResolver), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
-                        exceptionHandlingConfigurer.accessDeniedHandler(
-                                        (request, response, accessDeniedException) -> {
-                                            System.out.println("aaaa");
-                                            log.error(accessDeniedException.getLocalizedMessage());
-                                        }
-                                )
-                                .authenticationEntryPoint((request, response, authException) -> {
-                                    // TODO token处理失败 在这里处理
-                                    PrintWriter writer = response.getWriter();
-                                    writer.println("hllo");
-                                    writer.flush();
-                                    writer.close();
-                                })
+                        exceptionHandlingConfigurer
+                                .accessDeniedHandler((request, response, accessDeniedException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()))
+                                .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()))
                 )
                 .build();
+
+//        HttpHeaders.AUTHORIZATION
     }
 
 
@@ -111,12 +101,9 @@ public class FlySecurityConfig {
         return daoAuthenticationProvider;
     }
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter() {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
-        JwtAuthenticationProvider provider = new JwtAuthenticationProvider();
-        provider.setTokenService(tokenService);
-        filter.setAuthenticationProvider(provider);
-        return filter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails, HandlerExceptionResolver exceptionResolver) {
+        return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails, exceptionResolver));
     }
+
 
 }

@@ -38,4 +38,6 @@ public interface FlyTokenService {
      * @return
      */
     boolean verify(String token);
+
+    void refresh(String token);
 }

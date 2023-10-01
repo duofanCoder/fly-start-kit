@@ -1,7 +1,7 @@
 package com.duofan.fly.commons.redis.config;
 
 import com.duofan.fly.commons.redis.service.RedisService;
-import com.duofan.fly.core.cache.constraint.CacheService;
+import com.duofan.fly.core.cache.constraint.FlyCacheService;
 import com.duofan.fly.core.constant.log.LogConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -30,7 +30,7 @@ public class RedisAutoConfig {
 
     @Bean
     @ConditionalOnBean(CachingConfigurer.class)
-    public CacheService cacheService(RedisTemplate<String, Object> redisTemplate) {
+    public FlyCacheService cacheService(RedisTemplate<String, Object> redisTemplate) {
         log.info(LogConstant.COMPONENT_LOG, "REDIS缓存", "自动配置");
         return new RedisService(redisTemplate);
     }
