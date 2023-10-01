@@ -3,6 +3,7 @@ package com.duofan.fly.manage.api.controller.v1;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
+import com.duofan.fly.framework.security.constraint.FlyLogoutService;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Resource;
@@ -14,8 +15,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,13 +37,18 @@ import java.util.Map;
 public class FlyPassportController {
     @Resource
     private FlyLoginService loginService;
+    // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        this.handler.logout(request, response, auth);
+//        this.logoutSuccessHandler.onLogoutSuccess(request, response, auth);
+//        return;
+    @Resource
+    private FlyLogoutService logoutService;
     @Resource
     private FlyRegisterService registerService;
 
     @PostMapping("/login")
     public FlyResult login(@RequestBody Map<String, Object> loginRequest) {
-        System.out.println("hellologin");
-        return FlyResult.SUCCESS.setData(loginService.login(loginRequest));
+        return FlyResult.success(loginService.login(loginRequest));
     }
 
     @PostMapping("/register")
@@ -57,8 +61,7 @@ public class FlyPassportController {
 
     @PostMapping("/logout")
     public FlyResult logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getPrincipal());
+        logoutService.logout();
         return FlyResult.SUCCESS;
     }
 

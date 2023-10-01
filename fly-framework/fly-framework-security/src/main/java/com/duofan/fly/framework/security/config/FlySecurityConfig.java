@@ -72,7 +72,7 @@ public class FlySecurityConfig {
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .logout(Customizer.withDefaults())
+                .logout(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetails)
                 .addFilterBefore(jwtAuthenticationFilter(userDetails, exceptionResolver), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->

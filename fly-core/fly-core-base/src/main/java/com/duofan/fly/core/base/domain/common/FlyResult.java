@@ -30,6 +30,9 @@ public class FlyResult implements Serializable {
     public static FlyResult SUCCESS = of(FlyHttpStatus.SUCCESS);
     public static FlyResult FAIL = of(FlyHttpStatus.FAIL);
 
+    public static FlyResult success(Object data) {
+        return of(FlyHttpStatus.SUCCESS).setData(data);
+    }
 
     public static FlyResult of(FlyHttpStatus status) {
         return new FlyResult()

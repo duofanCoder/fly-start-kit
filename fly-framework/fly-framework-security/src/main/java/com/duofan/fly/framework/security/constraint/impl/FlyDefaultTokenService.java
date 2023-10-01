@@ -133,6 +133,13 @@ public class FlyDefaultTokenService implements FlyTokenService {
         }
     }
 
+    @Override
+    public void delete(String token) {
+        Map<String, Object> parse = parse(token);
+        // TODO 处理防止无状态jwt 多次登陆返回token
+        cacheService.delete(token);
+    }
+
 
     /**
      * 校验TOKEN是否过期

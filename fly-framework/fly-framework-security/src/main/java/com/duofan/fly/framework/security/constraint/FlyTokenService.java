@@ -40,4 +40,6 @@ public interface FlyTokenService {
     boolean verify(String token);
 
     void refresh(String token);
+
+    void delete(String token);
 }
