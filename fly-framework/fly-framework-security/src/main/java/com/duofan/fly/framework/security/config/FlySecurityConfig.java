@@ -1,6 +1,7 @@
 package com.duofan.fly.framework.security.config;
 
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
+import com.duofan.fly.framework.security.context.dbAuth.FlyAuthorizationManager;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationFilter;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
 import com.duofan.fly.framework.security.property.SecurityProperties;
@@ -43,6 +44,9 @@ public class FlySecurityConfig {
     @Resource(name = "handlerExceptionResolver")
     private HandlerExceptionResolver exceptionResolver;
 
+    @Resource(type = FlyAuthorizationManager.class)
+    private FlyAuthorizationManager authorizationManager;
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y);
@@ -56,7 +60,7 @@ public class FlySecurityConfig {
      * @throws Exception
      */
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetails) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetails, FlyAuthorizationManager flyAuthorizationManager) throws Exception {
         return http
                 // 跨站攻击关闭
                 .csrf(AbstractHttpConfigurer::disable)
@@ -67,8 +71,11 @@ public class FlySecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/passport/**")
                         .permitAll()
+                        .requestMatchers("/api/v1/**")
+                        .access((authentication, context) ->
+                                authorizationManager.check(authentication, context.getRequest()))
                         .anyRequest()
-                        .authenticated()
+                        .denyAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

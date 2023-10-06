@@ -28,7 +28,7 @@ import java.util.Map;
 @Component
 public class AuthenticationEndpointAnalysis implements CommandLineRunner {
 
-//PreAuthorizeAuthorizationManager
+//FlyAuthorizationManager
 
     @Resource
     private ApplicationContext applicationContext;

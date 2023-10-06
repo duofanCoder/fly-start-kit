@@ -45,7 +45,7 @@ public class FlyLoginUser implements UserDetails {
     }
 
     private String getOperationAuthority() {
-        // TODO generate op String ,operation prefix
+        // TODO generate op String ,operation prefix permission
         return null;
     }
 

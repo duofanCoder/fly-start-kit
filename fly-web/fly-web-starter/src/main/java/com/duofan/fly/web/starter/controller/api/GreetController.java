@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("greet")
+@RequestMapping("/api/v1/greet")
 @FlyAccessInfo(system = "启动实例", module = "Greet", moduleName = "打招呼的")
 public class GreetController {
 
