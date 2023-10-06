@@ -39,6 +39,16 @@ public class FlyLoginUser implements UserDetails {
         return AuthorityUtils.createAuthorityList(operations.stream().map(FlyResourceInfo::getRoleNo).distinct().toList());
     }
 
+    private String getRoleAuthority() {
+        // TODO generate ROLE String ,role prefix
+        return null;
+    }
+
+    private String getOperationAuthority() {
+        // TODO generate op String ,operation prefix
+        return null;
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
