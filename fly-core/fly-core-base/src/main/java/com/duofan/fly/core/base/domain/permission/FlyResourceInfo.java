@@ -1,6 +1,9 @@
 package com.duofan.fly.core.base.domain.permission;
 
+import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -16,6 +19,8 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class FlyResourceInfo {
     private String roleName;
     private String roleNo;
@@ -24,5 +29,15 @@ public class FlyResourceInfo {
     private String op;
     private String opName;
     private String description;
-    private String grantToAll;
+    private boolean grantToAll;
+
+
+    public FlyResourceInfo(FlyAccessInfo info) {
+        new FlyResourceInfo()
+                .setOp(info.op())
+                .setOpName(info.opName())
+                .setModule(info.module())
+                .setModuleName(info.moduleName())
+                .setGrantToAll(info.isGrantToAll());
+    }
 }
