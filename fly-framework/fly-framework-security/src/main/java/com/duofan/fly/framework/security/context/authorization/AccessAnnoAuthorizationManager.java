@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 @Component
 public class AccessAnnoAuthorizationManager implements AuthorizationManager<MethodInvocation> {
-    private AccessAnnoAttributeRegistry registry = new AccessAnnoAttributeRegistry();
+    private final AccessAnnoAttributeRegistry registry = new AccessAnnoAttributeRegistry();
 
     @Override
     public void verify(Supplier<Authentication> authentication, MethodInvocation object) {
@@ -21,6 +21,12 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, MethodInvocation object) {
         FlyResourceInfo attribute = registry.getAttribute(object);
-        return new AuthorizationDecision(true);
+        if (attribute.isGrantToAll()) {
+            return new AuthorizationDecision(true);
+        }
+
+        // TODO 角色对应到用户操作关系 - 如何保存上下文
+//        authentication.get().getPrincipal()
+        return new AuthorizationDecision(false);
     }
 }

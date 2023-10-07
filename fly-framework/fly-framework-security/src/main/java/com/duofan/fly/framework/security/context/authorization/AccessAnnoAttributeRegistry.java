@@ -2,6 +2,7 @@ package com.duofan.fly.framework.security.context.authorization;
 
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
+import com.duofan.fly.framework.security.config.AuthenticationEndpointAnalysis;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.MethodClassKey;
@@ -21,13 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AccessAnnoAttributeRegistry {
     private final Map<MethodClassKey, FlyResourceInfo> cachedAttributes = new ConcurrentHashMap<>();
 
+
     FlyResourceInfo resolveAttribute(Method method, Class<?> targetClass) {
         Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);
         FlyAccessInfo preAuthorize = findPreAuthorizeAnnotation(specificMethod);
         if (preAuthorize == null) {
             return null;
         }
-        return new FlyResourceInfo(preAuthorize);
+        return AuthenticationEndpointAnalysis.getApiInfo(String.format("%s.%s", targetClass.getName(), method.getName()));
     }
 
     final FlyResourceInfo getAttribute(MethodInvocation mi) {

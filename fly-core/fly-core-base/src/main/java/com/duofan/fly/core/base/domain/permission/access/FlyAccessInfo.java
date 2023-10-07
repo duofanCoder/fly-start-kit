@@ -19,10 +19,12 @@ import java.lang.annotation.*;
 public @interface FlyAccessInfo {
     String system() default "";
 
+    // 默认就是权限定类名
     String module() default "";
 
     String moduleName() default "";
 
+    // 默认就是方法名
     String op() default "";
 
     String opName() default "";
@@ -31,4 +33,6 @@ public @interface FlyAccessInfo {
     boolean isValid() default true;
 
     boolean isGrantToAll() default false;
+
+    String description() default "";
 }

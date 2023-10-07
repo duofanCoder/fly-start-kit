@@ -33,7 +33,7 @@ public class FlyResourceInfo {
 
 
     public FlyResourceInfo(FlyAccessInfo info) {
-        new FlyResourceInfo()
+        this
                 .setOp(info.op())
                 .setOpName(info.opName())
                 .setModule(info.module())

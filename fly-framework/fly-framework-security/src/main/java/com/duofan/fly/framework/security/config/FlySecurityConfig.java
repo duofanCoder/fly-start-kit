@@ -72,8 +72,7 @@ public class FlySecurityConfig {
                         .requestMatchers("/api/v1/passport/**")
                         .permitAll()
                         .requestMatchers("/api/v1/**")
-                        .access((authentication, context) ->
-                                authorizationManager.check(authentication, ))
+                        .authenticated()
                         .anyRequest()
                         .denyAll()
                 )

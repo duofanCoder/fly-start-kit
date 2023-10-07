@@ -1,19 +1,28 @@
 package com.duofan.fly.framework.security.config;
 
+import cn.hutool.core.util.StrUtil;
+import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.constant.log.LogConstant;
 import jakarta.annotation.Resource;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * web controller 端点信息生成
@@ -28,35 +37,105 @@ import java.util.Map;
 @Component
 public class AuthenticationEndpointAnalysis implements CommandLineRunner {
 
-//FlyAuthorizationManager
-
     @Resource
     private ApplicationContext applicationContext;
 
-    private Map<String, Module> modules;
-//    private List<Operation> grantToAll;
+    private final static Map<String, FlyModule> modules = new ConcurrentHashMap<>();
+    private final static Map<String, FlyResourceInfo> apiInfos = new ConcurrentHashMap<>();
+
+    public static Map<String, FlyModule> getEndpointModules() {
+        return Collections.unmodifiableMap(modules);
+    }
+
+    public static FlyResourceInfo getFullApiInfo(String module, String op) {
+        FlyResourceInfo info = new FlyResourceInfo();
+        info.setModule(module)
+                .setOp(op)
+                .setModuleName(modules.get(module).getModuleName())
+                .setOpName(modules.get(module).getApis().get(op).getOpName())
+                .setGrantToAll(modules.get(module).getApis().get(op).isGrantAll())
+                .setDescription(modules.get(module).getApis().get(op).getDescription());
+        return info;
+    }
+
+    /**
+     * module.op
+     *
+     * @param moduleOp
+     * @return
+     */
+    public static FlyResourceInfo getApiInfo(String moduleOp) {
+        return apiInfos.computeIfAbsent(moduleOp, (k) -> getFullApiInfo(
+                StrUtil.subBefore(moduleOp, ".", true),
+                StrUtil.subAfter(moduleOp, ".", true)
+        ));
+    }
 
     private void analysis() {
         log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "启动");
         Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(Controller.class);
         for (Map.Entry<String, Object> entry : controllers.entrySet()) {
             Object controller = entry.getValue();
-            Class<?> clazz = controller.getClass();
+            Class<?> clazz = ClassUtils.getUserClass(controller.getClass());
             FlyAccessInfo annotation = AnnotationUtils.findAnnotation(clazz, FlyAccessInfo.class);
             if (annotation == null) continue;
-            System.out.println(annotation.system());
-            Method[] controllerMethods = controller.getClass().getDeclaredMethods();
+            FlyModule module = new FlyModule();
+            ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
+            module.setModuleName(annotation.moduleName())
+                    .setModule(clazz.getName())
+                    .setDescription(module.description)
+                    .setSystem(annotation.system())
+                    .setApis(apis);
+            Method[] controllerMethods = clazz.getDeclaredMethods();
+            // 注解的方法
             List<Method> flyMethods = Arrays.stream(controllerMethods).filter(m -> m.isAnnotationPresent(FlyAccessInfo.class)).toList();
             for (Method flyMethod : flyMethods) {
-                System.out.println(flyMethod.getName());
+                FlyAccessInfo methodAnnotation = flyMethod.getAnnotation(FlyAccessInfo.class);
+                apis.put(flyMethod.getName(), new FlyApi()
+                        .setOpName(methodAnnotation.opName())
+                        .setOp(flyMethod.getName())
+                        .setDescription(module.description)
+                        .setGrantAll(methodAnnotation.isGrantToAll())
+                );
             }
+            modules.putIfAbsent(module.getModule(), module);
         }
 
 
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         analysis();
+        log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "完毕");
+        modules.forEach(
+                (module, info) -> {
+                    log.info(LogConstant.COMPONENT_LOG + "{}", "认证端点分析", "模块【" + info.getModuleName(), "】 加载完毕");
+                }
+        );
+    }
+
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    public static class FlyModule {
+        private String moduleName;
+        private String module;
+        private String system;
+        private String description;
+        // key => method name, value => api info
+        private Map<String, FlyApi> apis;
+    }
+
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    public static class FlyApi {
+        private String opName;
+        private String op;
+        private String description;
+        private boolean isGrantAll;
     }
 }
