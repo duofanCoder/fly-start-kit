@@ -1,6 +1,6 @@
 package com.duofan.fly.framework.security.config;
 
-import com.duofan.fly.core.constant.log.LogConstant;
+import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;

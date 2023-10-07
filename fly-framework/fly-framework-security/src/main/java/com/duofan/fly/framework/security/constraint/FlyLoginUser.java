@@ -1,18 +1,16 @@
 package com.duofan.fly.framework.security.constraint;
 
 import cn.hutool.core.collection.CollUtil;
+import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
-import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,20 +31,22 @@ public class FlyLoginUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (CollUtil.isEmpty(operations)) {
-            return Collections.singleton(new SimpleGrantedAuthority(FlyRoleEnums.DEFAULT.getRoleNo()));
-        }
+        return CollUtil.addAll(getRoleAuthority(), getOperationAuthority());
+    }
+
+    private Collection<? extends GrantedAuthority> getRoleAuthority() {
+        // generate ROLE String ,role prefix
         return AuthorityUtils.createAuthorityList(operations.stream().map(FlyResourceInfo::getRoleNo).distinct().toList());
     }
 
-    private String getRoleAuthority() {
-        // TODO generate ROLE String ,role prefix
-        return null;
-    }
-
-    private String getOperationAuthority() {
-        // TODO generate op String ,operation prefix permission
-        return null;
+    private Collection<? extends GrantedAuthority> getOperationAuthority() {
+        // generate op String ,operation prefix permission
+        return AuthorityUtils.createAuthorityList(operations.stream()
+                .map(flyResourceInfo -> String.
+                        format("%s%s.%s", SecurityConstant.OPERATION_PREFIX,
+                                flyResourceInfo.getModule(),
+                                flyResourceInfo.getOp()))
+                .filter(String::isBlank).distinct().toList());
     }
 
     @Override

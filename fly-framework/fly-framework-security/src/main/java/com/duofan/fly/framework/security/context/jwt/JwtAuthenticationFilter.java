@@ -1,7 +1,7 @@
 package com.duofan.fly.framework.security.context.jwt;
 
 import cn.hutool.core.util.StrUtil;
-import com.duofan.fly.framework.security.property.SecurityConstant;
+import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

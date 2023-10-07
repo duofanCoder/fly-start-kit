@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,6 +35,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties(SecurityProperties.class)
 public class FlySecurityConfig {
 
@@ -46,6 +47,7 @@ public class FlySecurityConfig {
 
     @Resource(type = AccessAnnoAuthorizationManager.class)
     private AccessAnnoAuthorizationManager authorizationManager;
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -67,7 +69,7 @@ public class FlySecurityConfig {
                 .cors(Customizer.withDefaults())
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/v3/api-docs/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
+                        .requestMatchers("/v3/api-docs/**", "/error/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
                         .permitAll()
                         .requestMatchers("/api/v1/passport/**")
                         .permitAll()
@@ -83,12 +85,9 @@ public class FlySecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(userDetails, exceptionResolver), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
-                                .accessDeniedHandler((request, response, accessDeniedException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()))
-                                .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()))
-                )
+                                .accessDeniedHandler((request, response, accessDeniedException) -> exceptionResolver.resolveException(request, response, null, accessDeniedException))
+                                .authenticationEntryPoint((request, response, authException) -> exceptionResolver.resolveException(request, response, null, authException)))
                 .build();
-
-//        HttpHeaders.AUTHORIZATION
     }
 
 

@@ -1,7 +1,7 @@
 package com.duofan.fly.framework.security.context.logout;
 
+import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
-import com.duofan.fly.framework.security.property.SecurityConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;

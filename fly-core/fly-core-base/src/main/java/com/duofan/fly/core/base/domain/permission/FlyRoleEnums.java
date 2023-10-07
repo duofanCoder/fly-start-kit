@@ -16,8 +16,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FlyRoleEnums {
 
-    DEFAULT("default", "默认"),
-    ADMIN("admin", "管理员");
+    DEFAULT("DEFAULT", "默认"),
+    ADMIN("ADMIN", "管理员");
 
     private final String roleNo;
     private final String roleName;

@@ -23,8 +23,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class FlyRoleOp extends EntityBase {
     private String roleNo;
-    private String moduleName;
     private String module;
     private String op;
-    private String opName;
 }

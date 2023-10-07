@@ -1,4 +1,4 @@
-package com.duofan.fly.core.constant.log;
+package com.duofan.fly.core.base.constant.log;
 
 /**
  * log相关

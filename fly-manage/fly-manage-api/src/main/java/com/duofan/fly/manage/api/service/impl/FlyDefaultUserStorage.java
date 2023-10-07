@@ -2,10 +2,10 @@ package com.duofan.fly.manage.api.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.exception.FlyException;
 import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.constant.log.LogConstant;
 import com.duofan.fly.core.domain.FlyUserDto;
 import com.duofan.fly.core.mapper.FlyUserMapper;
 import com.duofan.fly.core.storage.FlyUserStorage;

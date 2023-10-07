@@ -1,9 +1,9 @@
 package com.duofan.fly.framework.security.config;
 
 import cn.hutool.core.util.StrUtil;
+import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
-import com.duofan.fly.core.constant.log.LogConstant;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,7 +72,6 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
     }
 
     private void analysis() {
-        log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "启动");
         Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(Controller.class);
         for (Map.Entry<String, Object> entry : controllers.entrySet()) {
             Object controller = entry.getValue();
@@ -106,6 +105,7 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "启动");
         analysis();
         log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "完毕");
         modules.forEach(
@@ -138,4 +138,10 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
         private String description;
         private boolean isGrantAll;
     }
+
+
+    public static Map<String, FlyModule> listOps() {
+        return Collections.unmodifiableMap(modules);
+    }
+
 }

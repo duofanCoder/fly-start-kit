@@ -21,7 +21,6 @@ import lombok.experimental.Accessors;
 @Entity
 @Table
 @Accessors(chain = true)
-
 public class FlyRoleRel extends EntityBase {
     private String username;
     private String roleNo;
@@ -33,6 +32,6 @@ public class FlyRoleRel extends EntityBase {
     }
 
     public FlyRoleRel() {
-        
+
     }
 }

@@ -1,5 +1,6 @@
 package com.duofan.fly.core.base.domain.permission;
 
+import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,5 +40,10 @@ public class FlyResourceInfo {
                 .setModule(info.module())
                 .setModuleName(info.moduleName())
                 .setGrantToAll(info.isGrantToAll());
+    }
+
+    // 获取operation 权限名
+    public String getFullOp() {
+        return String.format("%s%s.%s", SecurityConstant.OPERATION_PREFIX, module, op);
     }
 }

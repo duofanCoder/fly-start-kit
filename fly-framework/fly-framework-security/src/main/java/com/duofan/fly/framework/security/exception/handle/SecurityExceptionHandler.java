@@ -9,6 +9,8 @@ import com.duofan.fly.framework.security.exception.LoginFailException;
 import com.duofan.fly.framework.security.exception.RegisterException;
 import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -77,6 +79,22 @@ public class SecurityExceptionHandler {
     @ResponseBody
     @ExceptionHandler(FlySecurityException.class)
     public FlyResult handleValidException(FlySecurityException e) {
+        log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.FAIL);
+    }
+
+    // FORBIDDEN 403 无权访问
+    @ResponseBody
+    @ExceptionHandler(AccessDeniedException.class)
+    public FlyResult handleAccessDeniedException(AccessDeniedException e) {
+        log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.FORBIDDEN);
+    }
+
+    //
+    @ResponseBody
+    @ExceptionHandler(AuthenticationException.class)
+    public FlyResult handleAuthenticationException(AuthenticationException e) {
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
         return FlyResult.of(FlyHttpStatus.FAIL);
     }

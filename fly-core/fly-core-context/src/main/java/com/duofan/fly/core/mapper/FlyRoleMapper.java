@@ -18,6 +18,7 @@ import java.util.List;
  */
 public interface FlyRoleMapper extends BaseMapper<FlyRole> {
 
+    // 获取角色和权限
     List<FlyResourceInfo> loadRoleResource(@Param("username") String username);
 
 }

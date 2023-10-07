@@ -1,4 +1,4 @@
-package com.duofan.fly.framework.security.property;
+package com.duofan.fly.core.base.constant.security;
 
 /**
  * 固定常量
@@ -12,4 +12,6 @@ package com.duofan.fly.framework.security.property;
 public class SecurityConstant {
     // JWT 请求头key
     public static final String TOKEN_HEADER_KEY = "x-access-token";
+    public static final String ROLE_PREFIX = "ROLE_";
+    public static final String OPERATION_PREFIX = "OPERATION_";
 }
