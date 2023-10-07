@@ -83,20 +83,20 @@ public class SecurityExceptionHandler {
         return FlyResult.of(FlyHttpStatus.FAIL);
     }
 
-    // FORBIDDEN 403 无权访问
+    //
     @ResponseBody
     @ExceptionHandler(AccessDeniedException.class)
     public FlyResult handleAccessDeniedException(AccessDeniedException e) {
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.FORBIDDEN);
+        return FlyResult.of(FlyHttpStatus.FAIL);
     }
 
-    //
+    // FORBIDDEN 403 无权访问
     @ResponseBody
     @ExceptionHandler(AuthenticationException.class)
     public FlyResult handleAuthenticationException(AuthenticationException e) {
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.FAIL);
+        return FlyResult.of(FlyHttpStatus.FORBIDDEN);
     }
 
 }
