@@ -17,6 +17,7 @@ import lombok.Getter;
 public enum FlyHttpStatus {
     SUCCESS("200", "操作成功", "通用成功"),
     FAIL("500", "系统繁忙，请稍后再试", "通用失败"),
+    BAD_REQUEST("400", "请求出错", "参数校验失败"),
     UNAUTHORIZED("401", "请先认证", "未登录操作"),
     NOT_FOUND("404", "未找到", "没找到数据"),
     FORBIDDEN("403", "无权访问", "没有操作权限");

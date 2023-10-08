@@ -3,7 +3,6 @@ package com.duofan.fly.core.base.domain.common;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class FlyPageInfo implements Serializable {
+public class FlyPageInfo<T> implements Serializable {
     private long pageSize = 20;
     private long pageIndex = 1;
     private long pageCount = 0;
@@ -29,8 +28,8 @@ public class FlyPageInfo implements Serializable {
      */
     private String order = "updateTime desc";
 
-    public static FlyPageInfo to(Page<T> page) {
-        FlyPageInfo result = new FlyPageInfo();
+    public static <T> FlyPageInfo<T> of(Page<T> page) {
+        FlyPageInfo<T> result = new FlyPageInfo<T>();
         result.pageCount = page.getPages();
         result.pageSize = page.getSize();
         result.list = page.getRecords();

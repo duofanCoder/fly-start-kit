@@ -4,11 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
+import com.duofan.fly.core.domain.FlyApi;
+import com.duofan.fly.core.domain.FlyModule;
 import jakarta.annotation.Resource;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
@@ -82,7 +80,7 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
             ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
             module.setModuleName(annotation.moduleName())
                     .setModule(clazz.getName())
-                    .setDescription(module.description)
+                    .setDescription(annotation.description())
                     .setSystem(annotation.system())
                     .setApis(apis);
             Method[] controllerMethods = clazz.getDeclaredMethods();
@@ -93,7 +91,7 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
                 apis.put(flyMethod.getName(), new FlyApi()
                         .setOpName(methodAnnotation.opName())
                         .setOp(flyMethod.getName())
-                        .setDescription(module.description)
+                        .setDescription(methodAnnotation.description())
                         .setGrantAll(methodAnnotation.isGrantToAll())
                 );
             }
@@ -113,30 +111,6 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
                     log.info(LogConstant.COMPONENT_LOG + "{}", "认证端点分析", "模块【" + info.getModuleName(), "】 加载完毕");
                 }
         );
-    }
-
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @NoArgsConstructor
-    public static class FlyModule {
-        private String moduleName;
-        private String module;
-        private String system;
-        private String description;
-        // key => method name, value => api info
-        private Map<String, FlyApi> apis;
-    }
-
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @NoArgsConstructor
-    public static class FlyApi {
-        private String opName;
-        private String op;
-        private String description;
-        private boolean isGrantAll;
     }
 
 

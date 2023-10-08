@@ -1,12 +1,14 @@
 package com.duofan.fly.manage.api.controller.v1;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
+import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyLogoutService;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -34,6 +36,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/passport")
+@FlyAccessInfo(moduleName = "登陆注册相关模块", system = "FLY BOOT")
 public class FlyPassportController {
     @Resource
     private FlyLoginService loginService;
@@ -47,11 +50,13 @@ public class FlyPassportController {
     private FlyRegisterService registerService;
 
     @PostMapping("/login")
-    public FlyResult login(@RequestBody Map<String, Object> loginRequest) {
+    @FlyAccessInfo(opName = "登陆", isGrantToAll = true)
+    public FlyResult login(@RequestBody @Validated @Valid @NotNull @NotBlank Map<String, Object> loginRequest) {
         return FlyResult.success(loginService.login(loginRequest));
     }
 
     @PostMapping("/register")
+    @FlyAccessInfo(opName = "注册", isGrantToAll = true)
     public FlyResult register(@RequestBody @Validated RegisterRequest register) {
         FlyUser flyUser = new FlyUser();
         BeanUtils.copyProperties(register, flyUser);
@@ -60,6 +65,7 @@ public class FlyPassportController {
     }
 
     @PostMapping("/logout")
+    @FlyAccessInfo(opName = "注销", isGrantToAll = true)
     public FlyResult logout() {
         logoutService.logout();
         return FlyResult.SUCCESS;

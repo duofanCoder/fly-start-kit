@@ -36,7 +36,7 @@ public class FlyLoginUser implements UserDetails {
 
     private Collection<? extends GrantedAuthority> getRoleAuthority() {
         // generate ROLE String ,role prefix
-        return AuthorityUtils.createAuthorityList(operations.stream().map(FlyResourceInfo::getRoleNo).distinct().toList());
+        return AuthorityUtils.createAuthorityList(operations.stream().map(info -> SecurityConstant.ROLE_PREFIX + info.getRoleNo()).distinct().toList());
     }
 
     private Collection<? extends GrantedAuthority> getOperationAuthority() {

@@ -1,6 +1,6 @@
 package com.duofan.fly.core.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.duofan.fly.core.base.entity.FlyRoleOp;
 
 /**
@@ -12,5 +12,5 @@ import com.duofan.fly.core.base.entity.FlyRoleOp;
  * @website duofan.top
  * @date 2023/10/7
  */
-public interface FlyRoleOpMapper extends Mapper<FlyRoleOp> {
+public interface FlyRoleOpMapper extends BaseMapper<FlyRoleOp> {
 }

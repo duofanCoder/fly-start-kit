@@ -28,18 +28,26 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter implements InitializingBean {
 
     private JwtAuthenticationProvider authenticationProvider;
+    private final String loginPath = "/api/v1/passport/login";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(SecurityConstant.TOKEN_HEADER_KEY);
         // 如果认证失败，返回false内部会自动解析异常返回
-        if (StrUtil.isNotBlank(token) && authenticationProvider.authenticate(token)) {
-            doFilter(request, response, filterChain);
-        }
         // 无TOKEN直接通过
         if (StrUtil.isBlank(token)) {
             doFilter(request, response, filterChain);
+            return;
         }
+        if (request.getRequestURI().equals(loginPath)) {
+            doFilter(request, response, filterChain);
+            return;
+        }
+        if (StrUtil.isNotBlank(token) && authenticationProvider.authenticate(token)) {
+            doFilter(request, response, filterChain);
+            return;
+        }
+
     }
 
 

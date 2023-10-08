@@ -27,8 +27,11 @@ public class FlyResult implements Serializable {
     private Object data;
 
 
-    public static FlyResult SUCCESS = of(FlyHttpStatus.SUCCESS);
-    public static FlyResult FAIL = of(FlyHttpStatus.FAIL);
+    // 静态全局变量不能设置
+    public static FlyResult SUCCESS =
+            of(FlyHttpStatus.SUCCESS);
+    public static FlyResult FAIL =
+            of(FlyHttpStatus.FAIL);
 
     public static FlyResult success(Object data) {
         return of(FlyHttpStatus.SUCCESS).setData(data);

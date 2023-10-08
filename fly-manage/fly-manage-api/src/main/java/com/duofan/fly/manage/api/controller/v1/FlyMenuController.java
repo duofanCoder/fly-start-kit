@@ -2,6 +2,7 @@ package com.duofan.fly.manage.api.controller.v1;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
+import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.framework.security.config.AuthenticationEndpointAnalysis;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,20 @@ public class FlyMenuController {
     @Resource
     private AuthenticationEndpointAnalysis analysis;
 
+    @Resource
+    private FlyRoleStorage roleStorage;
+
+
     @PostMapping("/listOps")
-    @FlyAccessInfo(opName = "列出接口", isGrantToAll = true)
-    FlyResult listOps() {
-        return FlyResult.success(AuthenticationEndpointAnalysis.listOps());
+    @FlyAccessInfo(opName = "列出接口")
+    FlyResult listOps(String roleNo) {
+        return FlyResult.success(roleStorage.listOpsByRoleNo(roleNo));
+    }
+
+
+    @PostMapping("")
+    @FlyAccessInfo(opName = "")
+    FlyResult addOps() {
+        return FlyResult.SUCCESS;
     }
 }
