@@ -33,7 +33,7 @@ public class CommonValidExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public FlyResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.BAD_REQUEST);
+        return FlyResult.of(FlyHttpStatus.BAD_REQUEST).setMsg(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 
     @ResponseBody

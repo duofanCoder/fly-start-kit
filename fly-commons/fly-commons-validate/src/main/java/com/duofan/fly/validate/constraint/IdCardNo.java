@@ -1,6 +1,8 @@
 package com.duofan.fly.validate.constraint;
 
+import com.duofan.fly.validate.constraintvalidators.IdCardNoValidator;
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
@@ -20,20 +22,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @date 2023/9/15
  */
 @Documented
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {IdCardNoValidator.class})
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Repeatable(IdCardNo.List.class)
 public @interface IdCardNo {
-    String message() default "身份证不合法";
+    String message() default "请输入正确的身份证号码";
 
+    Class<?>[] groups() default {};
 
-    /**
-     * @return an additional regular expression the annotated element must match. The default
-     * is any string ('.*')
-     */
-    String regexp() default ".*";
-
+    Class<? extends Payload>[] payload() default {};
 
     @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
     @Retention(RUNTIME)
