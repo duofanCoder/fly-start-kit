@@ -1,9 +1,10 @@
 package com.duofan.fly.framework.security.constraint.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.storage.FlyRoleStorage;
-import com.duofan.fly.core.storage.FlyUserStorage;
+import com.duofan.fly.core.mapper.FlyRoleMapper;
+import com.duofan.fly.core.mapper.FlyUserMapper;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +28,25 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class FlyUserDetailService implements UserDetailsService {
-    @Resource(type = FlyUserStorage.class)
-    private FlyUserStorage userStorage;
+    @Resource
+    private FlyUserMapper userMapper;
 
-    @Resource(type = FlyRoleStorage.class)
-    private FlyRoleStorage roleStorage;
+    @Resource
+    private FlyRoleMapper roleMapper;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        FlyUser user = Optional.of(this.userStorage.getByUsername(username))
+        FlyUser user = Optional.ofNullable(this.getByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
-        List<FlyResourceInfo> resources = roleStorage.loadRoleResource(user.getUsername());
+        List<FlyResourceInfo> resources = roleMapper.loadRoleResourceByUsername(user.getUsername());
         return new FlyLoginUser(user, resources);
     }
+
+    public FlyUser getByUsername(String username) {
+        LambdaQueryWrapper<FlyUser> wp = new LambdaQueryWrapper<FlyUser>();
+        wp.eq(FlyUser::getUsername, username);
+        return userMapper.selectOne(wp);
+    }
+
 }

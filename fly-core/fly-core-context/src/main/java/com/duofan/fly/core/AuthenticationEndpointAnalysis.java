@@ -1,4 +1,4 @@
-package com.duofan.fly.framework.security.config;
+package com.duofan.fly.core;
 
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;

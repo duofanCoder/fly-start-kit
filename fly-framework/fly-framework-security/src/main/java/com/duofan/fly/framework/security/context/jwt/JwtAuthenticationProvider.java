@@ -99,6 +99,7 @@ public class JwtAuthenticationProvider implements InitializingBean {
                 userDetails,
                 null,
                 grantedAuthorities(info.get("roles").toString()));
+        // TODO 无法获取请求
         result.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(((ServletRequestAttributes)
                         Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest())

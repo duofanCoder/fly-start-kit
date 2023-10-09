@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>fly-manage-api</module>
+        <module>fly-manage-starter</module>
     </modules>
 
     <properties>

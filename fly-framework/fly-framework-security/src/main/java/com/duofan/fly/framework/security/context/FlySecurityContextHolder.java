@@ -1,11 +1,11 @@
 package com.duofan.fly.framework.security.context;
 
+import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.exception.FlySecurityException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,10 +19,6 @@ import java.util.Optional;
  */
 public class FlySecurityContextHolder {
 
-    private final ThreadLocal<FlyLoginUser> loginUser = new ThreadLocal<FlyLoginUser>();
-
-    private final ThreadLocal<List<String>> roles = new ThreadLocal<>();
-
     public static FlyLoginUser currentUser() {
         return (FlyLoginUser) Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).orElseThrow(
                 () -> new FlySecurityException("当前用户信息不存在")
@@ -31,7 +27,7 @@ public class FlySecurityContextHolder {
 
 
     public static boolean hasRole(String roleNo) {
-        return currentUser().getAuthorities().contains(new SimpleGrantedAuthority(roleNo));
+        return currentUser().getAuthorities().contains(new SimpleGrantedAuthority(SecurityConstant.ROLE_PREFIX + roleNo));
     }
 
     public static String currentUsername() {

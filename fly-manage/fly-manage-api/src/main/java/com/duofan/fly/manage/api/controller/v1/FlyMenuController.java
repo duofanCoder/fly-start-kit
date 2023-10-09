@@ -1,9 +1,9 @@
 package com.duofan.fly.manage.api.controller.v1;
 
+import com.duofan.fly.core.AuthenticationEndpointAnalysis;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.storage.FlyRoleStorage;
-import com.duofan.fly.framework.security.config.AuthenticationEndpointAnalysis;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,8 +1,8 @@
 package com.duofan.fly.framework.security.context.authorization;
 
+import com.duofan.fly.core.AuthenticationEndpointAnalysis;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
-import com.duofan.fly.framework.security.config.AuthenticationEndpointAnalysis;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.MethodClassKey;

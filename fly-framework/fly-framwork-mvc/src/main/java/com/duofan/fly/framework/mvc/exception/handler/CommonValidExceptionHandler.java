@@ -2,6 +2,7 @@ package com.duofan.fly.framework.mvc.exception.handler;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.enums.FlyHttpStatus;
+import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -69,5 +70,12 @@ public class CommonValidExceptionHandler {
     public FlyResult handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
         return FlyResult.of(FlyHttpStatus.BAD_REQUEST).setMsg("请求类型Content-Type不支持");
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ServletException.class)
+    public FlyResult handleServletException(ServletException e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.NOT_FOUND);
     }
 }

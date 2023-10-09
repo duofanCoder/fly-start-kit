@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.utils;
+package com.duofan.fly.core.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -62,20 +62,10 @@ public class QueryUtils {
             }
             String colQuery = StrUtil.toUnderlineCase(col);
             if (value instanceof String valQuery) {
-                if (StrUtil.isBlank(valQuery) || valQuery.length() == 0) {
+                if (StrUtil.isBlank(valQuery) || valQuery.isEmpty()) {
                     continue;
                 }
-                if (valQuery.charAt(0) == ':') {
-                    wrapper.like(colQuery, StrUtil.subAfter(valQuery, ":", false));
-                } else if (valQuery.contains(",")) {
-                    List<String> existInList = Arrays.asList(valQuery.split(","));
-                    wrapper.exists(colQuery, existInList);
-                } else if (valQuery.contains("~")) {
-                    List<String> betweenList = Arrays.asList(valQuery.split("~"));
-                    wrapper.exists(colQuery, betweenList);
-                } else {
-                    wrapper.eq(colQuery, valQuery);
-                }
+                conditionWrapper(valQuery, wrapper, colQuery);
             } else {
                 wrapper.eq(colQuery, value);
             }
@@ -112,6 +102,20 @@ public class QueryUtils {
             wrapper.set(colQuery, value);
         }
         return null;
+    }
+
+    private static <T> void conditionWrapper(String valQuery, UpdateWrapper<T> wrapper, String colQuery) {
+        if (valQuery.charAt(0) == ':') {
+            wrapper.like(colQuery, StrUtil.subAfter(valQuery, ":", false));
+        } else if (valQuery.contains(",")) {
+            List<String> existInList = Arrays.asList(valQuery.split(","));
+            wrapper.exists(colQuery, existInList);
+        } else if (valQuery.contains("~")) {
+            List<String> betweenList = Arrays.asList(valQuery.split("~"));
+            wrapper.exists(colQuery, betweenList);
+        } else {
+            wrapper.eq(colQuery, valQuery);
+        }
     }
 
 

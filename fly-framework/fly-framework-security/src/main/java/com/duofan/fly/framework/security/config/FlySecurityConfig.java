@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -66,7 +65,6 @@ public class FlySecurityConfig {
         return http
                 // 跨站攻击关闭
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/v3/api-docs/**", "/error/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
@@ -74,9 +72,9 @@ public class FlySecurityConfig {
                         .requestMatchers("/api/v1/passport/**")
                         .permitAll()
                         .requestMatchers("/api/v1/**")
-                        .authenticated()
+                        .permitAll()
                         .anyRequest()
-                        .denyAll()
+                        .permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

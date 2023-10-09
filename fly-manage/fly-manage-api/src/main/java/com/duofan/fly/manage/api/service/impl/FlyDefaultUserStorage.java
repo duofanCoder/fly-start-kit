@@ -34,7 +34,6 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
     private PasswordEncoder passwordEncoder;
 
     @Override
-
     public FlyUser getByUsername(String username) {
         LambdaQueryWrapper<FlyUser> wp = new LambdaQueryWrapper<FlyUser>();
         wp.eq(FlyUser::getUsername, username);
