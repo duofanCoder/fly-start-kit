@@ -1,6 +1,7 @@
 package com.duofan.fly.framework.security.context.jwt;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.exception.FlySuspiciousSecurityException;
 import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
@@ -14,15 +15,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * jwt认证校验其
@@ -41,6 +42,14 @@ public class JwtAuthenticationProvider implements InitializingBean {
     private final UserDetailsService detailService;
     private final HandlerExceptionResolver exceptionResolver;
 
+    private ThreadLocal<HttpServletRequest> requestThreadLocal = new ThreadLocal<>();
+    private ThreadLocal<HttpServletResponse> responseThreadLocal = new ThreadLocal<>();
+
+    public JwtAuthenticationProvider(FlyTokenService tokenService, UserDetailsService detailService, HandlerExceptionResolver exceptionResolver) {
+        this.tokenService = tokenService;
+        this.detailService = detailService;
+        this.exceptionResolver = exceptionResolver;
+    }
 
     @Override
     public void afterPropertiesSet() {
@@ -48,17 +57,17 @@ public class JwtAuthenticationProvider implements InitializingBean {
     }
 
     private HttpServletRequest request() {
-        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        return requestThreadLocal.get();
     }
 
     private HttpServletResponse response() {
-        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getResponse();
+        return responseThreadLocal.get();
     }
 
     private boolean checkToken(String token) {
         // 是否篡改
         if (!tokenService.verify(token)) {
-            log.info("JWT篡改 TOKEN内容:{}", token);
+            log.warn("JWT篡改 TOKEN内容:{}", token);
             FlySuspiciousSecurityException ex = new FlySuspiciousSecurityException("JWT篡改");
             exceptionResolver.resolveException(request(), response(), null, ex);
             return false;
@@ -88,22 +97,32 @@ public class JwtAuthenticationProvider implements InitializingBean {
                 .map(SimpleGrantedAuthority::new).toList();
     }
 
-    public boolean authenticate(String token) throws AuthenticationException {
+    /**
+     * 认证操作
+     *
+     * @param token
+     * @param request
+     * @return
+     * @throws AuthenticationException
+     */
+    public boolean authenticate(String token, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        requestThreadLocal.set(request);
+        responseThreadLocal.set(response);
+
         if (!checkToken(token)) {
             return false;
         }
         Map<String, Object> info = tokenService.parse(token);
         // TODO use cache
-        UserDetails userDetails = detailService.loadUserByUsername(info.get("sub").toString());
+        FlyLoginUser userDetails = (FlyLoginUser) detailService.loadUserByUsername(info.get("sub").toString());
+        userDetails.setCurrentRoleNo((String) info.getOrDefault("currentRoleNo", userDetails.getRoleList().get(0).getRoleNo()));
         UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails,
                 null,
                 grantedAuthorities(info.get("roles").toString()));
-        // TODO 无法获取请求
+        // TODO 优化请求不破坏封装
         result.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(((ServletRequestAttributes)
-                        Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest())
-        );
+                new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
         context.setAuthentication(result);
         SecurityContextHolder.getContextHolderStrategy().setContext(context);

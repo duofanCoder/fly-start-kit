@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +55,7 @@ public class FlyDefaultTokenService implements FlyTokenService {
                 .setSubject(loginUser.getUsername())
                 .setCharset(CharsetUtil.CHARSET_UTF_8)
                 .setPayload("roles", loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
+                .setPayload("currentRoleNo", Optional.ofNullable(loginUser.getCurrentRoleNo()).orElse(loginUser.getRoleList().get(0).getRoleNo()))
                 .setIssuedAt(new Date())
                 .setExpiresAt(DateUtil.offsetHour(new Date(), 1))
                 .setSigner(AlgorithmUtil.getAlgorithm(properties.getToken().getAlgorithm()),
@@ -77,7 +79,7 @@ public class FlyDefaultTokenService implements FlyTokenService {
     // 测试签名时间
     public static void main(String[] args) throws InterruptedException {
 
-        FlyLoginUser loginUser = new FlyLoginUser(new FlyUser().setUsername("hhello"), null);
+        FlyLoginUser loginUser = new FlyLoginUser(new FlyUser().setUsername("hhello"), null, null);
 
         String token = new JWT()
                 .setHeader(JWTHeader.ALGORITHM, "HS256")

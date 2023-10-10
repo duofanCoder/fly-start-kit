@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Ini
             doFilter(request, response, filterChain);
             return;
         }
-        if (StrUtil.isNotBlank(token) && authenticationProvider.authenticate(token)) {
+        if (StrUtil.isNotBlank(token) && authenticationProvider.authenticate(token, request, response)) {
             doFilter(request, response, filterChain);
             return;
         }

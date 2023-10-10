@@ -17,7 +17,6 @@
         <module>fly-commons-swagger</module>
         <module>fly-commons-logger</module>
         <module>fly-commons-redis</module>
-        <module>fly-commons-swagger</module>
     </modules>
 
     <properties>

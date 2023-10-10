@@ -3,8 +3,9 @@ package com.duofan.fly.framework.security.constraint;
 import cn.hutool.core.collection.CollUtil;
 import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
+import com.duofan.fly.core.base.entity.FlyRole;
 import com.duofan.fly.core.base.entity.FlyUser;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * security 登录用户
@@ -23,11 +26,18 @@ import java.util.List;
  * @date 2023/9/20
  */
 @Data
-@AllArgsConstructor
 public class FlyLoginUser implements UserDetails {
 
     private FlyUser user;
+    private List<FlyRole> roleList;
     private List<FlyResourceInfo> operations;
+    private String currentRoleNo;
+
+    public FlyLoginUser(FlyUser user, List<FlyRole> roleList, List<FlyResourceInfo> operations) {
+        this.user = user;
+        this.roleList = roleList;
+        this.operations = operations;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -49,7 +59,12 @@ public class FlyLoginUser implements UserDetails {
                 .filter(String::isBlank).distinct().toList());
     }
 
+    public Set<String> getOps() {
+        return getOperationAuthority().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+    }
+
     @Override
+    @JsonIgnore
     public String getPassword() {
         return user.getPassword();
     }
@@ -60,20 +75,24 @@ public class FlyLoginUser implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

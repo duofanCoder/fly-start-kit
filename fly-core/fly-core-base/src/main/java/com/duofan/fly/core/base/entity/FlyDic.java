@@ -1,6 +1,6 @@
 package com.duofan.fly.core.base.entity;
 
-import com.duofan.fly.core.base.entity.abstact.EntityBase;
+import com.duofan.fly.core.base.entity.abstact.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table
 @Accessors(chain = true)
-public class FlyDic extends EntityBase {
+public class FlyDic extends BaseEntity {
     private String dicType;
     private String text;
     private String code;

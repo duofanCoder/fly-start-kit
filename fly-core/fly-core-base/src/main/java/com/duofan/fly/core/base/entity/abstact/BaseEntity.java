@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,10 +22,12 @@ import java.util.Date;
 @ToString
 @RequiredArgsConstructor
 @MappedSuperclass
-public class EntityBase implements Serializable {
+public class BaseEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @TableId
     private String id;
     @JsonDeserialize

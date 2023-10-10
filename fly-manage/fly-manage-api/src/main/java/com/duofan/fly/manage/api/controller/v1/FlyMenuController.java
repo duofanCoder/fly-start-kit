@@ -31,7 +31,7 @@ public class FlyMenuController {
 
 
     @PostMapping("/listOps")
-    @FlyAccessInfo(opName = "列出接口")
+    @FlyAccessInfo(opName = "接口信息", description = "标注当前角色是否拥有")
     FlyResult listOps(String roleNo) {
         return FlyResult.success(roleStorage.listOpsByRoleNo(roleNo));
     }

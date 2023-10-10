@@ -1,6 +1,6 @@
 package com.duofan.fly.core.base.entity;
 
-import com.duofan.fly.core.base.entity.abstact.EntityBase;
+import com.duofan.fly.core.base.entity.abstact.BaseEntity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Table
 @RequiredArgsConstructor
 @Accessors(chain = true)
-public class FlyUser extends EntityBase {
+public class FlyUser extends BaseEntity {
     private String username;
     @JsonDeserialize
     private String password;

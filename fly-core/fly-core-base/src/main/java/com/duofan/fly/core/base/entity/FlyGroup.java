@@ -1,6 +1,6 @@
 package com.duofan.fly.core.base.entity;
 
-import com.duofan.fly.core.base.entity.abstact.EntityBase;
+import com.duofan.fly.core.base.entity.abstact.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table
 @Accessors(chain = true)
-public class FlyGroup extends EntityBase {
+public class FlyGroup extends BaseEntity {
     private String groupName;
     private String groupNo;
     private String isEnabled;

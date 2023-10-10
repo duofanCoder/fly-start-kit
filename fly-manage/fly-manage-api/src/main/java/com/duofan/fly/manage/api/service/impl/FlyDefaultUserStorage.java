@@ -7,14 +7,19 @@ import com.duofan.fly.core.base.domain.exception.FlyException;
 import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.domain.FlyUserDto;
+import com.duofan.fly.core.dto.AdminLoginInfo;
 import com.duofan.fly.core.mapper.FlyUserMapper;
 import com.duofan.fly.core.storage.FlyUserStorage;
-import com.duofan.fly.framework.security.context.FlySecurityContextHolder;
+import com.duofan.fly.framework.security.constraint.FlyLoginUser;
+import com.duofan.fly.framework.security.context.FlySessionHolder;
 import com.duofan.fly.framework.security.exception.FlySuspiciousSecurityException;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 /**
  * @author duofan
@@ -42,8 +47,8 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
 
     @Override
     public void passwdReset(FlyUserDto userDto) {
-        if (!FlySecurityContextHolder.hasRole(FlyRoleEnums.ADMIN.getRoleNo()) &&
-                !FlySecurityContextHolder.currentUsername().equals(userDto.getUsername())) {
+        if (!FlySessionHolder.hasRole(FlyRoleEnums.ADMIN.getRoleNo()) &&
+                !FlySessionHolder.currentUsername().equals(userDto.getUsername())) {
             log.info(LogConstant.SUSPICIOUS_OPERATION_LOG + "，被修改用户名：{}", "重置密码", "越权修改其他用户密码", userDto.getUsername());
             throw new FlySuspiciousSecurityException("密码修改失败，请稍后再试");
         }
@@ -58,6 +63,17 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
                 .setPassword(newEncoderPasswd);
         flyUser.setId(user.getId());
         this.updateById(flyUser);
+    }
+
+    @Override
+    public AdminLoginInfo getLoginUserInfo() {
+        FlyLoginUser login = FlySessionHolder.currentUser();
+        AdminLoginInfo info = new AdminLoginInfo();
+        info.setRole(login.getRoleList().get(0))
+                .setRoleList(login.getRoleList())
+                .setUsername(login.getUsername())
+                .setAuthorityList(login.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
+        return info;
     }
 
 

@@ -4,8 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.domain.FlyUserDto;
+import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
-import com.duofan.fly.framework.security.context.FlySecurityContextHolder;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +31,8 @@ public class FlyUserController {
     @Resource
     private FlyUserStorage userStorage;
 
+    @Resource
+    private FlyRoleStorage roleStorage;
 
     @PostMapping("/password/reset")
     @FlyAccessInfo(opName = "重置密码")
@@ -43,7 +45,7 @@ public class FlyUserController {
     @PostMapping("/getUserInfo")
     @FlyAccessInfo(opName = "获取用户信息")
     public FlyResult getUserInfo() {
-        return FlyResult.success(FlySecurityContextHolder.currentUser());
+        return FlyResult.success(userStorage.getLoginUserInfo());
     }
 
 

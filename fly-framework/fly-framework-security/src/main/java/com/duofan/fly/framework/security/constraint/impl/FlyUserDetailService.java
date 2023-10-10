@@ -2,6 +2,7 @@ package com.duofan.fly.framework.security.constraint.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
+import com.duofan.fly.core.base.entity.FlyRole;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.mapper.FlyRoleMapper;
 import com.duofan.fly.core.mapper.FlyUserMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 用户查询
@@ -40,7 +42,10 @@ public class FlyUserDetailService implements UserDetailsService {
         FlyUser user = Optional.ofNullable(this.getByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
         List<FlyResourceInfo> resources = roleMapper.loadRoleResourceByUsername(user.getUsername());
-        return new FlyLoginUser(user, resources);
+
+        List<FlyRole> roleList = resources.stream().map(r -> new FlyRole().setRoleNo(r.getRoleNo())
+                .setRoleName(r.getRoleName())).distinct().collect(Collectors.toList());
+        return new FlyLoginUser(user, roleList, resources);
     }
 
     public FlyUser getByUsername(String username) {

@@ -1,6 +1,6 @@
 package com.duofan.fly.core.base.entity;
 
-import com.duofan.fly.core.base.entity.abstact.EntityBase;
+import com.duofan.fly.core.base.entity.abstact.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(uniqueConstraints = {})
 @Accessors(chain = true)
-public class FlyRoleOp extends EntityBase {
+public class FlyRoleOp extends BaseEntity {
     private String roleNo;
     private String module;
     private String op;

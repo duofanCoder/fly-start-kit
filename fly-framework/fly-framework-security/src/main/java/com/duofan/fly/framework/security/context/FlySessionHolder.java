@@ -17,8 +17,13 @@ import java.util.Optional;
  * @website duofan.top
  * @date 2023/9/24
  */
-public class FlySecurityContextHolder {
+public class FlySessionHolder {
 
+    /**
+     * 系统内部调用获取当前用户信息
+     *
+     * @return
+     */
     public static FlyLoginUser currentUser() {
         return (FlyLoginUser) Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).orElseThrow(
                 () -> new FlySecurityException("当前用户信息不存在")
