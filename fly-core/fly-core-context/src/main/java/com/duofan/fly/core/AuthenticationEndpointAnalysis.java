@@ -118,9 +118,14 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
                         AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) :
                         AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) != null ?
                                 AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) : null;
-        RequestMapping a = (RequestMapping) annotation;
-        assert a != null;
-        return a.value()[0];
+        if (annotation instanceof RequestMapping an) {
+            return an.value()[0];
+        } else if (annotation instanceof GetMapping getMapping) {
+            return getMapping.value()[0];
+        } else if (annotation instanceof PostMapping postMapping) {
+            return postMapping.value()[0];
+        }
+        return null;
     }
 
     @Override
