@@ -1,5 +1,8 @@
 package com.duofan.fly.core.base.domain.permission.access;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import java.lang.annotation.*;
 
 /**
@@ -16,6 +19,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
+@RequestMapping(method = RequestMethod.POST)
 public @interface FlyAccessInfo {
     String system() default "";
 
@@ -28,6 +32,9 @@ public @interface FlyAccessInfo {
     String op() default "";
 
     String opName() default "";
+
+    // 默认是否需要认证
+    boolean needAuthenticated() default true;
 
     // 是否启动权限校验
     boolean isValid() default true;

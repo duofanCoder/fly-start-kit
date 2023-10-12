@@ -14,7 +14,12 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,6 +80,7 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
             Object controller = entry.getValue();
             Class<?> clazz = ClassUtils.getUserClass(controller.getClass());
             FlyAccessInfo annotation = AnnotationUtils.findAnnotation(clazz, FlyAccessInfo.class);
+            String reqRoot = getAnnotation(clazz);
             if (annotation == null) continue;
             FlyModule module = new FlyModule();
             ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
@@ -88,17 +94,33 @@ public class AuthenticationEndpointAnalysis implements CommandLineRunner {
             List<Method> flyMethods = Arrays.stream(controllerMethods).filter(m -> m.isAnnotationPresent(FlyAccessInfo.class)).toList();
             for (Method flyMethod : flyMethods) {
                 FlyAccessInfo methodAnnotation = flyMethod.getAnnotation(FlyAccessInfo.class);
+                String reqUrl = getAnnotation(flyMethod);
+                ;
                 apis.put(flyMethod.getName(), new FlyApi()
                         .setOpName(methodAnnotation.opName())
                         .setOp(flyMethod.getName())
                         .setDescription(methodAnnotation.description())
                         .setGrantAll(methodAnnotation.isGrantToAll())
+                        .setNeedAuthenticated(methodAnnotation.needAuthenticated())
+                        .setRequestUrl(reqRoot + reqUrl)
                 );
             }
             modules.putIfAbsent(module.getModule(), module);
         }
 
 
+    }
+
+    private String getAnnotation(AnnotatedElement annotationEle) {
+        Annotation annotation = AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) != null ?
+                AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) :
+                AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) != null ?
+                        AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) :
+                        AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) != null ?
+                                AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) : null;
+        RequestMapping a = (RequestMapping) annotation;
+        assert a != null;
+        return a.value()[0];
     }
 
     @Override

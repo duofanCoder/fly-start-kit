@@ -31,6 +31,7 @@ public class FlyResourceInfo {
     private String opName;
     private String description;
     private boolean grantToAll;
+    private String requestUrl;
 
 
     public FlyResourceInfo(FlyAccessInfo info) {

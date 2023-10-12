@@ -17,9 +17,17 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class FlyApi {
+    private String moduleName;
+    private String module;
+    private String system;
+    private String moduleDescription;
+
+
     private String opName;
     private String op;
     private String description;
     private boolean isGrantAll;
     private boolean isOwn;
+    private String requestUrl;
+    private boolean needAuthenticated;
 }
