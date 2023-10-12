@@ -44,10 +44,10 @@ spring:
 
 
 debug: false
-#logging:
-#  level:
-#    org.springframework.security:
-#      TRACE
+logging:
+  level:
+    org.springframework.security:
+      TRACE
 knife4j:
   enable: true
   setting:

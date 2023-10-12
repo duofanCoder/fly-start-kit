@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class SwaggerConfig {
+public class FlySwaggerConfig {
     public static final String HEADER_STRING = "x-access-token";
 
 
@@ -42,6 +42,7 @@ public class SwaggerConfig {
         };
     }
 
+    @Bean
     public SpringDocConfigProperties.GroupConfig apiManageApi() {
         val groupConfig = new SpringDocConfigProperties.GroupConfig();
         groupConfig.setGroup("fly-manage-api");

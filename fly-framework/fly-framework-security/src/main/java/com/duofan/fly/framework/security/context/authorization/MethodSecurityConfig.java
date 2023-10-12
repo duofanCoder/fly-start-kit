@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Role;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = false)
+@EnableMethodSecurity
 class MethodSecurityConfig {
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)

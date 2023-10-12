@@ -16,6 +16,7 @@
         <module>fly-core-base</module>
         <module>fly-core-starter</module>
         <module>fly-core-cache</module>
+        <module>fly-core-context</module>
     </modules>
     <artifactId>fly-core</artifactId>
 

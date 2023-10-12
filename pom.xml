@@ -14,8 +14,6 @@
         <module>fly-framework</module>
         <module>fly-commons</module>
         <module>fly-core</module>
-        <module>fly-core/fly-core-context</module>
-        <module>fly-commons/fly-commons-validate</module>
         <module>fly-manage</module>
     </modules>
     <parent>

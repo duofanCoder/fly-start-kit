@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,13 +50,14 @@ public class FlyPassportController {
     private FlyRegisterService registerService;
 
     @PostMapping("/login")
-    @FlyAccessInfo(opName = "登陆", isGrantToAll = true)
+    @PreAuthorize("permitAll()")
+    @FlyAccessInfo(opName = "登陆", needAuthenticated = false)
     public FlyResult login(@RequestBody @Valid Map<String, Object> loginRequest) {
         return FlyResult.success(loginService.login(loginRequest));
     }
 
     @PostMapping("/register")
-    @FlyAccessInfo(opName = "注册", isGrantToAll = true)
+    @FlyAccessInfo(opName = "注册", needAuthenticated = false)
     public FlyResult register(@RequestBody @Valid RegisterRequest register) {
         FlyUser flyUser = new FlyUser();
         BeanUtils.copyProperties(register, flyUser);

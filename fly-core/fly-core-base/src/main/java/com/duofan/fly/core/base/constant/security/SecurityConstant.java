@@ -14,4 +14,5 @@ public class SecurityConstant {
     public static final String TOKEN_HEADER_KEY = "x-access-token";
     public static final String ROLE_PREFIX = "ROLE_";
     public static final String OPERATION_PREFIX = "OPERATION_";
+    public static final String AUTHORITY_ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
 }

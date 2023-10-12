@@ -1,6 +1,5 @@
 package com.duofan.fly.manage.api.controller.v1;
 
-import com.duofan.fly.core.AuthenticationEndpointAnalysis;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.storage.FlyRoleStorage;
@@ -22,9 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/operation")
 @FlyAccessInfo(system = "FLY BOOT", moduleName = "菜单模块")
 public class FlyMenuController {
-
-    @Resource
-    private AuthenticationEndpointAnalysis analysis;
 
     @Resource
     private FlyRoleStorage roleStorage;

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/user")
-@FlyAccessInfo(system = "FLY BOOT", module = "用户操作")
+@FlyAccessInfo(system = "FLY BOOT", moduleName = "用户操作")
 public class FlyUserController {
 
     @Resource

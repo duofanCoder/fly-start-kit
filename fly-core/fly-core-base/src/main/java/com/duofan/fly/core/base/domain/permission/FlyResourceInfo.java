@@ -32,6 +32,7 @@ public class FlyResourceInfo {
     private String description;
     private boolean grantToAll;
     private String requestUrl;
+    private boolean needAuthenticated;
 
 
     public FlyResourceInfo(FlyAccessInfo info) {
@@ -40,6 +41,7 @@ public class FlyResourceInfo {
                 .setOpName(info.opName())
                 .setModule(info.module())
                 .setModuleName(info.moduleName())
+                .setNeedAuthenticated(isNeedAuthenticated())
                 .setGrantToAll(info.isGrantToAll());
     }
 

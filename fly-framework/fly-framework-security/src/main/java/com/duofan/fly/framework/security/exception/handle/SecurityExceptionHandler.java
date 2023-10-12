@@ -61,6 +61,12 @@ public class SecurityExceptionHandler {
         return FlyResult.of(FlyHttpStatus.FAIL);
     }
 
+    /**
+     * Spring security 内部登陆异常
+     *
+     * @param e
+     * @return
+     */
     @ResponseBody
     @ExceptionHandler(LoginException.class)
     public FlyResult handleValidException(LoginException e) {
@@ -83,12 +89,11 @@ public class SecurityExceptionHandler {
         return FlyResult.of(FlyHttpStatus.FAIL);
     }
 
-    //
     @ResponseBody
     @ExceptionHandler(AccessDeniedException.class)
     public FlyResult handleAccessDeniedException(AccessDeniedException e) {
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.FAIL);
+        return FlyResult.of(FlyHttpStatus.FORBIDDEN);
     }
 
     // FORBIDDEN 403 无权访问

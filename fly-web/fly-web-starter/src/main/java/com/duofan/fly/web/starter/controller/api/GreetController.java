@@ -23,6 +23,7 @@ public class GreetController {
     private FlyUserMapper userMapper;
 
     @GetMapping("hello")
+    @PreAuthorize("permitAll()")
     @FlyAccessInfo(op = "hello", opName = "说句你好")
     public ResponseEntity<String> hello() {
         List<FlyUser> flyUsers = userMapper.selectList(null);

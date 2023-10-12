@@ -26,10 +26,16 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, MethodInvocation object) {
         FlyResourceInfo attribute = registry.getAttribute(object);
-        if (attribute.isGrantToAll()) {
+        Authentication authInfo = authentication.get();
+        if (!attribute.isNeedAuthenticated()) {
             return new AuthorizationDecision(true);
         }
-        Collection<? extends GrantedAuthority> authorities = authentication.get().getAuthorities();
+        if (attribute.isGrantToAll() && authInfo.getAuthorities().contains(
+                new SimpleGrantedAuthority(SecurityConstant.AUTHORITY_ROLE_ANONYMOUS)
+        )) {
+            return new AuthorizationDecision(true);
+        }
+        Collection<? extends GrantedAuthority> authorities = authInfo.getAuthorities();
 
         if (authorities
                 .contains(new SimpleGrantedAuthority(SecurityConstant.ROLE_PREFIX + FlyRoleEnums.ADMIN))) {
