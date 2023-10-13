@@ -23,40 +23,45 @@ spring:
     #      password: root
     #      name: root
     #      roles: ADMIN
-    #springdoc:
-    #  swagger-ui:
-    #    path: /swagger-ui.html
-    #    tags-sorter: alpha
-    #operations-sorter: order
-  #  api-docs:
-  #    path: /v3/api-docs
-  #  group-configs:
-  #    - group: 'default'
-  #      paths-to-match: '/**'
-  #      packages-to-scan: com.duofan.fly.web.starter
-  #    - group: 'fly'
-  #      paths-to-match: '/**'
-  #      packages-to-scan: com.duofan.fly.manage.api.controller.v1
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.fly.web.starter
+    - group: 'fly-api'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.fly.manage.api.controller.v1
 #  devtools:
 #    livereload:
 #      enabled: false
 #  default-flat-param-object: true
 
 
-debug: false
-logging:
-  level:
-    org.springframework.security:
-      TRACE
+debug: true
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
 knife4j:
   enable: true
   setting:
     language: zh_cn
     swagger-model-name: 实体类列表
-  documents:
-    - name: 标题1
-      locations: classpath:markdown/*
-      group: default
+    enable-group: true
+  #    enable-document-manage: true
+  #  documents:
+  #    - name: 标题1
+  #      locations: classpath:markdown/*
+  #      group: -v3-api-docs
+  #    - name: 标题2
+  #      locations: classpath:markdown/*
+  #      group: fly
 
   basic:
     enable: false
@@ -64,7 +69,8 @@ knife4j:
     password: 123
 fly:
   security:
-    captcha-enabled: true
+    login:
+      captcha-enabled: true
   jpa:
     ddl-auto:
       enabled: true
