@@ -132,6 +132,9 @@ public class QueryUtils {
      */
     private static <T, Q> QueryWrapper<T> buildQueryWrapper(T entity, List<String> queryColList, Class<T> clazz, Class<Q> clazzQ) {
         QueryWrapper<T> wrapper = new QueryWrapper<>();
+        if (entity == null) {
+            return wrapper;
+        }
         for (String col : queryColList) {
             Field field;
             field = recursionField(clazz, col);

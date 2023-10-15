@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.duofan.fly.core.mapper.FlyRoleMapper">
-    <!--    <update id="updateByRoleNo" parameterType="com.duofan.fly.core.base.entity.FlyRole">-->
-
-    <!--    </update>-->
-
     <select id="loadRoleResourceByUsername" resultType="com.duofan.fly.core.base.domain.permission.FlyResourceInfo">
         select r.*, o.*
         from fly_user u
                  right join fly_role_rel r on u.username = #{username}
                  left join fly_role ur on ur.role_no = r.role_no and ur.is_enabled = '1'
                  left join fly_role_op o on o.role_no = r.role_no
-
     </select>
 </mapper>

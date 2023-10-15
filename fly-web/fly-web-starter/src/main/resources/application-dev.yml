@@ -43,7 +43,7 @@ springdoc:
 #  default-flat-param-object: true
 
 
-debug: true
+debug: false
 #logging:
 #  level:
 #    org.springframework.security:

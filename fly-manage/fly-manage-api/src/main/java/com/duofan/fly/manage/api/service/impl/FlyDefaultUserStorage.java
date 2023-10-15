@@ -1,15 +1,19 @@
 package com.duofan.fly.manage.api.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.exception.FlyException;
 import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.domain.FlyUserDto;
 import com.duofan.fly.core.dto.AdminLoginInfo;
+import com.duofan.fly.core.dto.UserDto;
 import com.duofan.fly.core.mapper.FlyUserMapper;
 import com.duofan.fly.core.storage.FlyUserStorage;
+import com.duofan.fly.core.utils.QueryUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.context.FlySessionHolder;
 import com.duofan.fly.framework.security.exception.FlySuspiciousSecurityException;
@@ -19,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +51,7 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
     }
 
     @Override
-    public void passwdReset(FlyUserDto userDto) {
+    public void passwdReset(UserDto userDto) {
         if (!FlySessionHolder.hasRole(FlyRoleEnums.ADMIN.getRoleNo()) &&
                 !FlySessionHolder.currentUsername().equals(userDto.getUsername())) {
             log.info(LogConstant.SUSPICIOUS_OPERATION_LOG + "，被修改用户名：{}", "重置密码", "越权修改其他用户密码", userDto.getUsername());
@@ -74,6 +79,19 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
                 .setUsername(login.getUsername())
                 .setAuthorityList(login.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
         return info;
+    }
+
+    @Override
+    public FlyPageInfo<FlyUser> page(FlyPageInfo<FlyUser> pageInfo, FlyUser user) {
+        Page<FlyUser> page = QueryUtils.buildPage(pageInfo, FlyUser.class);
+        QueryWrapper<FlyUser> wp = QueryUtils.buildQueryWrapper(user, List.of("username", "email", "phone", "", "isLocked", "isEnabled"), FlyUser.class);
+        return FlyPageInfo.of(page(page, wp));
+    }
+
+    @Override
+    public FlyPageInfo<UserDto> page(FlyPageInfo<FlyUser> pageInfo, UserDto condition) {
+        
+        return null;
     }
 
 

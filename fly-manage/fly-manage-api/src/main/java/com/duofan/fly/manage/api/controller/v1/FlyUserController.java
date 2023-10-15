@@ -1,13 +1,15 @@
 package com.duofan.fly.manage.api.controller.v1;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
-import com.duofan.fly.core.domain.FlyUserDto;
+import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.dto.UserDto;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
+import com.duofan.fly.manage.api.controller.request.UserRequest;
 import jakarta.annotation.Resource;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +38,8 @@ public class FlyUserController {
 
     @PostMapping("/password/reset")
     @FlyAccessInfo(opName = "重置密码")
-    public FlyResult passwdReset(PasswdResetRequest request) {
-        userStorage.passwdReset(BeanUtil.copyProperties(request, FlyUserDto.class));
+    public FlyResult passwdReset(UserRequest.PasswdReset request) {
+        userStorage.passwdReset(BeanUtil.copyProperties(request, UserDto.class));
         return FlyResult.SUCCESS;
     }
 
@@ -49,10 +51,29 @@ public class FlyUserController {
     }
 
 
-    @Data
-    private static class PasswdResetRequest {
-        private String username;
-        private String rawPassword;
-        private String newPassword;
+    @PostMapping("/page")
+    @FlyAccessInfo(opName = "分页用户信息")
+    public FlyResult page(FlyPageInfo<FlyUser> pageInfo, UserRequest.UserPage page) {
+        return FlyResult.success(userStorage.page(pageInfo, BeanUtil.copyProperties(page, UserDto.class)));
     }
+
+    @PostMapping("/detail")
+    @FlyAccessInfo(opName = "详细用户信息")
+    public FlyResult detail(String id) {
+        return FlyResult.success(userStorage.getById(id));
+    }
+
+    @PostMapping("/delete")
+    @FlyAccessInfo(opName = "删除用户信息")
+    public FlyResult delete(String id) {
+        return FlyResult.success(userStorage.removeById(id));
+    }
+
+    @PostMapping("/update")
+    @FlyAccessInfo(opName = "修改用户信息")
+    public FlyResult updateById(UserRequest.UserUpdate request) {
+        return FlyResult.success(userStorage.updateById(BeanUtil.copyProperties(request, FlyUser.class)));
+    }
+
+
 }

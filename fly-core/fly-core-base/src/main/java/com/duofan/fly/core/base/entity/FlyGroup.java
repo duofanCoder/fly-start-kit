@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 /**
  * 用户分组
+ * 支持单人多分组
  *
  * @author duofan
  * @version 1.0

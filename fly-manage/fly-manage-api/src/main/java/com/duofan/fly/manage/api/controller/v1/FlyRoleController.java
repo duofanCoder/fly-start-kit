@@ -38,7 +38,7 @@ public class FlyRoleController {
 
     @PostMapping("/page")
     @FlyAccessInfo(opName = "分页角色")
-    FlyResult page(FlyPageInfo<FlyRole> pageInfo, FlyRole role) {
+    FlyResult page(@RequestBody(required = false) FlyPageInfo<FlyRole> pageInfo, @RequestBody(required = false) FlyRole role) {
         return FlyResult.success(roleStorage.page(pageInfo, role));
     }
 
@@ -51,12 +51,12 @@ public class FlyRoleController {
 
     @PostMapping("/remove")
     @FlyAccessInfo(opName = "删除角色")
-    FlyResult remove(String roleNo) {
+    FlyResult remove(@RequestBody String roleNo) {
         roleStorage.remove(roleNo);
         return FlyResult.SUCCESS;
     }
 
-    @PostMapping("/update")
+    @PostMapping("/api/v1/role/update")
     @FlyAccessInfo(opName = "修改角色")
     FlyResult update(@RequestBody RoleRequest request) {
         roleStorage.update(BeanUtil.copyProperties(request, FlyRole.class));

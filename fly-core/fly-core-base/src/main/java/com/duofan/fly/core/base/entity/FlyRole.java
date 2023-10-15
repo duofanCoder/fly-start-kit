@@ -1,7 +1,6 @@
 package com.duofan.fly.core.base.entity;
 
 import com.duofan.fly.core.base.entity.abstact.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import lombok.experimental.Accessors;
 public class FlyRole extends BaseEntity {
     private String roleName;
     private String roleNo;
-    @JsonIgnore
     @Column(columnDefinition = "varchar(32) default 1")
     private String isEnabled;
 }
