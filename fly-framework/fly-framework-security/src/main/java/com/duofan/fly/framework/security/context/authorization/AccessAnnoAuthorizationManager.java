@@ -27,6 +27,13 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
     public AuthorizationDecision check(Supplier<Authentication> authentication, MethodInvocation object) {
         FlyResourceInfo attribute = registry.getAttribute(object);
         Authentication authInfo = authentication.get();
+        Collection<? extends GrantedAuthority> authorities = authInfo.getAuthorities();
+
+        // ADMIN 角色直接通过
+        if (authorities
+                .contains(new SimpleGrantedAuthority(SecurityConstant.ROLE_PREFIX + FlyRoleEnums.ADMIN))) {
+            return new AuthorizationDecision(true);
+        }
         if (!attribute.isNeedAuthenticated()) {
             return new AuthorizationDecision(true);
         }
@@ -35,12 +42,7 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
         )) {
             return new AuthorizationDecision(true);
         }
-        Collection<? extends GrantedAuthority> authorities = authInfo.getAuthorities();
 
-        if (authorities
-                .contains(new SimpleGrantedAuthority(SecurityConstant.ROLE_PREFIX + FlyRoleEnums.ADMIN))) {
-            return new AuthorizationDecision(true);
-        }
 
         if (authorities.contains(
                 new SimpleGrantedAuthority(attribute.getFullOp())

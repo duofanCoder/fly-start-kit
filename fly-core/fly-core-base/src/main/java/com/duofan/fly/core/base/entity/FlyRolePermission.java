@@ -1,8 +1,10 @@
 package com.duofan.fly.core.base.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.duofan.fly.core.base.entity.abstact.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,8 +23,11 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(uniqueConstraints = {})
 @Accessors(chain = true)
-public class FlyRoleOp extends BaseEntity {
+public class FlyRolePermission extends BaseEntity {
     private String roleNo;
     private String module;
     private String op;
+    @Transient
+    @TableField(exist = false)
+    private boolean isActivated;
 }

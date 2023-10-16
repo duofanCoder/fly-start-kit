@@ -1,7 +1,7 @@
 package com.duofan.fly.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.duofan.fly.core.base.entity.FlyRoleOp;
+import com.duofan.fly.core.base.entity.FlyRolePermission;
 
 /**
  * 角色操作关系表
@@ -12,5 +12,5 @@ import com.duofan.fly.core.base.entity.FlyRoleOp;
  * @website duofan.top
  * @date 2023/10/7
  */
-public interface FlyRoleOpMapper extends BaseMapper<FlyRoleOp> {
+public interface FlyRolePermissionMapper extends BaseMapper<FlyRolePermission> {
 }

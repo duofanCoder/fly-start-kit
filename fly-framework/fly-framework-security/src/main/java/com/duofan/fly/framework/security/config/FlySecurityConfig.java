@@ -28,7 +28,7 @@ public class FlySecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y);
+        return new BCryptPasswordEncoder();
     }
 
     /**

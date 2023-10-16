@@ -56,7 +56,7 @@ public class FlyRoleController {
         return FlyResult.SUCCESS;
     }
 
-    @PostMapping("/api/v1/role/update")
+    @PostMapping("/update")
     @FlyAccessInfo(opName = "修改角色")
     FlyResult update(@RequestBody RoleRequest request) {
         roleStorage.update(BeanUtil.copyProperties(request, FlyRole.class));

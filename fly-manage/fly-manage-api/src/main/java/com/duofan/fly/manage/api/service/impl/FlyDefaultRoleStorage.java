@@ -7,19 +7,21 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.AuthenticationEndpointAnalysis;
+import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyRole;
-import com.duofan.fly.core.base.entity.FlyRoleOp;
+import com.duofan.fly.core.base.entity.FlyRolePermission;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
 import com.duofan.fly.core.domain.FlyModule;
 import com.duofan.fly.core.mapper.FlyRoleMapper;
-import com.duofan.fly.core.mapper.FlyRoleOpMapper;
+import com.duofan.fly.core.mapper.FlyRolePermissionMapper;
 import com.duofan.fly.core.mapper.FlyRoleRelMapper;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.utils.QueryUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
     private FlyRoleRelMapper relMapper;
 
     @Resource
-    private FlyRoleOpMapper roleOpMapper;
+    private FlyRolePermissionMapper permissionMapper;
 
     @Override
     public List<FlyResourceInfo> loadRoleResource(String role) {
@@ -78,20 +80,20 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
 
     @Override
     public List<FlyModule> listOpsByRoleNo(String roleNo) {
-        LambdaQueryWrapper<FlyRoleOp> wp = new LambdaQueryWrapper<>();
-        wp.eq(FlyRoleOp::getRoleNo, roleNo);
-        List<FlyRoleOp> roleOps = roleOpMapper.selectList(wp);
+        LambdaQueryWrapper<FlyRolePermission> wp = new LambdaQueryWrapper<>();
+        wp.eq(FlyRolePermission::getRoleNo, roleNo);
+        List<FlyRolePermission> roleOps = permissionMapper.selectList(wp);
         Map<String, FlyModule> ops = AuthenticationEndpointAnalysis.listOps();
 
         ArrayList<FlyModule> modules = CollUtil.newArrayList(ops.values());
         for (FlyModule module : modules) {
             Set<String> opSet = roleOps.stream()
                     .filter(r -> module.getModule().equals(r.getModule()))
-                    .map(FlyRoleOp::getOp)
+                    .map(FlyRolePermission::getOp)
                     .collect(Collectors.toSet());
             module.getApis().values().stream()
                     .filter(api -> CollUtil.contains(opSet, api.getOp()))
-                    .forEach(i -> i.setOwn(true));
+                    .forEach(i -> i.setActivated(true));
         }
         return modules;
     }
@@ -110,6 +112,23 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
         UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(role, List.of("roleNo"),
                 List.of("roleName", "isDisabled"), FlyRole.class);
         roleMapper.update(null, wp);
+    }
+
+    @Override
+    public void bindPermission(FlyRolePermission permission) {
+        QueryWrapper<FlyRolePermission> wp = QueryUtils.buildQueryWrapper(permission, List.of("op", "module", "roleNo"), FlyRolePermission.class);
+
+        if (!permission.isActivated()) {
+            permissionMapper.delete(wp);
+        } else {
+            try {
+                permissionMapper.insert(permission);
+            } catch (DuplicateKeyException e) {
+                log.info(LogConstant.COMMON_OPERATION_LOG);
+            }
+
+        }
+
     }
 
 }

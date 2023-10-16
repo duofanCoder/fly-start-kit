@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyRole;
+import com.duofan.fly.core.base.entity.FlyRolePermission;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
 import com.duofan.fly.core.domain.FlyModule;
 
@@ -34,4 +35,6 @@ public interface FlyRoleStorage extends IService<FlyRole> {
     void remove(String roleNo);
 
     void update(FlyRole role);
+
+    void bindPermission(FlyRolePermission permission);
 }

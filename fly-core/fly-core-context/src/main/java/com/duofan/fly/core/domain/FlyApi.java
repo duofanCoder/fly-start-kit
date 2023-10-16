@@ -27,7 +27,7 @@ public class FlyApi {
     private String op;
     private String description;
     private boolean isGrantAll;
-    private boolean isOwn;
+    private boolean isActivated;
     private String requestUrl;
     private boolean needAuthenticated;
 }

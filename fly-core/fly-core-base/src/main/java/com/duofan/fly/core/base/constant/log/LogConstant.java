@@ -15,4 +15,7 @@ public class LogConstant {
     // 可以操作日志
     public static final String SUSPICIOUS_OPERATION_LOG = "操作名：【{}】,可疑信息：{}";
     public static final String COMMON_OPERATION_LOG = "操作名：【{}】,信息：{}";
+    public static final String BUSINESS_OPERATION_LOG = "业务操作名：【{}】,信息：{}";
+
+
 }
