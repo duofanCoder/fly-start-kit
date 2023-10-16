@@ -84,14 +84,16 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
     @Override
     public FlyPageInfo<FlyUser> page(FlyPageInfo<FlyUser> pageInfo, FlyUser user) {
         Page<FlyUser> page = QueryUtils.buildPage(pageInfo, FlyUser.class);
-        QueryWrapper<FlyUser> wp = QueryUtils.buildQueryWrapper(user, List.of("username", "email", "phone", "", "isLocked", "isEnabled"), FlyUser.class);
-        return FlyPageInfo.of(page(page, wp));
+        QueryWrapper<FlyUser> wp = QueryUtils.buildQueryWrapper(user, List.of("username", "email", "phone", "isLocked", "isEnabled"), FlyUser.class);
+        Page<FlyUser> data = page(page, wp);
+        
+        return FlyPageInfo.of(data);
     }
 
     @Override
     public FlyPageInfo<UserDto> page(FlyPageInfo<FlyUser> pageInfo, UserDto condition) {
-        
-        return null;
+        Page<FlyUser> page = QueryUtils.buildPage(pageInfo, FlyUser.class);
+        return FlyPageInfo.of(userMapper.page(page, condition));
     }
 
 

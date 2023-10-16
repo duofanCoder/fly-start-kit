@@ -99,11 +99,11 @@ public class ManageInitRunner implements CommandLineRunner {
 
     private void roleRelInit() {
         FlyRoleRel rel = new FlyRoleRel();
-        rel.setRoleNo("admin")
+        rel.setRoleNo("ADMIN")
                 .setUsername("admin");
         roleStorage.addRoleRel(rel);
         FlyRoleRel rel2 = new FlyRoleRel();
-        rel2.setRoleNo("common")
+        rel2.setRoleNo("COMMON")
                 .setUsername("common");
         roleStorage.addRoleRel(rel);
         roleStorage.addRoleRel(rel2);

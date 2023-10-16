@@ -4,5 +4,6 @@
     <select id="page" resultType="com.duofan.fly.core.dto.UserDto">
         select u.*
         from fly_user u
+        
     </select>
 </mapper>

@@ -15,5 +15,5 @@ import com.duofan.fly.core.dto.UserDto;
  * @date 2023/9/13
  */
 public interface FlyUserMapper extends BaseMapper<FlyUser> {
-    UserDto page(IPage<?> page, UserDto user);
+    IPage<UserDto> page(IPage<?> page, UserDto user);
 }

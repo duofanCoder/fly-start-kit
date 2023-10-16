@@ -1,6 +1,6 @@
 package com.duofan.fly.core.base.domain.common;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -30,7 +30,7 @@ public class FlyPageInfo<T> implements Serializable {
      */
     private String order = "updateTime desc";
 
-    public static <T> FlyPageInfo<T> of(Page<T> page) {
+    public static <T> FlyPageInfo<T> of(IPage<T> page) {
         FlyPageInfo<T> result = new FlyPageInfo<T>();
         result.pageCount = page.getPages();
         result.recordCount = page.getRecords().size();

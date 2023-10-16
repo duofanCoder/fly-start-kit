@@ -33,7 +33,6 @@ public class BaseEntity implements Serializable {
     private String id;
     @JsonDeserialize
     @TableField(fill = FieldFill.INSERT)
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date createTime;
@@ -42,7 +41,9 @@ public class BaseEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @JsonDeserialize
     private Date updateTime;
+    @TableField(fill = FieldFill.INSERT)
     private String createBy;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
     @JsonIgnore
     @Column(columnDefinition = "varchar(32) default 0")
