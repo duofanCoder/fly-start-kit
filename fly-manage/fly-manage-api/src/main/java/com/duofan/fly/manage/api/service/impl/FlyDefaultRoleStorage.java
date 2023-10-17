@@ -124,9 +124,8 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
             try {
                 permissionMapper.insert(permission);
             } catch (DuplicateKeyException e) {
-                log.info(LogConstant.COMMON_OPERATION_LOG);
+                log.info(LogConstant.BUSINESS_OPERATION_LOG, "角色绑定", "重复绑定");
             }
-
         }
 
     }

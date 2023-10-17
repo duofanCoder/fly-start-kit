@@ -25,6 +25,8 @@ public class MenuResponse {
         private String value;
         private String description;
         private boolean isActivated;
+        // 无法设置，针对权限是授予所有人的
+        private boolean disabled;
         private List<MenuTree> children;
 
         public static List<MenuTree> of(@NotEmpty List<FlyModule> modules) {
@@ -41,6 +43,7 @@ public class MenuResponse {
                                                         .setDescription(api.getDescription())
                                                         .setValue(menu.getValue() + "." + api.getOp())
                                                         .setActivated(api.isActivated())
+                                                        .setDisabled(api.isGrantAll())
                                                         .setChildren(null)
                                 ).toList());
                         return menu;
