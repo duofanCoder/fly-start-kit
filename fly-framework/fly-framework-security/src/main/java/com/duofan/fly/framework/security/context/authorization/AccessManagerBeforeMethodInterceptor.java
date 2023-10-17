@@ -10,7 +10,6 @@ import org.springframework.aop.Pointcut;
 import org.springframework.aop.PointcutAdvisor;
 import org.springframework.aop.framework.AopInfrastructureBean;
 import org.springframework.aop.support.ComposablePointcut;
-import org.springframework.aop.support.Pointcuts;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.core.Ordered;
 import org.springframework.core.log.LogMessage;
@@ -26,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.util.Assert;
 
-import java.lang.annotation.Annotation;
 import java.util.function.Supplier;
 
 /**
@@ -71,7 +69,7 @@ public class AccessManagerBeforeMethodInterceptor
     public static AuthorizationManagerBeforeMethodInterceptor preAccess(
             AccessAnnoAuthorizationManager authorizationManager) {
         AuthorizationManagerBeforeMethodInterceptor interceptor = new AuthorizationManagerBeforeMethodInterceptor(
-                new ComposablePointcut(classOrMethod(FlyAccessInfo.class)), authorizationManager);
+                new ComposablePointcut(classOrMethod()), authorizationManager);
         interceptor.setOrder(AuthorizationInterceptorsOrder.LAST.getOrder());
         return interceptor;
     }
@@ -80,9 +78,8 @@ public class AccessManagerBeforeMethodInterceptor
         return preAccess(new AccessAnnoAuthorizationManager());
     }
 
-    private static Pointcut classOrMethod(Class<? extends Annotation> annotation) {
-        return Pointcuts.union(new AnnotationMatchingPointcut(null, annotation, true),
-                new AnnotationMatchingPointcut(annotation, true));
+    private static Pointcut classOrMethod() {
+        return new AnnotationMatchingPointcut(FlyAccessInfo.class, FlyAccessInfo.class, true);
     }
 
     /**

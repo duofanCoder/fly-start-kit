@@ -39,6 +39,7 @@ public class UserRequest {
 
     @Data
     public static class PasswdReset {
+        @NotBlank
         private String username;
         private String rawPassword;
         private String newPassword;
