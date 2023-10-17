@@ -29,8 +29,9 @@ public class PermissionRequest {
 
         public static FlyRolePermission of(PermissionBind bind) {
             return new FlyRolePermission().setActivated(bind.isBind())
-                    .setOp(PermissionStrUtils.module(bind.getPermission()))
-                    .setModule(PermissionStrUtils.operation(bind.getPermission()));
+                    .setRoleNo(bind.getRoleNo())
+                    .setOp(PermissionStrUtils.operation(bind.getPermission()))
+                    .setModule(PermissionStrUtils.module(bind.getPermission()));
         }
     }
 }

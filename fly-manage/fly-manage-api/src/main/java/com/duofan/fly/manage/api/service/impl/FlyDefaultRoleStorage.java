@@ -13,6 +13,7 @@ import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.entity.FlyRole;
 import com.duofan.fly.core.base.entity.FlyRolePermission;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
+import com.duofan.fly.core.domain.FlyApi;
 import com.duofan.fly.core.domain.FlyModule;
 import com.duofan.fly.core.mapper.FlyRoleMapper;
 import com.duofan.fly.core.mapper.FlyRolePermissionMapper;
@@ -27,8 +28,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author duofan
@@ -86,14 +85,14 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
         Map<String, FlyModule> ops = AuthenticationEndpointAnalysis.listOps();
 
         ArrayList<FlyModule> modules = CollUtil.newArrayList(ops.values());
-        for (FlyModule module : modules) {
-            Set<String> opSet = roleOps.stream()
-                    .filter(r -> module.getModule().equals(r.getModule()))
-                    .map(FlyRolePermission::getOp)
-                    .collect(Collectors.toSet());
-            module.getApis().values().stream()
-                    .filter(api -> CollUtil.contains(opSet, api.getOp()))
-                    .forEach(i -> i.setActivated(true));
+        for (FlyRolePermission roleOp : roleOps) {
+            for (FlyModule module : modules) {
+                for (FlyApi api : module.getApis().values()) {
+                    if (module.getModule().equals(roleOp.getModule()) && api.getOp().equals(roleOp.getOp())) {
+                        api.setActivated(true);
+                    }
+                }
+            }
         }
         return modules;
     }

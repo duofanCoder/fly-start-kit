@@ -5,6 +5,8 @@ import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.entity.FlyDict;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 字典管理接口
@@ -16,7 +18,7 @@ import java.util.List;
  * @date 2023/10/16
  */
 public interface FlyDictStorage extends IService<FlyDict> {
-    List<FlyDict> list(List<String> typeList);
+    Map<String, List<FlyDict>> list(Set<String> typeList);
 
     boolean save(FlyDict dict);
 

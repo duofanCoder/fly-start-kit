@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 字典接口
@@ -47,9 +47,8 @@ public class FlyDictController {
     @FlyAccessInfo(opName = "查询")
     FlyResult batchList(
             @RequestBody @NotNull @NotEmpty
-            List<String> typeList) {
-        List<FlyDict> ret = dictStorage.list(typeList);
-        return FlyResult.success(ret);
+            Set<String> typeList) {
+        return FlyResult.success(dictStorage.list(typeList));
     }
 
     @PostMapping("/create")

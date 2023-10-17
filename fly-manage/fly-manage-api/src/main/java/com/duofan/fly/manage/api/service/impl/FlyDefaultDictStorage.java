@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.entity.FlyDict;
 import com.duofan.fly.core.mapper.FlyDictMapper;
+import com.duofan.fly.core.service.FlyDictService;
 import com.duofan.fly.core.storage.FlyDictStorage;
 import com.duofan.fly.core.utils.QueryUtils;
 import jakarta.annotation.Resource;
@@ -15,9 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,23 +35,48 @@ public class FlyDefaultDictStorage extends ServiceImpl<FlyDictMapper, FlyDict> i
     @Resource
     private FlyDictMapper dictMapper;
 
+    @Resource
+    private FlyDictService dictService;
+
     @Override
-    public List<FlyDict> list(List<String> typeList) {
+    public Map<String, List<FlyDict>> list(Set<String> typeList) {
+        LinkedHashMap<String, List<FlyDict>> result = new LinkedHashMap<>();
+
+        ArrayList<String> nonDynamicDictTypeList
+                = new ArrayList<>();
+        // TODO 动态字典数据安全
+        // 动态字典
+        typeList.forEach(type -> {
+            List<FlyDict> list = dictService.list(type);
+            if (list != null) {
+                result.put(type, list);
+            } else {
+                nonDynamicDictTypeList.add(type);
+            }
+        });
+
+        if (nonDynamicDictTypeList.isEmpty()) {
+            return result;
+        }
+        // 非动态字典
         FlyDict dict = new FlyDict()
-                .setType(StrUtil.join(",", typeList));
+                .setType(StrUtil.join(",", nonDynamicDictTypeList));
         QueryWrapper<FlyDict> wp = QueryUtils.buildQueryWrapper(dict, List.of("type"), FlyDict.class);
         List<FlyDict> data = dictMapper.selectList(wp);
         Set<String> typeSet = data.stream().map(FlyDict::getType).collect(Collectors.toSet());
-        LinkedList<FlyDict> result = new LinkedList<>();
+
         for (String type : typeSet) {
+            ArrayList<FlyDict> tmp = new ArrayList<>();
             for (FlyDict datum : data) {
                 if (datum.getType().equals(type)) {
-                    result.add(new FlyDict().setCode(datum.getCode()).setText(datum.getText()).setType(datum.getType()));
+                    tmp.add(new FlyDict(datum.getType(), datum.getText(), datum.getCode()));
                 }
             }
+            result.put(type, tmp);
         }
         return result;
     }
+
 
     @Override
     public boolean save(FlyDict dict) {
