@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -23,6 +24,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(uniqueConstraints = {})
 @Accessors(chain = true)
+@NoArgsConstructor
 public class FlyRolePermission extends BaseEntity {
     private String roleNo;
     private String module;
@@ -30,4 +32,10 @@ public class FlyRolePermission extends BaseEntity {
     @Transient
     @TableField(exist = false)
     private boolean isActivated;
+
+    public FlyRolePermission(String roleNo, String module, String op) {
+        this.roleNo = roleNo;
+        this.module = module;
+        this.op = op;
+    }
 }

@@ -7,6 +7,8 @@ import com.duofan.fly.core.base.entity.FlyRole;
 import com.duofan.fly.core.base.entity.FlyRolePermission;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
 import com.duofan.fly.core.domain.FlyModule;
+import com.duofan.fly.core.dto.RoleDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,4 +39,7 @@ public interface FlyRoleStorage extends IService<FlyRole> {
     void update(FlyRole role);
 
     void bindPermission(FlyRolePermission permission);
+
+    @Transactional(rollbackFor = Exception.class)
+    void saveOrUpdate(RoleDto role);
 }

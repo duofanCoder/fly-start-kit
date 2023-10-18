@@ -18,5 +18,12 @@ public class FlyModule {
     private String description;
     // key => method name, value => api info
     private Map<String, FlyApi> apis;
+
+    public FlyModule(String moduleName, String module, String system, String description) {
+        this.moduleName = moduleName;
+        this.module = module;
+        this.system = system;
+        this.description = description;
+    }
 }
 

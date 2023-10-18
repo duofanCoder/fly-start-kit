@@ -1,6 +1,7 @@
 package com.duofan.fly.framework.security.config;
 
 import com.duofan.fly.core.AuthenticationEndpointAnalysis;
+import com.duofan.fly.core.domain.FlyApi;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationFilter;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
@@ -41,6 +42,8 @@ public class FlySecurityFilterConfig {
      */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetails) throws Exception {
+
+
         return http
                 // 跨站攻击关闭
                 .csrf(AbstractHttpConfigurer::disable)
@@ -49,7 +52,7 @@ public class FlySecurityFilterConfig {
                         .requestMatchers("/v3/api-docs/**", "/error/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
                         .permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                        .requestMatchers(analysis.getWhiteApis().toArray(new String[1]))
+                        .requestMatchers(analysis.getWhiteApis().stream().map(FlyApi::getRequestUrl).toList().toArray(new String[1]))
                         .permitAll()
                         .requestMatchers("/api/**")
                         .authenticated()

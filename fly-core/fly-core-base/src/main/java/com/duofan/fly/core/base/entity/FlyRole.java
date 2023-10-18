@@ -1,7 +1,10 @@
 package com.duofan.fly.core.base.entity;
 
 import com.duofan.fly.core.base.entity.abstact.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,8 +22,8 @@ import lombok.experimental.Accessors;
 @Setter
 @ToString
 @Entity
-@Table(indexes = {@Index(name = "role_no_index", columnList = "roleNo", unique = true)},
-        uniqueConstraints = @UniqueConstraint(columnNames = {"roleNo"})
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"roleNo", "isDeleted"})
 )
 @RequiredArgsConstructor
 @Accessors(chain = true)

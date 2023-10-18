@@ -48,10 +48,12 @@ public class MenuResponse {
                                                     .setLabel(api.getOpName())
                                                     .setDescription(api.getDescription())
                                                     .setValue(menu.getValue() + "." + api.getOp())
-                                                    .setActivated(api.isActivated())
-                                                    .setDisabled(api.isGrantAll())
+                                                    .setActivated(api.isActivated() || api.isGrantAll() || !api.isNeedAuthenticated())
+                                                    .setDisabled(api.isGrantAll() || !api.isNeedAuthenticated())
                                                     .setChildren(null);
-                                            checkMenus.add(tmp.getValue());
+                                            if (tmp.isActivated() || tmp.isDisabled()) {
+                                                checkMenus.add(tmp.getValue());
+                                            }
                                             return tmp;
                                         }
                                 ).toList());

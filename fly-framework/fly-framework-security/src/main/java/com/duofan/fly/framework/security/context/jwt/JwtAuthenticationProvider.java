@@ -112,6 +112,7 @@ public class JwtAuthenticationProvider implements InitializingBean {
         if (!checkToken(token)) {
             return false;
         }
+        tokenService.refresh(token);
         Map<String, Object> info = tokenService.parse(token);
         // TODO use cache
         FlyLoginUser userDetails = (FlyLoginUser) detailService.loadUserByUsername(info.get("sub").toString());

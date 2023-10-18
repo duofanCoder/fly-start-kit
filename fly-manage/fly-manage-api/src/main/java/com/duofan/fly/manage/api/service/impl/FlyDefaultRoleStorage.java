@@ -1,5 +1,6 @@
 package com.duofan.fly.manage.api.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,19 +16,25 @@ import com.duofan.fly.core.base.entity.FlyRolePermission;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
 import com.duofan.fly.core.domain.FlyApi;
 import com.duofan.fly.core.domain.FlyModule;
+import com.duofan.fly.core.dto.RoleDto;
 import com.duofan.fly.core.mapper.FlyRoleMapper;
 import com.duofan.fly.core.mapper.FlyRolePermissionMapper;
 import com.duofan.fly.core.mapper.FlyRoleRelMapper;
+import com.duofan.fly.core.storage.FlyRolePermissionStorage;
 import com.duofan.fly.core.storage.FlyRoleStorage;
+import com.duofan.fly.core.utils.PermissionStrUtils;
 import com.duofan.fly.core.utils.QueryUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author duofan
@@ -47,6 +54,9 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
 
     @Resource
     private FlyRolePermissionMapper permissionMapper;
+
+    @Resource
+    private FlyRolePermissionStorage permissionStorage;
 
     @Override
     public List<FlyResourceInfo> loadRoleResource(String role) {
@@ -129,4 +139,24 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
 
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOrUpdate(RoleDto role) {
+        FlyRole entity = BeanUtil.copyProperties(role, FlyRole.class);
+        UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(entity, List.of("id", "roleNo"), List.of("isEnabled", "roleName", "remark"), FlyRole.class);
+        this.update(entity, wp);
+
+        this.permissionStorage.
+                remove(
+                        new LambdaQueryWrapper<FlyRolePermission>().eq(FlyRolePermission::getRoleNo, role.getRoleNo())
+                );
+        Set<FlyRolePermission> permissions = role.getPermissions().stream().filter(p -> !CollUtil.contains(ignorePermission(), p)).map(p -> new FlyRolePermission(role.getRoleNo(), PermissionStrUtils.module(p), PermissionStrUtils.operation(p)))
+                .collect(Collectors.toSet());
+        this.permissionStorage.saveBatch(permissions);
+    }
+
+
+    private List<String> ignorePermission() {
+        return AuthenticationEndpointAnalysis.ignoreForAuth().stream().map(FlyApi::getOp).toList();
+    }
 }

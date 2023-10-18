@@ -1,5 +1,6 @@
 package com.duofan.fly.core;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
@@ -45,10 +46,17 @@ public class AuthenticationEndpointAnalysis {
     private final static Map<String, FlyResourceInfo> apiInfos = new ConcurrentHashMap<>();
 
     // 不需要认证就可以访问的接口
-    private final static List<String> whiteApis = new ArrayList<>();
+    private final static List<FlyApi> whiteApis = new ArrayList<>();
 
-    public List<String> getWhiteApis() {
-        return whiteApis;
+    // 授权所有认证用户
+    private final static List<FlyApi> grantAlleApis = new ArrayList<>();
+
+    public Collection<FlyApi> getWhiteApis() {
+        return CollUtil.unmodifiable(whiteApis);
+    }
+
+    public Collection<FlyApi> getGrantAlleApis() {
+        return CollUtil.unmodifiable(grantAlleApis);
     }
 
     public static Map<String, FlyModule> getEndpointModules() {
@@ -110,7 +118,10 @@ public class AuthenticationEndpointAnalysis {
                         .setRequestUrl((reqRoot + "/" + reqUrl).replace("//", "/"));
                 apis.put(flyMethod.getName(), api);
                 if (!api.isNeedAuthenticated()) {
-                    whiteApis.add(api.getRequestUrl());
+                    whiteApis.add(api);
+                }
+                if (api.isGrantAll()) {
+                    grantAlleApis.add(api);
                 }
             }
             modules.putIfAbsent(module.getModule(), module);
@@ -148,9 +159,32 @@ public class AuthenticationEndpointAnalysis {
         );
     }
 
-
-    public static Map<String, FlyModule> listOps() {
-        return Collections.unmodifiableMap(modules);
+    public static Map<String, Object> deepCopy(Map<String, Object> map) {
+        Map<String, Object> copy = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof Map) {
+                value = deepCopy((Map<String, Object>) value);
+            } else if (value instanceof FlyModule module) {
+                FlyModule copyModule = new FlyModule(module.getModuleName(), module.getModule(), module.getSystem(), module.getDescription());
+                Map apis = module.getApis();
+                copyModule.setApis(deepCopy(apis));
+                value = copyModule;
+            } else if (value instanceof FlyApi api) {
+                value = new FlyApi(api.getModuleName(), api.getModule(), api.getSystem(), api.getModuleDescription(), api.getOpName(), api.getOp(), api.getDescription(), api.isGrantAll(), api.isActivated(), api.getRequestUrl(), api.isNeedAuthenticated());
+            }
+            copy.put(key, value);
+        }
+        return copy;
     }
 
+    public static Map<String, FlyModule> listOps() {
+        return deepCopy((Map) modules);
+    }
+
+
+    public static Collection<FlyApi> ignoreForAuth() {
+        return CollUtil.unmodifiable(CollUtil.union(whiteApis, grantAlleApis));
+    }
 }

@@ -7,6 +7,7 @@ import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyRole;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
+import com.duofan.fly.core.dto.RoleDto;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.manage.api.request.RoleRelRequest;
 import com.duofan.fly.manage.api.request.RoleRequest;
@@ -44,8 +45,15 @@ public class FlyRoleController {
 
     @PostMapping("/create")
     @FlyAccessInfo(opName = "添加角色")
-    FlyResult create(@RequestBody @Validated RoleRequest.Save request) {
-        roleStorage.save(BeanUtil.copyProperties(request, FlyRole.class));
+    FlyResult create(@RequestBody @Validated RoleRequest.SaveOrUpdate request) {
+        roleStorage.saveOrUpdate(BeanUtil.copyProperties(request, RoleDto.class));
+        return FlyResult.SUCCESS;
+    }
+
+    @PostMapping("/update")
+    @FlyAccessInfo(opName = "修改角色")
+    FlyResult update(@RequestBody RoleRequest.SaveOrUpdate request) {
+        roleStorage.saveOrUpdate(BeanUtil.copyProperties(request, RoleDto.class));
         return FlyResult.SUCCESS;
     }
 
@@ -56,19 +64,6 @@ public class FlyRoleController {
         return FlyResult.SUCCESS;
     }
 
-    @PostMapping("/update")
-    @FlyAccessInfo(opName = "修改角色")
-    FlyResult update(@RequestBody RoleRequest.Save request) {
-        roleStorage.update(BeanUtil.copyProperties(request, FlyRole.class));
-        return FlyResult.SUCCESS;
-    }
-
-    @PostMapping("/update/permission")
-    @FlyAccessInfo(opName = "修改角色")
-    FlyResult updatePermission(@RequestBody RoleRequest.UpdateAndPermission request) {
-        roleStorage.update(BeanUtil.copyProperties(request, FlyRole.class));
-        return FlyResult.SUCCESS;
-    }
 
     @PostMapping("/bind/create")
     @FlyAccessInfo(opName = "角色绑定用户")

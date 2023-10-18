@@ -24,7 +24,7 @@ public class GreetController {
 
     @GetMapping("hello")
     @PreAuthorize("permitAll()")
-    @FlyAccessInfo(op = "hello", opName = "说句你好")
+    @FlyAccessInfo(opName = "说句你好")
     public ResponseEntity<String> hello() {
         List<FlyUser> flyUsers = userMapper.selectList(null);
         System.out.println(flyUsers);
@@ -33,7 +33,7 @@ public class GreetController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("grantHello")
-    @FlyAccessInfo(op = "hello", opName = "说句你好", isGrantToAll = true)
+    @FlyAccessInfo(opName = "说句你好", isGrantToAll = true)
     public ResponseEntity<String> helloGrantAll() {
         List<FlyUser> flyUsers = userMapper.selectList(null);
         System.out.println(flyUsers);

@@ -30,4 +30,18 @@ public class FlyApi {
     private boolean isActivated;
     private String requestUrl;
     private boolean needAuthenticated;
+
+    public FlyApi(String moduleName, String module, String system, String moduleDescription, String opName, String op, String description, boolean isGrantAll, boolean isActivated, String requestUrl, boolean needAuthenticated) {
+        this.moduleName = moduleName;
+        this.module = module;
+        this.system = system;
+        this.moduleDescription = moduleDescription;
+        this.opName = opName;
+        this.op = op;
+        this.description = description;
+        this.isGrantAll = isGrantAll;
+        this.isActivated = isActivated;
+        this.requestUrl = requestUrl;
+        this.needAuthenticated = needAuthenticated;
+    }
 }
