@@ -44,7 +44,7 @@ public class FlyRoleController {
 
     @PostMapping("/create")
     @FlyAccessInfo(opName = "添加角色")
-    FlyResult create(@RequestBody @Validated RoleRequest request) {
+    FlyResult create(@RequestBody @Validated RoleRequest.Save request) {
         roleStorage.save(BeanUtil.copyProperties(request, FlyRole.class));
         return FlyResult.SUCCESS;
     }
@@ -58,7 +58,14 @@ public class FlyRoleController {
 
     @PostMapping("/update")
     @FlyAccessInfo(opName = "修改角色")
-    FlyResult update(@RequestBody RoleRequest request) {
+    FlyResult update(@RequestBody RoleRequest.Save request) {
+        roleStorage.update(BeanUtil.copyProperties(request, FlyRole.class));
+        return FlyResult.SUCCESS;
+    }
+
+    @PostMapping("/update/permission")
+    @FlyAccessInfo(opName = "修改角色")
+    FlyResult updatePermission(@RequestBody RoleRequest.UpdateAndPermission request) {
         roleStorage.update(BeanUtil.copyProperties(request, FlyRole.class));
         return FlyResult.SUCCESS;
     }

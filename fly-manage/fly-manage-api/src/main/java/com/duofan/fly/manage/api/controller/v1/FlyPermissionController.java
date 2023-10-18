@@ -48,6 +48,6 @@ public class FlyPermissionController {
         roleStorage.bindPermission(PermissionRequest.PermissionBind.of(request));
         return FlyResult.SUCCESS;
     }
-
+    
 
 }

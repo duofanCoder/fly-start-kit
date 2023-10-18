@@ -4,8 +4,12 @@ import com.duofan.fly.core.domain.FlyModule;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.val;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 菜单返回构造
@@ -29,8 +33,9 @@ public class MenuResponse {
         private boolean disabled;
         private List<MenuTree> children;
 
-        public static List<MenuTree> of(@NotEmpty List<FlyModule> modules) {
-            return modules.stream().map(
+        public static Map<String, Object> of(@NotEmpty List<FlyModule> modules) {
+            ArrayList<String> checkMenus = new ArrayList<>();
+            List<MenuTree> tree = modules.stream().map(
                     module -> {
                         MenuTree menu = new MenuTree();
                         menu.setLabel(module.getModuleName())
@@ -38,17 +43,25 @@ public class MenuResponse {
                                 .setValue(module.getModule())
                                 .setChildren(module.getApis().values().stream().map(
                                         api ->
-                                                new MenuTree()
-                                                        .setLabel(api.getOpName())
-                                                        .setDescription(api.getDescription())
-                                                        .setValue(menu.getValue() + "." + api.getOp())
-                                                        .setActivated(api.isActivated())
-                                                        .setDisabled(api.isGrantAll())
-                                                        .setChildren(null)
+                                        {
+                                            val tmp = new MenuTree()
+                                                    .setLabel(api.getOpName())
+                                                    .setDescription(api.getDescription())
+                                                    .setValue(menu.getValue() + "." + api.getOp())
+                                                    .setActivated(api.isActivated())
+                                                    .setDisabled(api.isGrantAll())
+                                                    .setChildren(null);
+                                            checkMenus.add(tmp.getValue());
+                                            return tmp;
+                                        }
                                 ).toList());
                         return menu;
                     }
             ).toList();
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("checkMenus", checkMenus);
+            map.put("tree", tree);
+            return map;
         }
 
     }
