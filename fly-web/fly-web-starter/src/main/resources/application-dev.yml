@@ -46,7 +46,11 @@ springdoc:
 #  default-flat-param-object: true
 
 
-debug: false
+debug: true
+
+# 关闭Spring-boot-devtools热部署
+spring.devtools.restart.enabled: false
+
 #logging:
 #  level:
 #    org.springframework.security:

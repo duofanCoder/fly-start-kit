@@ -54,7 +54,7 @@ public class FlyMvcConfig implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.removeIf(MappingJackson2HttpMessageConverter.class::isInstance);
-        converters.add(0, mappingJackson2HttpMessageConverter());
+        converters.add(mappingJackson2HttpMessageConverter());
     }
 
     @Override

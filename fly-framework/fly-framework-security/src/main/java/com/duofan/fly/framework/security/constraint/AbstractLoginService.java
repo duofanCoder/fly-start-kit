@@ -63,6 +63,7 @@ public abstract class AbstractLoginService implements FlyLoginService {
             loginUser = authenticate(username, password);
         } catch (Exception e) {
             loginValidRepository.doErrHandle(data, e);
+            log.info("{}", e.getMessage());
             throw e;
         }
         loginValidRepository.doSuccessHandle(data);
