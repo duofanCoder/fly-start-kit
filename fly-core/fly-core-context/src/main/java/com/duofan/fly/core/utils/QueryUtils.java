@@ -101,7 +101,7 @@ public class QueryUtils {
             String colQuery = StrUtil.toUnderlineCase(col);
             wrapper.set(colQuery, value);
         }
-        return null;
+        return wrapper;
     }
 
     private static <T> void conditionWrapper(String valQuery, UpdateWrapper<T> wrapper, String colQuery) {
