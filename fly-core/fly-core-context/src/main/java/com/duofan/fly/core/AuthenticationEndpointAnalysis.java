@@ -7,6 +7,7 @@ import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.domain.FlyApi;
 import com.duofan.fly.core.domain.FlyModule;
+import com.duofan.fly.core.utils.PermissionStrUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +43,11 @@ public class AuthenticationEndpointAnalysis {
     private ApplicationContext applicationContext;
 
     private final static Map<String, FlyModule> modules = new ConcurrentHashMap<>();
-    // key => module + method
+    // 懒加载 key => module + method
     private final static Map<String, FlyResourceInfo> apiInfos = new ConcurrentHashMap<>();
+
+    // 所有的flyApi
+    private final static List<FlyApi> allApis = new ArrayList<>();
 
     // 不需要认证就可以访问的接口
     private final static List<FlyApi> whiteApis = new ArrayList<>();
@@ -65,27 +69,19 @@ public class AuthenticationEndpointAnalysis {
 
     public static FlyResourceInfo getFullApiInfo(String module, String op) {
         FlyResourceInfo info = new FlyResourceInfo();
-        info.setModule(module)
-                .setOp(op)
-                .setModuleName(modules.get(module).getModuleName())
-                .setOpName(modules.get(module).getApis().get(op).getOpName())
-                .setGrantToAll(modules.get(module).getApis().get(op).isGrantAll())
-                .setNeedAuthenticated(modules.get(module).getApis().get(op).isNeedAuthenticated())
-                .setDescription(modules.get(module).getApis().get(op).getDescription());
+        info.setModule(module).setOp(op).setModuleName(modules.get(module).getModuleName()).setOpName(modules.get(module).getApis().get(op).getOpName()).setGrantToAll(modules.get(module).getApis().get(op).isGrantAll()).setNeedAuthenticated(modules.get(module).getApis().get(op).isNeedAuthenticated()).setDescription(modules.get(module).getApis().get(op).getDescription());
         return info;
     }
 
     /**
-     * module.op
+     * 懒加载
+     * 接口使用过之后才会有存入的到apiInfos
      *
      * @param moduleOp
      * @return
      */
     public static FlyResourceInfo getApiInfo(String moduleOp) {
-        return apiInfos.computeIfAbsent(moduleOp, (k) -> getFullApiInfo(
-                StrUtil.subBefore(moduleOp, ".", true),
-                StrUtil.subAfter(moduleOp, ".", true)
-        ));
+        return apiInfos.computeIfAbsent(moduleOp, (k) -> getFullApiInfo(PermissionStrUtils.module(moduleOp), PermissionStrUtils.operation(moduleOp)));
     }
 
     private void analysis() {
@@ -98,24 +94,14 @@ public class AuthenticationEndpointAnalysis {
             if (annotation == null) continue;
             FlyModule module = new FlyModule();
             ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
-            module.setModuleName(StrUtil.emptyToDefault(annotation.moduleName(), clazz.getName()))
-                    .setModule(clazz.getName())
-                    .setDescription(annotation.description())
-                    .setSystem(annotation.system())
-                    .setApis(apis);
+            module.setModuleName(StrUtil.emptyToDefault(annotation.moduleName(), clazz.getName())).setModule(clazz.getName()).setDescription(annotation.description()).setSystem(annotation.system()).setApis(apis);
             Method[] controllerMethods = clazz.getDeclaredMethods();
             // 注解的方法
             List<Method> flyMethods = Arrays.stream(controllerMethods).filter(m -> m.isAnnotationPresent(FlyAccessInfo.class)).toList();
             for (Method flyMethod : flyMethods) {
                 FlyAccessInfo methodAnnotation = flyMethod.getAnnotation(FlyAccessInfo.class);
                 String reqUrl = getAnnotation(flyMethod);
-                FlyApi api = new FlyApi()
-                        .setOpName(StrUtil.emptyToDefault(methodAnnotation.opName(), flyMethod.getName()))
-                        .setOp(flyMethod.getName())
-                        .setDescription(methodAnnotation.description())
-                        .setGrantAll(methodAnnotation.isGrantToAll())
-                        .setNeedAuthenticated(methodAnnotation.needAuthenticated())
-                        .setRequestUrl((reqRoot + "/" + reqUrl).replace("//", "/"));
+                FlyApi api = new FlyApi().setModule(module.getModule()).setModuleName(module.getModuleName()).setOpName(StrUtil.emptyToDefault(methodAnnotation.opName(), flyMethod.getName())).setOp(flyMethod.getName()).setDescription(methodAnnotation.description()).setGrantAll(methodAnnotation.isGrantToAll()).setNeedAuthenticated(methodAnnotation.needAuthenticated()).setRequestUrl((reqRoot + "/" + reqUrl).replace("//", "/"));
                 apis.put(flyMethod.getName(), api);
                 if (!api.isNeedAuthenticated()) {
                     whiteApis.add(api);
@@ -123,6 +109,7 @@ public class AuthenticationEndpointAnalysis {
                 if (api.isGrantAll()) {
                     grantAlleApis.add(api);
                 }
+                allApis.add(api);
             }
             modules.putIfAbsent(module.getModule(), module);
         }
@@ -131,12 +118,7 @@ public class AuthenticationEndpointAnalysis {
     }
 
     private String getAnnotation(AnnotatedElement annotationEle) {
-        Annotation annotation = AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) != null ?
-                AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) :
-                AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) != null ?
-                        AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) :
-                        AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) != null ?
-                                AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) : null;
+        Annotation annotation = AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) != null ? AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) : AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) != null ? AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) : AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) != null ? AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) : null;
         if (annotation instanceof GetMapping an) {
             return an.value()[0];
         } else if (annotation instanceof PostMapping getMapping) {
@@ -152,11 +134,9 @@ public class AuthenticationEndpointAnalysis {
         log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "启动");
         analysis();
         log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "完毕");
-        modules.forEach(
-                (module, info) -> {
-                    log.info(LogConstant.COMPONENT_LOG + "{}", "认证端点分析", "模块【" + info.getModuleName(), "】加载完毕");
-                }
-        );
+        modules.forEach((module, info) -> {
+            log.info(LogConstant.COMPONENT_LOG + "{}", "认证端点分析", "模块【" + info.getModuleName(), "】加载完毕");
+        });
     }
 
     public static Map<String, Object> deepCopy(Map<String, Object> map) {
@@ -183,7 +163,45 @@ public class AuthenticationEndpointAnalysis {
         return deepCopy((Map) modules);
     }
 
+    /**
+     * module+op
+     * 获取不需要认证的接口 = 游客可见 + 所有认证后可见
+     *
+     * @return
+     */
+    public static List<String> ignorePermission() {
+        return AuthenticationEndpointAnalysis.ignoreForAuth().stream().map(api -> PermissionStrUtils.permission(api.getModule(), api.getOp())).toList();
+    }
 
+
+    /**
+     * apiInfos 是否包含该认证点API
+     *
+     * @param module
+     * @param op
+     * @return
+     */
+    public static boolean contains(String module, String op) {
+        return allApis.stream().allMatch(api -> PermissionStrUtils.permission(api.getModule(), api.getOp()).equals(PermissionStrUtils.permission(module, op)));
+    }
+
+    /**
+     * 判断认证点是否在系统内 入参是认证点 module+op
+     */
+    public static boolean contains(String moduleOp) {
+        for (FlyApi api : allApis) {
+            if (PermissionStrUtils.permission(api.getModule(), api.getOp()).equals(moduleOp)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取不需要认证的接口 = 游客可见 + 所有认证后可见
+     *
+     * @return
+     */
     public static Collection<FlyApi> ignoreForAuth() {
         return CollUtil.unmodifiable(CollUtil.union(whiteApis, grantAlleApis));
     }

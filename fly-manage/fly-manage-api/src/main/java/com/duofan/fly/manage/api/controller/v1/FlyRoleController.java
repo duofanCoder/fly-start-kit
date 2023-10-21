@@ -37,6 +37,14 @@ public class FlyRoleController {
     @Resource
     private FlyRoleStorage roleStorage;
 
+
+    /**
+     * 分页角色
+     *
+     * @param pageInfo 分页信息
+     * @param role     角色信息
+     * @return 分页角色
+     */
     @PostMapping("/page")
     @FlyAccessInfo(opName = "分页角色")
     FlyResult page(@RequestBody(required = false) FlyPageInfo<FlyRole> pageInfo, @RequestBody(required = false) FlyRole role) {

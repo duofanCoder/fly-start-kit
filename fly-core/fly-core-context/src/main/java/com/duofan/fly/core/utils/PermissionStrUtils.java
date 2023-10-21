@@ -20,4 +20,8 @@ public class PermissionStrUtils {
     public static String operation(String permission) {
         return StrUtil.subSuf(permission, permission.lastIndexOf(".") + 1);
     }
+
+    public static String permission(String getModule, String getOp) {
+        return StrUtil.format("{}.{}", getModule, getOp);
+    }
 }

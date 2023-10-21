@@ -145,18 +145,17 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
         FlyRole entity = BeanUtil.copyProperties(role, FlyRole.class);
         UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(entity, List.of("id", "roleNo"), List.of("isEnabled", "roleName", "remark"), FlyRole.class);
         this.update(entity, wp);
-
         this.permissionStorage.
                 remove(
                         new LambdaQueryWrapper<FlyRolePermission>().eq(FlyRolePermission::getRoleNo, role.getRoleNo())
                 );
-        Set<FlyRolePermission> permissions = role.getPermissions().stream().filter(p -> !CollUtil.contains(ignorePermission(), p)).map(p -> new FlyRolePermission(role.getRoleNo(), PermissionStrUtils.module(p), PermissionStrUtils.operation(p)))
+        Set<FlyRolePermission> permissions = role.getPermissions().stream()
+                // 认证不需要授权的接口
+                .filter(p -> !CollUtil.contains(AuthenticationEndpointAnalysis.ignorePermission(), p))
+                // 只有需要授权的接口会写入到数据库
+                .filter(AuthenticationEndpointAnalysis::contains)
+                .map(p -> new FlyRolePermission(role.getRoleNo(), PermissionStrUtils.module(p), PermissionStrUtils.operation(p)))
                 .collect(Collectors.toSet());
         this.permissionStorage.saveBatch(permissions);
-    }
-
-
-    private List<String> ignorePermission() {
-        return AuthenticationEndpointAnalysis.ignoreForAuth().stream().map(FlyApi::getOp).toList();
     }
 }
