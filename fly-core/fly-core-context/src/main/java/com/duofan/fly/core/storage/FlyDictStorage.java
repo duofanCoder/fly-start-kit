@@ -26,4 +26,5 @@ public interface FlyDictStorage extends IService<FlyDict> {
 
     FlyPageInfo<FlyDict> page(FlyPageInfo<FlyDict> pageInfo, FlyDict condition);
 
+    List<FlyDict> list(String type);
 }

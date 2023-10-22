@@ -44,11 +44,17 @@ public class FlyDictController {
     }
 
     @PostMapping("/batchList")
-    @FlyAccessInfo(opName = "查询")
+    @FlyAccessInfo(opName = "批量查询")
     FlyResult batchList(
             @RequestBody @NotNull @NotEmpty
             Set<String> typeList) {
         return FlyResult.success(dictStorage.list(typeList));
+    }
+
+    @PostMapping("/list")
+    @FlyAccessInfo(opName = "单个查询")
+    FlyResult list(String type) {
+        return FlyResult.success(dictStorage.list(type));
     }
 
     @PostMapping("/create")

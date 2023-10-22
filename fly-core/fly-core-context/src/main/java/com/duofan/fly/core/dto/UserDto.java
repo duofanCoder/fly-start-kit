@@ -1,8 +1,11 @@
 package com.duofan.fly.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * 用户传输类
@@ -20,8 +23,9 @@ public class UserDto {
     private String newPassword;
     private String rawPassword;
     @JsonDeserialize
+    @JsonIgnore
     private String password;
-
+    private String remark;
     private String phone;
     private String username;
 
@@ -36,5 +40,6 @@ public class UserDto {
     private String isEnabled;
 
     private String roleNo;
+    private List<String> ownRoleList;
     private String groupNo;
 }

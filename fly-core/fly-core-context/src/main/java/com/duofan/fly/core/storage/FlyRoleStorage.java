@@ -28,6 +28,8 @@ public interface FlyRoleStorage extends IService<FlyRole> {
 
     void addRoleRel(FlyRoleRel flyRoleRel);
 
+    void addRoleRel(List<FlyRoleRel> flyRoleRel);
+
     void removeRoleRel(FlyRoleRel flyRoleRel);
 
     FlyPageInfo<FlyRole> page(FlyPageInfo<FlyRole> pageInfo, FlyRole role);
@@ -42,4 +44,10 @@ public interface FlyRoleStorage extends IService<FlyRole> {
 
     @Transactional(rollbackFor = Exception.class)
     void saveOrUpdate(RoleDto role);
+
+    void updateChangeEnabled(FlyRole flyRole);
+
+    List<String> getByUsername(String username);
+
+    void removeRel(FlyRoleRel entity);
 }

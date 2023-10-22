@@ -1,7 +1,7 @@
 package com.duofan.fly.manage.api.dict;
 
 import com.duofan.fly.core.base.entity.FlyDict;
-import com.duofan.fly.core.spi.DicExtension;
+import com.duofan.fly.core.spi.DictExtension;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @date 2023/7/14
  */
 @Component
-public class RoleDict implements DicExtension {
+public class RoleDict implements DictExtension {
     @Resource
     private FlyRoleStorage service;
 

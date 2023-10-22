@@ -3,6 +3,7 @@ package com.duofan.fly.core.base.entity;
 import com.duofan.fly.core.base.entity.abstact.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,6 +22,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table
 @Accessors(chain = true)
+@AllArgsConstructor
 public class FlyRoleRel extends BaseEntity {
     private String username;
     private String roleNo;

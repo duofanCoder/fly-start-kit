@@ -31,4 +31,13 @@ public class RoleRequest {
     }
 
 
+    // 状态修改开启关闭
+    @Data
+    public static class Status {
+        @NotBlank(message = "角色编号不能为空")
+        private String roleNo;
+        @NotBlank(message = "状态不能为空")
+        private String isEnabled;
+    }
+
 }

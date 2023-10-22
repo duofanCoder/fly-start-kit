@@ -37,12 +37,11 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
         if (!attribute.isNeedAuthenticated()) {
             return new AuthorizationDecision(true);
         }
-        if (attribute.isGrantToAll() && authInfo.getAuthorities().contains(
+        if (attribute.isGrantToAll() && !authInfo.getAuthorities().contains(
                 new SimpleGrantedAuthority(SecurityConstant.AUTHORITY_ROLE_ANONYMOUS)
         )) {
             return new AuthorizationDecision(true);
         }
-
 
         if (authorities.contains(
                 new SimpleGrantedAuthority(attribute.getFullOp())

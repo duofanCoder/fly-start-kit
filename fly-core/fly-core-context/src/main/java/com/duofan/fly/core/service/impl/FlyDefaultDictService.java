@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.entity.FlyDict;
 import com.duofan.fly.core.service.FlyDictService;
-import com.duofan.fly.core.spi.DicExtension;
+import com.duofan.fly.core.spi.DictExtension;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,13 +23,13 @@ import java.util.List;
 public class FlyDefaultDictService implements FlyDictService {
 
     @Resource
-    List<DicExtension> dicExtensionList;
+    List<DictExtension> dictExtensionList;
 
     @Override
     public List<FlyDict> list(String dicType) {
 
-        DicExtension dic = dicExtensionList.stream()
-                .filter(dicExtension -> StrUtil.equalsIgnoreCase(dicType, dicExtension.getType()))
+        DictExtension dic = dictExtensionList.stream()
+                .filter(dictExtension -> StrUtil.equalsIgnoreCase(dicType, dictExtension.getType()))
                 .findFirst()
                 .orElse(null);
 

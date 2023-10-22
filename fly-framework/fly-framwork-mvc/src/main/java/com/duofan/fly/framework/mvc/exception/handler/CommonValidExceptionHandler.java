@@ -76,6 +76,22 @@ public class CommonValidExceptionHandler {
     @ExceptionHandler(ServletException.class)
     public FlyResult handleServletException(ServletException e) {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.NOT_FOUND);
+        return FlyResult.of(FlyHttpStatus.FAIL);
     }
+
+    @ResponseBody
+    @ExceptionHandler(IllegalStateException.class)
+    public FlyResult handleIllegalStateException(IllegalStateException e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public FlyResult handleException(Exception e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.FAIL);
+    }
+
+
 }

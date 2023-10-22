@@ -104,4 +104,9 @@ public class FlyDefaultDictStorage extends ServiceImpl<FlyDictMapper, FlyDict> i
         QueryWrapper<FlyDict> wp = QueryUtils.buildQueryWrapper(condition, List.of("username", "email", "phone", "isLocked", "isEnabled"), FlyDict.class);
         return FlyPageInfo.of(page(page, wp));
     }
+
+    @Override
+    public List<FlyDict> list(String type) {
+        return dictService.list(type);
+    }
 }

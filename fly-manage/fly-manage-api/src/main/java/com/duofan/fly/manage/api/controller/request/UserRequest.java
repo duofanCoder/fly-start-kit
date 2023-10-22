@@ -22,19 +22,38 @@ public class UserRequest {
     public static class UserUpdate {
         @NotBlank
         @NotNull
-        private String id;
         private String username;
         private String gender;
-        private String age;
         private String birth;
         @IdCardNo
         private String idCardNo;
         @Email
         private String email;
         private String phone;
-        private String avatarImg;
+        private String avatar;
         private String isLocked;
         private String isEnabled;
+        private String roleNo;
+        private String remark;
+    }
+
+    @Data
+    public static class Save {
+        @NotBlank
+        @NotNull
+        private String username;
+        private String gender;
+        private String birth;
+        @IdCardNo
+        private String idCardNo;
+        @Email
+        private String email;
+        private String phone;
+        private String avatar;
+        private String isLocked = "0";
+        private String isEnabled = "1";
+        private String roleNo;
+        private String remark;
     }
 
     @Data
@@ -56,8 +75,16 @@ public class UserRequest {
         private String idCardNo;
         private String email;
         private String phone;
-        private String avatarImg;
+        private String avatar;
         private String isLocked;
         private String isEnabled;
+    }
+
+    @Data
+    public static class Locked {
+        @NotBlank(message = "用户名不能为空")
+        private String username;
+        @NotBlank(message = "启用状态不能为空")
+        private String isLocked;
     }
 }

@@ -25,4 +25,8 @@ public interface FlyUserStorage extends IService<FlyUser> {
     FlyPageInfo<FlyUser> page(FlyPageInfo<FlyUser> pageInfo, FlyUser user);
 
     FlyPageInfo<UserDto> page(FlyPageInfo<FlyUser> pageInfo, UserDto condition);
+
+    void locked(FlyUser flyUser);
+
+    void updateByUsername(FlyUser flyUser);
 }

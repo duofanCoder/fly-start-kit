@@ -51,7 +51,6 @@ public class ManageInitRunner implements CommandLineRunner {
     private void userInit() {
 
         FlyUser adminEntity = new FlyUser()
-                .setAge("25")
                 .setUsername("admin")
                 .setPassword(passwordEncoder.encode("123456"))
                 .setEmail("duofancc@qq.com")
@@ -63,7 +62,6 @@ public class ManageInitRunner implements CommandLineRunner {
                 .setIsEnabled("1");
 
         FlyUser commonEntity = new FlyUser()
-                .setAge("22")
                 .setUsername("common")
                 .setPassword(passwordEncoder.encode("123456"))
                 .setEmail("common@qq.com")

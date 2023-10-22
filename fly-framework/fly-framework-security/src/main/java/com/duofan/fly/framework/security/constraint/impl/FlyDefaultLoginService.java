@@ -39,7 +39,8 @@ public class FlyDefaultLoginService extends AbstractLoginService {
         } catch (Exception e) {
             for (LoginFailException.LoginFailStatus value : LoginFailException.LoginFailStatus.values()) {
                 Class<?> clazz = value.getClazz();
-                if (clazz.isAssignableFrom(e.getClass())) {
+                // 判断异常是否该类实例
+                if (clazz.isInstance(e)) {
                     throw new LoginFailException(value);
                 }
             }

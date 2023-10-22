@@ -1,5 +1,9 @@
 package com.duofan.fly.manage.api.request;
 
+import com.duofan.fly.manage.api.dict.RoleDict;
+import com.duofan.fly.validate.constraint.Dict;
+import com.duofan.fly.validate.constraint.IdCardNo;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -13,7 +17,10 @@ import lombok.Data;
  */
 @Data
 public class RoleRelRequest {
+    @NotBlank(message = "用户名不能为空")
     private String username;
+    @Dict(dict = RoleDict.class, message = "角色不存在")
     private String roleNo;
+    @IdCardNo
     private String rel;
 }

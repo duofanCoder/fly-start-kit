@@ -27,6 +27,16 @@ public class QueryUtils {
         return buildQueryWrapper(entity, queryColList, clazz, clazz);
     }
 
+    /**
+     * 构建查询修改工具
+     *
+     * @param entity        查询修改实体
+     * @param queryColList  查询列
+     * @param updateColList 修改列
+     * @param clazz         输入类
+     * @param <T>           输入类泛型
+     * @return 查询wrapper
+     */
     public static <T> UpdateWrapper<T> buildUpdateWrapper(T entity, List<String> queryColList, List<String> updateColList, Class<T> clazz) {
         return buildUpdateWrapper(entity, queryColList, updateColList, clazz, clazz);
     }
@@ -81,7 +91,7 @@ public class QueryUtils {
 
             Method method = null;
             try {
-                String methodName = "set" + StrUtil.upperFirst(field.getName());
+                String methodName = "get" + StrUtil.upperFirst(field.getName());
                 method = clazzQ.getMethod(methodName);
             } catch (NoSuchMethodException e) {
                 log.info("修改字段在实体类没有找到方法,colum:{}", col);

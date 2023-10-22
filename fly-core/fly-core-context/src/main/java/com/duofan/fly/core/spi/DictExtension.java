@@ -5,7 +5,7 @@ import com.duofan.fly.core.base.entity.FlyDict;
 
 import java.util.List;
 
-public interface DicExtension {
+public interface DictExtension {
     String getType();
 
     List<FlyDict> list();

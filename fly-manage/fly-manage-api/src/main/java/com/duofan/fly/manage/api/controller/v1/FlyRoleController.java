@@ -11,7 +11,9 @@ import com.duofan.fly.core.dto.RoleDto;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.manage.api.request.RoleRelRequest;
 import com.duofan.fly.manage.api.request.RoleRequest;
+import com.duofan.fly.validate.plugins.ValidationList;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,17 +77,24 @@ public class FlyRoleController {
 
     @PostMapping("/bind/create")
     @FlyAccessInfo(opName = "角色绑定用户")
-    FlyResult addRoleRel(@RequestBody List<RoleRelRequest> roleRels) {
-        CglibUtil.copyList(roleRels, FlyRoleRel::new)
-                .forEach(r -> roleStorage.addRoleRel(r));
+    FlyResult addRoleRel(@RequestBody @Valid ValidationList<RoleRelRequest> roleRels) {
+        roleStorage.addRoleRel(BeanUtil.copyToList(roleRels, FlyRoleRel.class));
         return FlyResult.SUCCESS;
     }
 
     @PostMapping("/bind/remove")
     @FlyAccessInfo(opName = "角色解绑用户")
     FlyResult removeRoleRel(@RequestBody List<RoleRelRequest> roleRels) {
-        CglibUtil.copyList(roleRels, FlyRoleRel::new)
-                .forEach(r -> roleStorage.removeRoleRel(r));
+        CglibUtil.copyList(roleRels, FlyRoleRel::new).forEach(r -> roleStorage.removeRoleRel(r));
+        return FlyResult.SUCCESS;
+    }
+
+
+    // 角色状态开启/关闭
+    @PostMapping("/status")
+    @FlyAccessInfo(opName = "角色状态开启/关闭")
+    FlyResult status(@RequestBody RoleRequest.Status status) {
+        roleStorage.updateChangeEnabled(BeanUtil.copyProperties(status, FlyRole.class));
         return FlyResult.SUCCESS;
     }
 }

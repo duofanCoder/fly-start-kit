@@ -11,6 +11,8 @@ public class SecurityProperties {
 
     private TokenProperties token = new TokenProperties();
 
+    private String defaultPassword = "123456";
+
     @Data
     public static class LoginProperties {
         private boolean captchaEnabled = true;

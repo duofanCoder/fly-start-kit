@@ -6,12 +6,13 @@ import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.dto.UserDto;
-import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
 import com.duofan.fly.manage.api.controller.request.UserRequest;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,9 +34,6 @@ public class FlyUserController {
     @Resource
     private FlyUserStorage userStorage;
 
-    @Resource
-    private FlyRoleStorage roleStorage;
-
     @PostMapping("/password/reset")
     @FlyAccessInfo(opName = "重置密码")
     public FlyResult passwdReset(UserRequest.PasswdReset request) {
@@ -45,7 +43,7 @@ public class FlyUserController {
 
 
     @PostMapping("/getUserInfo")
-    @FlyAccessInfo(opName = "获取用户信息")
+    @FlyAccessInfo(opName = "获取用户信息", isGrantToAll = true)
     public FlyResult getUserInfo() {
         return FlyResult.success(userStorage.getLoginUserInfo());
     }
@@ -53,7 +51,7 @@ public class FlyUserController {
 
     @PostMapping("/page")
     @FlyAccessInfo(opName = "分页用户信息")
-    public FlyResult page(FlyPageInfo<FlyUser> pageInfo, UserRequest.UserPage page) {
+    public FlyResult page(@RequestBody FlyPageInfo<FlyUser> pageInfo, @RequestBody UserRequest.UserPage page) {
         return FlyResult.success(userStorage.page(pageInfo, BeanUtil.copyProperties(page, UserDto.class)));
     }
 
@@ -71,9 +69,21 @@ public class FlyUserController {
 
     @PostMapping("/update")
     @FlyAccessInfo(opName = "修改用户信息")
-    public FlyResult updateById(UserRequest.UserUpdate request) {
-        return FlyResult.success(userStorage.updateById(BeanUtil.copyProperties(request, FlyUser.class)));
+    public FlyResult updateByUsername(@RequestBody @Valid UserRequest.UserUpdate request) {
+        userStorage.updateByUsername(BeanUtil.copyProperties(request, FlyUser.class));
+        return FlyResult.SUCCESS;
     }
 
+    @PostMapping("/save")
+    @FlyAccessInfo(opName = "添加用户信息")
+    public FlyResult save(@RequestBody @Valid UserRequest.Save request) {
+        return FlyResult.success(userStorage.save(BeanUtil.copyProperties(request, FlyUser.class)));
+    }
 
+    @PostMapping("/status/locked")
+    @FlyAccessInfo(opName = "启用用户")
+    public FlyResult enabled(@RequestBody @Valid UserRequest.Locked request) {
+        userStorage.locked(BeanUtil.copyProperties(request, FlyUser.class));
+        return FlyResult.SUCCESS;
+    }
 }

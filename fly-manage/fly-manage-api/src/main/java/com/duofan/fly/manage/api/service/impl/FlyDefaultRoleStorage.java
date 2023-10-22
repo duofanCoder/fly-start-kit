@@ -73,6 +73,12 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addRoleRel(List<FlyRoleRel> flyRoleRel) {
+        flyRoleRel.forEach(this::addRoleRel);
+    }
+
+    @Override
     public void removeRoleRel(FlyRoleRel flyRoleRel) {
         QueryWrapper<FlyRoleRel> wp = QueryUtils.buildQueryWrapper(flyRoleRel, List.of("roleNo", "username", "rel"), FlyRoleRel.class);
         relMapper.delete(wp);
@@ -118,8 +124,7 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
 
     @Override
     public void update(FlyRole role) {
-        UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(role, List.of("roleNo"),
-                List.of("roleName", "isDisabled"), FlyRole.class);
+        UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(role, List.of("roleNo"), List.of("roleName", "isDisabled"), FlyRole.class);
         roleMapper.update(null, wp);
     }
 
@@ -145,17 +150,40 @@ public class FlyDefaultRoleStorage extends ServiceImpl<FlyRoleMapper, FlyRole> i
         FlyRole entity = BeanUtil.copyProperties(role, FlyRole.class);
         UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(entity, List.of("id", "roleNo"), List.of("isEnabled", "roleName", "remark"), FlyRole.class);
         this.update(entity, wp);
-        this.permissionStorage.
-                remove(
-                        new LambdaQueryWrapper<FlyRolePermission>().eq(FlyRolePermission::getRoleNo, role.getRoleNo())
-                );
+        this.permissionStorage.remove(new LambdaQueryWrapper<FlyRolePermission>().eq(FlyRolePermission::getRoleNo, role.getRoleNo()));
         Set<FlyRolePermission> permissions = role.getPermissions().stream()
                 // 认证不需要授权的接口
                 .filter(p -> !CollUtil.contains(AuthenticationEndpointAnalysis.ignorePermission(), p))
                 // 只有需要授权的接口会写入到数据库
-                .filter(AuthenticationEndpointAnalysis::contains)
-                .map(p -> new FlyRolePermission(role.getRoleNo(), PermissionStrUtils.module(p), PermissionStrUtils.operation(p)))
-                .collect(Collectors.toSet());
+                .filter(AuthenticationEndpointAnalysis::contains).map(p -> new FlyRolePermission(role.getRoleNo(), PermissionStrUtils.module(p), PermissionStrUtils.operation(p))).collect(Collectors.toSet());
         this.permissionStorage.saveBatch(permissions);
+    }
+
+    @Override
+    public void updateChangeEnabled(FlyRole flyRole) {
+        UpdateWrapper<FlyRole> wp = QueryUtils.buildUpdateWrapper(flyRole, List.of("roleNo"), List.of("isEnabled"), FlyRole.class);
+        roleMapper.update(null, wp);
+    }
+
+    @Override
+    public List<String> getByUsername(String username) {
+        QueryWrapper<FlyRoleRel> wp = QueryUtils.buildQueryWrapper(new FlyRoleRel().setUsername(username), List.of("username"), FlyRoleRel.class);
+        List<FlyRoleRel> roleRels = relMapper.selectList(wp);
+        if (CollUtil.isEmpty(roleRels)) {
+            return null;
+        }
+        return roleRels.stream().map(FlyRoleRel::getRoleNo).collect(Collectors.toList());
+    }
+
+    /**
+     * 删除用户角色关系
+     *
+     * @param entity
+     */
+    @Override
+    public void removeRel(FlyRoleRel entity) {
+        QueryWrapper<FlyRoleRel> wp = QueryUtils.buildQueryWrapper(entity, List.of("username", "roleNo", "rel"
+        ), FlyRoleRel.class);
+        relMapper.delete(wp);
     }
 }

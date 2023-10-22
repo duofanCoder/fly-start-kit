@@ -83,7 +83,7 @@ public class FlyLoginUser implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return "0".equals(this.user.getIsLocked());
     }
 
     @JsonIgnore
@@ -95,6 +95,6 @@ public class FlyLoginUser implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return true;
+        return "1".equals(this.user.getIsEnabled());
     }
 }
