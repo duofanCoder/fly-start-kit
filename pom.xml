@@ -15,6 +15,7 @@
         <module>fly-commons</module>
         <module>fly-core</module>
         <module>fly-manage</module>
+        <module>fly-api</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
