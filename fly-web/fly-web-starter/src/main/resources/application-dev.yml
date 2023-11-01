@@ -74,10 +74,16 @@ knife4j:
     enable: false
     username: abc
     password: 123
+
+
 fly:
   security:
     login:
       captcha-enabled: true
+  pay:
+    alipay:
+      trade-face:
+        enabled: true
   jpa:
     ddl-auto:
       enabled: true

@@ -6,8 +6,10 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayTradePrecreateModel;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.duofan.fly.api.pay.constant.PayChannelDict;
 import com.duofan.fly.api.pay.dto.TradeDto;
 import com.duofan.fly.api.pay.service.PayService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,15 +23,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class AlipayFaceTradePayServiceImpl implements PayService {
+
+    @Resource
+    private AlipayClient defaultApiClient;
+
+    @Override
+    public PayChannelDict getPayChannelDict() {
+        return PayChannelDict.ALIPAY_TRADE_FACE;
+    }
+
     @Override
     public TradeDto preCreate(Double price) {
-        AlipayClient defaultApiClient = null;
-        try {
-            defaultApiClient = FaceTradeUtils.getDefaultApiClient();
-        } catch (AlipayApiException e) {
-            log.info("阿里当面付异常：配置装载出错");
-            throw new RuntimeException(e);
-        }
         //实例化客户端
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
@@ -39,7 +43,7 @@ public class AlipayFaceTradePayServiceImpl implements PayService {
         model.setTotalAmount("0.01");
         model.setSubject("Iphone6 16G");
         request.setBizModel(model);
-        request.setNotifyUrl(AlipayTradeConstants.NotifyUrl);
+        request.setNotifyUrl("https://alipay.duofan.top/face-trade/callback");
         AlipayTradePrecreateResponse response = null;
         try {
             response = defaultApiClient.execute(request);
@@ -49,7 +53,7 @@ public class AlipayFaceTradePayServiceImpl implements PayService {
         }
         if (response.isSuccess()) {
             log.info("阿里当面付:订单预创建成功, 订单号 = {}", outTradeNo);
-            return new AlipayTradeDto().setOutTradeNo(response.getOutTradeNo())
+            return new TradeDto().setOutTradeNo(response.getOutTradeNo())
                     .setQrCode(response.getQrCode());
         } else {
             log.info(response.getBody());

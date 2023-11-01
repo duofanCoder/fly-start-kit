@@ -3,6 +3,8 @@ package com.duofan.fly.api.pay.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.HashMap;
+
 /**
  * @Author duofaWorker
  * @Email duofancc@qq.com
@@ -17,4 +19,5 @@ public class TradeDto {
 
     private String outTradeNo;
 
+    private HashMap<String, Object> tradeInfo;
 }
