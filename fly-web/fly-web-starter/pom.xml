@@ -54,7 +54,7 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.duofan.fly</groupId>
+            <groupId>com.duofan.fly.commons</groupId>
             <artifactId>fly-commons-swagger</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
