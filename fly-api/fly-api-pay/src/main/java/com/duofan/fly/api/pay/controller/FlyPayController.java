@@ -5,6 +5,7 @@ import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,9 +33,13 @@ public class FlyPayController {
 
     @PostMapping("/create")
     @FlyAccessInfo(opName = "创建支付", needAuthenticated = false)
-    FlyResult create(@RequestBody @Valid Double price) {
-        return FlyResult.success(payService.preCreate(price));
+    FlyResult create(@RequestBody PayRequest request) {
+        return FlyResult.success(payService.preCreate(request.getPrice()));
     }
 
+    @Data
+    public static class PayRequest {
+        private Double price;
+    }
 
 }

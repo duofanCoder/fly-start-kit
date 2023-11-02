@@ -7,9 +7,9 @@ import com.alipay.api.DefaultAlipayClient;
 import com.duofan.fly.api.pay.utils.AlipayTradeProperty;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 当面副
@@ -21,27 +21,28 @@ import org.springframework.context.annotation.Bean;
  * @date 2023/10/27
  */
 @Slf4j
+@Configuration
 @EnableConfigurationProperties(AlipayTradeProperty.class)
 public class AlipayFaceTradeConfig {
 
     @Resource
-    private AlipayTradeProperty.FaceTradeProperties faceTradeProperty;
+    private AlipayTradeProperty alipayTradeProperty;
 
     private AlipayConfig getDefaultConfig() {
         AlipayConfig alipayConfig = new AlipayConfig();
-        alipayConfig.setAppId(faceTradeProperty.getAppId());
-        alipayConfig.setPrivateKey(faceTradeProperty.getPrivateKey());
-        alipayConfig.setAlipayPublicKey(faceTradeProperty.getPublicKey());
-        alipayConfig.setEncryptKey(faceTradeProperty.getEncryptKey());
-        alipayConfig.setServerUrl(faceTradeProperty.getServerUrl());
-        alipayConfig.setFormat(faceTradeProperty.getFormat());
-        alipayConfig.setCharset(faceTradeProperty.getCharset());
-        alipayConfig.setSignType(faceTradeProperty.getSignType());
+        alipayConfig.setAppId(alipayTradeProperty.getFaceTrade().getAppId());
+        alipayConfig.setPrivateKey(alipayTradeProperty.getFaceTrade().getPrivateKey());
+        alipayConfig.setAlipayPublicKey(alipayTradeProperty.getFaceTrade().getPublicKey());
+        alipayConfig.setEncryptKey(alipayTradeProperty.getFaceTrade().getEncryptKey());
+        alipayConfig.setServerUrl(alipayTradeProperty.getFaceTrade().getServerUrl());
+        alipayConfig.setFormat(alipayTradeProperty.getFaceTrade().getFormat());
+        alipayConfig.setCharset(alipayTradeProperty.getFaceTrade().getCharset());
+        alipayConfig.setSignType(alipayTradeProperty.getFaceTrade().getSignType());
         return alipayConfig;
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "fly.pay.alipay.faceTrade", name = "enabled", value = "true")
+//    @ConditionalOnProperty(prefix = "fly.pay.alipay.trade-face", name = "enabled", value = "true")
     public AlipayClient alipayClient() throws AlipayApiException {
         DefaultAlipayClient client = null;
         try {
