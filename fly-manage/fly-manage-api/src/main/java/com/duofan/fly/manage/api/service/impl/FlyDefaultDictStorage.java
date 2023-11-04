@@ -1,11 +1,13 @@
 package com.duofan.fly.manage.api.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
+import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.entity.FlyDict;
 import com.duofan.fly.core.mapper.FlyDictMapper;
 import com.duofan.fly.core.service.FlyDictService;
@@ -83,7 +85,7 @@ public class FlyDefaultDictStorage extends ServiceImpl<FlyDictMapper, FlyDict> i
         try {
             dictMapper.insert(dict);
         } catch (DuplicateKeyException e) {
-            throw new RuntimeException("数据不符合，唯一约束");
+            throw new FlyConstraintException("数据不符合，唯一约束");
         }
         return true;
     }
@@ -94,19 +96,43 @@ public class FlyDefaultDictStorage extends ServiceImpl<FlyDictMapper, FlyDict> i
         try {
             dictMapper.update(dict, wp);
         } catch (DuplicateKeyException e) {
-            throw new RuntimeException("数据不符合，唯一约束");
+            throw new FlyConstraintException("数据不符合，唯一约束");
         }
     }
 
     @Override
     public FlyPageInfo<FlyDict> page(FlyPageInfo<FlyDict> pageInfo, FlyDict condition) {
         Page<FlyDict> page = QueryUtils.buildPage(pageInfo, FlyDict.class);
-        QueryWrapper<FlyDict> wp = QueryUtils.buildQueryWrapper(condition, List.of("username", "email", "phone", "isLocked", "isEnabled"), FlyDict.class);
+        QueryWrapper<FlyDict> wp = QueryUtils.buildQueryWrapper(condition, List.of("type", "name"), FlyDict.class);
+        wp.orderByAsc("type", "sort");
         return FlyPageInfo.of(page(page, wp));
     }
 
     @Override
     public List<FlyDict> list(String type) {
+        FlyDict dict = new FlyDict()
+                .setType(type);
+        QueryWrapper<FlyDict> wp = QueryUtils.buildQueryWrapper(dict, List.of("type"), FlyDict.class);
+        wp.orderByAsc("sort");
+        List<FlyDict> data = dictMapper.selectList(wp);
+        if (CollUtil.isNotEmpty(data)) {
+            return data;
+        }
         return dictService.list(type);
+    }
+
+    @Override
+    public void switchEnabled(FlyDict flyDict) {
+        UpdateWrapper<FlyDict> wp = QueryUtils.buildUpdateWrapper(flyDict, List.of("type", "code"), List.of("isEnabled"), FlyDict.class);
+        dictMapper.update(flyDict, wp);
+    }
+
+    @Override
+    public Object listWrap(String type) {
+        if (type.contains(",")) {
+            String[] types = type.split(",");
+            return list(Arrays.stream(types).collect(Collectors.toSet()));
+        }
+        return list(type);
     }
 }

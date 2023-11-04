@@ -1,6 +1,8 @@
 package com.duofan.fly.framework.mvc.exception.handler;
 
+import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.domain.common.FlyResult;
+import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.enums.FlyHttpStatus;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Objects;
 
 /**
  * 处理入参异常
@@ -34,7 +38,22 @@ public class CommonValidExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public FlyResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.BAD_REQUEST).setMsg(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        // 返回第一个错误显示错误内容和字段
+        e.getBindingResult().getAllErrors().forEach(error -> {
+            log.warn("入参校验统一异常处理：{}，字段：{}，错误内容：{}", e.getMessage(), error.getCodes()[1], error.getDefaultMessage());
+        });
+
+        String msg = StrUtil.format("{} {}", Objects.requireNonNull(
+                        e.getBindingResult().getAllErrors().get(0).getCodes())[1],
+                e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return FlyResult.of(FlyHttpStatus.BAD_REQUEST).setMsg(msg);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(FlyConstraintException.class)
+    public FlyResult handleFlyConstraintException(FlyConstraintException e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     @ResponseBody

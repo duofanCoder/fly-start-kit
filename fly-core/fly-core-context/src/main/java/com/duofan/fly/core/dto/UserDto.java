@@ -20,6 +20,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class UserDto {
+    private String id;
     private String newPassword;
     private String rawPassword;
     @JsonDeserialize

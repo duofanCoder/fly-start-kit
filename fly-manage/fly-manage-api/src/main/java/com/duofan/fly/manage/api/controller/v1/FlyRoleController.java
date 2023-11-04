@@ -91,7 +91,7 @@ public class FlyRoleController {
 
 
     // 角色状态开启/关闭
-    @PostMapping("/status")
+    @PostMapping("/toggle/enabled")
     @FlyAccessInfo(opName = "角色状态开启/关闭")
     FlyResult status(@RequestBody RoleRequest.Status status) {
         roleStorage.updateChangeEnabled(BeanUtil.copyProperties(status, FlyRole.class));

@@ -7,7 +7,6 @@ import com.duofan.fly.framework.security.exception.FlySuspiciousSecurityExceptio
 import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,20 +33,15 @@ import java.util.Optional;
  * @date 2023/9/27
  */
 @Slf4j
-@AllArgsConstructor
 public class JwtAuthenticationProvider implements InitializingBean {
 
     private final FlyTokenService tokenService;
     private final UserDetailsService detailService;
-    private final HandlerExceptionResolver exceptionResolver;
 
-    private ThreadLocal<HttpServletRequest> requestThreadLocal = new ThreadLocal<>();
-    private ThreadLocal<HttpServletResponse> responseThreadLocal = new ThreadLocal<>();
 
-    public JwtAuthenticationProvider(FlyTokenService tokenService, UserDetailsService detailService, HandlerExceptionResolver exceptionResolver) {
+    public JwtAuthenticationProvider(FlyTokenService tokenService, UserDetailsService detailService) {
         this.tokenService = tokenService;
         this.detailService = detailService;
-        this.exceptionResolver = exceptionResolver;
     }
 
     @Override
@@ -56,27 +49,15 @@ public class JwtAuthenticationProvider implements InitializingBean {
         Assert.notNull(this.tokenService, "JWT管理服务未配置");
     }
 
-    private HttpServletRequest request() {
-        return requestThreadLocal.get();
-    }
-
-    private HttpServletResponse response() {
-        return responseThreadLocal.get();
-    }
-
     private boolean checkToken(String token) {
         // 是否篡改
         if (!tokenService.verify(token)) {
             log.warn("JWT篡改 TOKEN内容:{}", token);
-            FlySuspiciousSecurityException ex = new FlySuspiciousSecurityException("JWT篡改");
-            exceptionResolver.resolveException(request(), response(), null, ex);
-            return false;
+            throw new FlySuspiciousSecurityException("JWT篡改");
         }
         // expired
         if (!tokenService.validate(token)) {
-            TokenExpiredException ex = new TokenExpiredException("JWT过期");
-            exceptionResolver.resolveException(request(), response(), null, ex);
-            return false;
+            throw new TokenExpiredException("JWT过期");
         }
         return true;
     }
@@ -102,15 +83,11 @@ public class JwtAuthenticationProvider implements InitializingBean {
      *
      * @param token
      * @param request
-     * @return
      * @throws AuthenticationException
      */
-    public boolean authenticate(String token, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        requestThreadLocal.set(request);
-        responseThreadLocal.set(response);
-
+    public void authenticate(String token, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         if (!checkToken(token)) {
-            return false;
+            return;
         }
         tokenService.refresh(token);
         Map<String, Object> info = tokenService.parse(token);
@@ -127,6 +104,5 @@ public class JwtAuthenticationProvider implements InitializingBean {
         SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
         context.setAuthentication(result);
         SecurityContextHolder.getContextHolderStrategy().setContext(context);
-        return true;
     }
 }

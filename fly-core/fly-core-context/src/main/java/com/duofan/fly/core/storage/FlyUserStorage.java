@@ -29,4 +29,5 @@ public interface FlyUserStorage extends IService<FlyUser> {
     void locked(FlyUser flyUser);
 
     void updateByUsername(FlyUser flyUser);
+
 }

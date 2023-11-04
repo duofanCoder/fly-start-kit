@@ -11,10 +11,7 @@ import com.duofan.fly.manage.api.controller.request.UserRequest;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户管理接口
@@ -49,19 +46,19 @@ public class FlyUserController {
     }
 
 
-    @PostMapping("/page")
+    @GetMapping("/page")
     @FlyAccessInfo(opName = "分页用户信息")
-    public FlyResult page(@RequestBody FlyPageInfo<FlyUser> pageInfo, @RequestBody UserRequest.UserPage page) {
+    public FlyResult page(FlyPageInfo<FlyUser> pageInfo, UserRequest.UserPage page) {
         return FlyResult.success(userStorage.page(pageInfo, BeanUtil.copyProperties(page, UserDto.class)));
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     @FlyAccessInfo(opName = "详细用户信息")
     public FlyResult detail(String id) {
         return FlyResult.success(userStorage.getById(id));
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     @FlyAccessInfo(opName = "删除用户信息")
     public FlyResult delete(String id) {
         return FlyResult.success(userStorage.removeById(id));

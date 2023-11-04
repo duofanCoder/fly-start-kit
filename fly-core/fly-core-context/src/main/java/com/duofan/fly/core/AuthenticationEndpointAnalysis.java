@@ -1,5 +1,6 @@
 package com.duofan.fly.core;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;
@@ -7,6 +8,7 @@ import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.domain.FlyApi;
 import com.duofan.fly.core.domain.FlyModule;
+import com.duofan.fly.core.utils.MappingUtils;
 import com.duofan.fly.core.utils.PermissionStrUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -16,12 +18,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -90,7 +87,7 @@ public class AuthenticationEndpointAnalysis {
             Object controller = entry.getValue();
             Class<?> clazz = ClassUtils.getUserClass(controller.getClass());
             FlyAccessInfo annotation = AnnotationUtils.findAnnotation(clazz, FlyAccessInfo.class);
-            String reqRoot = getAnnotation(clazz);
+            String reqRoot = MappingUtils.getMappingUrl(clazz);
             if (annotation == null) continue;
             FlyModule module = new FlyModule();
             ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
@@ -100,8 +97,14 @@ public class AuthenticationEndpointAnalysis {
             List<Method> flyMethods = Arrays.stream(controllerMethods).filter(m -> m.isAnnotationPresent(FlyAccessInfo.class)).toList();
             for (Method flyMethod : flyMethods) {
                 FlyAccessInfo methodAnnotation = flyMethod.getAnnotation(FlyAccessInfo.class);
-                String reqUrl = getAnnotation(flyMethod);
-                FlyApi api = new FlyApi().setModule(module.getModule()).setModuleName(module.getModuleName()).setOpName(StrUtil.emptyToDefault(methodAnnotation.opName(), flyMethod.getName())).setOp(flyMethod.getName()).setDescription(methodAnnotation.description()).setGrantAll(methodAnnotation.isGrantToAll()).setNeedAuthenticated(methodAnnotation.needAuthenticated()).setRequestUrl((reqRoot + "/" + reqUrl).replace("//", "/"));
+                String reqUrl = MappingUtils.getMappingUrl(flyMethod);
+                FlyApi api = new FlyApi()
+                        .setModule(module.getModule()).setModuleName(module.getModuleName())
+                        .setOpName(StrUtil.emptyToDefault(methodAnnotation.opName(), flyMethod.getName()))
+                        .setOp(flyMethod.getName()).setDescription(methodAnnotation.description())
+                        .setGrantAll(methodAnnotation.isGrantToAll())
+                        .setNeedAuthenticated(methodAnnotation.needAuthenticated())
+                        .setRequestUrl((reqRoot + "/" + reqUrl).replace("//", "/"));
                 apis.put(flyMethod.getName(), api);
                 if (!api.isNeedAuthenticated()) {
                     whiteApis.add(api);
@@ -117,17 +120,6 @@ public class AuthenticationEndpointAnalysis {
 
     }
 
-    private String getAnnotation(AnnotatedElement annotationEle) {
-        Annotation annotation = AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) != null ? AnnotationUtils.findAnnotation(annotationEle, GetMapping.class) : AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) != null ? AnnotationUtils.findAnnotation(annotationEle, PostMapping.class) : AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) != null ? AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class) : null;
-        if (annotation instanceof GetMapping an) {
-            return an.value()[0];
-        } else if (annotation instanceof PostMapping getMapping) {
-            return getMapping.value()[0];
-        } else if (annotation instanceof RequestMapping postMapping) {
-            return postMapping.value()[0];
-        }
-        return null;
-    }
 
     @PostConstruct
     public void run() {
@@ -139,6 +131,13 @@ public class AuthenticationEndpointAnalysis {
         });
     }
 
+    /**
+     * 弃用不优雅
+     *
+     * @param map
+     * @return
+     */
+    @Deprecated
     public static Map<String, Object> deepCopy(Map<String, Object> map) {
         Map<String, Object> copy = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -160,7 +159,25 @@ public class AuthenticationEndpointAnalysis {
     }
 
     public static Map<String, FlyModule> listOps() {
-        return deepCopy((Map) modules);
+        // 换个 深拷贝 modules的方法
+        Map<String, FlyModule> copy = new HashMap<>();
+        modules.forEach((k, v) -> {
+            FlyModule module = new FlyModule();
+            BeanUtil.copyProperties(v, module);
+            ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
+            v.getApis().forEach((k1, v1) -> {
+                FlyApi api = new FlyApi();
+
+                api.setModule(v1.getModule())
+                        .setModuleName(v1.getModuleName())
+                        .setOp(v1.getOp())
+                        .setOpName(v1.getOpName()).setDescription(v1.getDescription()).setGrantAll(v1.isGrantAll()).setNeedAuthenticated(v1.isNeedAuthenticated()).setRequestUrl(v1.getRequestUrl());
+                apis.put(k1, api);
+            });
+            module.setApis(apis);
+            copy.put(k, module);
+        });
+        return copy;
     }
 
     /**

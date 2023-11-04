@@ -22,31 +22,47 @@ public class DictRequest {
         @NotBlank
         @Length(min = 2, max = 32)
         private String type;
+        @NotBlank
+        @Length(min = 2, max = 32)
+        private String name;
         @Length(min = 1, max = 32)
         @NotBlank
         private String code;
+        private String description;
         @NotBlank
         @Length(min = 1, max = 32)
         private String text;
-        @Length(max = 32)
-        private String remark;
+        private String isEnabled = "1";
         private long sort;
     }
 
     @Data
     @Accessors(chain = true)
+    public static class Enabled {
+        @NotBlank
+        private String type;
+        private String isEnabled = "1";
+        private String code;
+    }
+
+    @Data
+    @Accessors(chain = true)
     public static class Update {
+
         @NotBlank
         @Length(min = 2, max = 32)
         private String type;
+        @NotBlank
+        @Length(min = 2, max = 32)
+        private String name;
         @Length(min = 1, max = 32)
         @NotBlank
         private String code;
+        private String description;
         @NotBlank
         @Length(min = 1, max = 32)
         private String text;
-        @Length(max = 32)
-        private String remark;
-        private long sort;
+        private String isEnabled = "1";
+        private long sort = 0;
     }
 }

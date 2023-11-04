@@ -28,6 +28,13 @@ public class FlyDict extends BaseEntity {
     private String text;
     private String code;
 
+    // 是否启用
+    private String isEnabled;
+    // 字典名称
+    private String name;
+    // 字典值的描述
+    private String description;
+
     public FlyDict(String type, String text, String code) {
         this.type = type;
         this.text = text;

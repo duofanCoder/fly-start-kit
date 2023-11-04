@@ -27,4 +27,14 @@ public interface FlyDictStorage extends IService<FlyDict> {
     FlyPageInfo<FlyDict> page(FlyPageInfo<FlyDict> pageInfo, FlyDict condition);
 
     List<FlyDict> list(String type);
+
+    void switchEnabled(FlyDict flyDict);
+
+    /**
+     * 如果有都好分割查询set否则单个查询 获取字典值
+     *
+     * @param type
+     * @return
+     */
+    Object listWrap(String type);
 }

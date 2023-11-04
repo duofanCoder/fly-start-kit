@@ -2,8 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.duofan.fly.core.mapper.FlyUserMapper">
     <select id="page" resultType="com.duofan.fly.core.dto.UserDto">
-        select u.*
+        select u.*, rr.role_no as roleNo
         from fly_user u
-        
+        left join fly_role_rel rr on u.username = rr.username
+        where 1=1
+        <if test="user.username != null and user.username != ''">
+            and u.username = #{user.username}
+        </if>
+        <if test="user.roleNo != null and user.roleNo != ''">
+            and rr.role_no in
+            <foreach collection="user.roleNo.split(',')" item="q_role_no" separator="," open="(" close=")">
+                #{q_role_no}
+            </foreach>
+        </if>
+        <if test="user.isLocked != null and user.isLocked != ''">
+            and u.is_locked = #{user.isLocked}
+        </if>
+        <if test="user.phone != null and user.phone != ''">
+            and u.phone = #{user.phone}
+        </if>
+        <if test="user.email != null and user.email != ''">
+            and u.email = #{user.email}
+        </if>
     </select>
 </mapper>

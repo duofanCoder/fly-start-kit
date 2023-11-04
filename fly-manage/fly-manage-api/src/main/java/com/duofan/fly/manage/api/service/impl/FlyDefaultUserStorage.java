@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
+import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.domain.exception.FlyException;
 import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
@@ -129,10 +130,17 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
 
     @Override
     public boolean save(FlyUser entity) {
+        existUser(entity);
         // 解析角色  并绑定角色关系
         updateRoleRelInfo(entity);
         entity.setPassword(passwordEncoder.encode(securityProperties.getDefaultPassword()));
         return super.save(entity);
+    }
+
+    private void existUser(FlyUser entity) {
+        if (this.count(new LambdaQueryWrapper<FlyUser>().eq(FlyUser::getUsername, entity.getUsername())) > 0) {
+            throw new FlyConstraintException("用户名已存在");
+        }
     }
 
     protected void updateRoleRelInfo(FlyUser entity) {

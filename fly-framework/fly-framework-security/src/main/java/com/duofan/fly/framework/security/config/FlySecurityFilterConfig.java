@@ -1,7 +1,10 @@
 package com.duofan.fly.framework.security.config;
 
 import com.duofan.fly.core.AuthenticationEndpointAnalysis;
+import com.duofan.fly.core.base.domain.common.FlyResult;
+import com.duofan.fly.core.base.enums.FlyHttpStatus;
 import com.duofan.fly.core.domain.FlyApi;
+import com.duofan.fly.core.utils.WebUtils;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationFilter;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
@@ -63,15 +66,21 @@ public class FlySecurityFilterConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetails)
-                .addFilterBefore(jwtAuthenticationFilter(userDetails, exceptionResolver), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(userDetails), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
-                                .accessDeniedHandler((request, response, accessDeniedException) -> exceptionResolver.resolveException(request, response, null, accessDeniedException))
-                                .authenticationEntryPoint((request, response, authException) -> exceptionResolver.resolveException(request, response, null, authException)))
+                                .accessDeniedHandler((request, response, accessDeniedException) ->
+                                {
+                                    WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN));
+                                })
+                                .authenticationEntryPoint((request, response, authException) ->
+                                {
+                                    WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN));
+                                }))
                 .build();
     }
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails, HandlerExceptionResolver exceptionResolver) {
-        return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails, exceptionResolver));
+    private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails) {
+        return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails));
     }
 }

@@ -1,10 +1,9 @@
-package com.duofan.fly.api.pay.controller;
+package com.duofan.fly.api.pay.controller.v1;
 
 import com.duofan.fly.api.pay.service.PayService;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

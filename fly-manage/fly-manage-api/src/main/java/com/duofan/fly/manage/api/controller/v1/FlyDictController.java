@@ -9,15 +9,8 @@ import com.duofan.fly.core.storage.FlyDictStorage;
 import com.duofan.fly.manage.api.controller.request.DictRequest;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Set;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 字典接口
@@ -37,37 +30,42 @@ public class FlyDictController {
     @Resource
     private FlyDictStorage dictStorage;
 
-    @PostMapping("/page")
+    @GetMapping("/page")
     @FlyAccessInfo(opName = "分页")
-    FlyResult page(@RequestBody(required = false) FlyPageInfo<FlyDict> pageInfo, @RequestBody(required = false) FlyDict dict) {
+    FlyResult page(FlyPageInfo<FlyDict> pageInfo, FlyDict dict) {
         return FlyResult.success(dictStorage.page(pageInfo, dict));
     }
 
-    @PostMapping("/batchList")
-    @FlyAccessInfo(opName = "批量查询")
-    FlyResult batchList(
-            @RequestBody @NotNull @NotEmpty
-            Set<String> typeList) {
-        return FlyResult.success(dictStorage.list(typeList));
+    @GetMapping("/list")
+    @FlyAccessInfo(opName = "字典查询")
+    FlyResult batchList(@RequestParam String type) {
+        return FlyResult.success(dictStorage.listWrap(type));
     }
 
-    @PostMapping("/list")
-    @FlyAccessInfo(opName = "单个查询")
-    FlyResult list(String type) {
-        return FlyResult.success(dictStorage.list(type));
+    @DeleteMapping("/remove")
+    @FlyAccessInfo(opName = "删除字典值")
+    FlyResult remove(@RequestParam String id) {
+        return FlyResult.success(dictStorage.removeById(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     @FlyAccessInfo(opName = "创建")
     FlyResult create(@RequestBody @Valid DictRequest.Save request) {
         dictStorage.save(BeanUtil.copyProperties(request, FlyDict.class));
         return FlyResult.SUCCESS;
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     @FlyAccessInfo(opName = "修改")
     FlyResult update(@RequestBody @Valid DictRequest.Update request) {
         dictStorage.update(BeanUtil.copyProperties(request, FlyDict.class));
+        return FlyResult.SUCCESS;
+    }
+
+    @PutMapping("/enabled")
+    @FlyAccessInfo(opName = "切换启用")
+    FlyResult enabled(@RequestBody @Valid DictRequest.Enabled request) {
+        dictStorage.switchEnabled(BeanUtil.copyProperties(request, FlyDict.class));
         return FlyResult.SUCCESS;
     }
 }

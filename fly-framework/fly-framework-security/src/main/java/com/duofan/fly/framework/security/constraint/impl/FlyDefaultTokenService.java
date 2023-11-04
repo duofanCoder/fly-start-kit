@@ -57,7 +57,8 @@ public class FlyDefaultTokenService implements FlyTokenService {
                 .setPayload("roles", loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
                 .setPayload("currentRoleNo", Optional.ofNullable(loginUser.getCurrentRoleNo()).orElse(loginUser.getRoleList().get(0).getRoleNo()))
                 .setIssuedAt(new Date())
-                .setExpiresAt(DateUtil.offsetHour(new Date(), 1))
+                // 注销 续签信息 保存在redis
+//                .setExpiresAt(DateUtil.offsetHour(new Date(), 1))
                 .setSigner(AlgorithmUtil.getAlgorithm(properties.getToken().getAlgorithm()),
                         properties.getToken().getSignSecret().getBytes())
                 .sign();

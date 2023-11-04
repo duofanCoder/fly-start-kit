@@ -35,10 +35,11 @@ public class FlyDefaultDictService implements FlyDictService {
 
         if (ObjectUtil.isNotNull(dic)) {
             if (dic.isCacheable()) {
-                return null;
-            } else {
-                return dic.list();
+                // TODO 让字典缓存
             }
+            return dic.list();
+        } else {
+            log.warn("字典类型[{}]不存在", dicType);
         }
         return null;
     }

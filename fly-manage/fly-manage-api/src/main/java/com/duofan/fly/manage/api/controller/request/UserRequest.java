@@ -78,6 +78,7 @@ public class UserRequest {
         private String avatar;
         private String isLocked;
         private String isEnabled;
+        private String roleNo;
     }
 
     @Data

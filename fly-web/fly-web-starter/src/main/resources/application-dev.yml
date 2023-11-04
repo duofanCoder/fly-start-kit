@@ -40,21 +40,24 @@ springdoc:
     - group: 'fly-api'
       paths-to-match: '/**'
       packages-to-scan: com.duofan.fly.manage.api.controller.v1
+    - group: 'fly-api-pay'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.fly.api.pay.controller.v1
 #  devtools:
 #    livereload:
 #      enabled: false
 #  default-flat-param-object: true
 
 
-debug: true
+debug: false
 
 # 关闭Spring-boot-devtools热部署
 spring.devtools.restart.enabled: false
 
-#logging:
-#  level:
-#    org.springframework.security:
-#      TRACE
+logging:
+  level:
+    org.springframework.security:
+      TRACE
 knife4j:
   enable: true
   setting:
