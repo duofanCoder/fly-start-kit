@@ -15,6 +15,7 @@
     <modules>
         <module>fly-api-pay</module>
         <module>fly-api-order</module>
+        <module>fly-api-message</module>
     </modules>
 
     <properties>

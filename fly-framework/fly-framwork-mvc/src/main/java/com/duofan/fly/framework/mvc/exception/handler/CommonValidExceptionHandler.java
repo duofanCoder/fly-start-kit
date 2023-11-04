@@ -3,6 +3,7 @@ package com.duofan.fly.framework.mvc.exception.handler;
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
+import com.duofan.fly.core.base.domain.exception.FlyInternalException;
 import com.duofan.fly.core.base.enums.FlyHttpStatus;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +111,13 @@ public class CommonValidExceptionHandler {
     public FlyResult handleException(Exception e) {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
         return FlyResult.of(FlyHttpStatus.FAIL);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(FlyInternalException.class)
+    public FlyResult handleFlyInternalException(FlyInternalException e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.Internal_ERROR);
     }
 
 

@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 2311
 spring:
   application:
     name: fly-kit-dev
@@ -90,3 +90,10 @@ fly:
   jpa:
     ddl-auto:
       enabled: true
+  message:
+    email:
+      enabled: true
+      host: smtp.qq.com
+      port: 465
+      from: 2633320940@qq.com
+      pass: owrvhhfavcrmdigi

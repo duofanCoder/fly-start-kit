@@ -1,6 +1,6 @@
 package com.duofan.fly.commons.redis.service;
 
-import com.duofan.fly.core.cache.constraint.FlyCacheService;
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

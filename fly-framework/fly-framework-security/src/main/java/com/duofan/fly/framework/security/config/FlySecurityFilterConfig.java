@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 /**
  * 拦截器配置
@@ -32,8 +31,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 @Configuration
 public class FlySecurityFilterConfig {
-    @Resource(name = "handlerExceptionResolver")
-    private HandlerExceptionResolver exceptionResolver;
     @Resource
     private AuthenticationEndpointAnalysis analysis;
     @Resource
@@ -52,7 +49,7 @@ public class FlySecurityFilterConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/v3/api-docs/**", "/error/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico")
+                        .requestMatchers("/v3/api-docs/**", "/error/**", "/doc.html", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/favicon.ico", "/logo.svg")
                         .permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .requestMatchers(analysis.getWhiteApis().stream().map(FlyApi::getRequestUrl).toList().toArray(new String[1]))

@@ -47,7 +47,7 @@ public class FlySecurityAutoConfiguration {
     }
 
     @Bean("captchaLoginValidRepository")
-    @ConditionalOnProperty(prefix = "fly.security.login", name = "captchaEnabled", matchIfMissing = true)
+    @ConditionalOnProperty(name = "fly.security.login.captchaEnabled", havingValue = "true")
     FlyLoginValidRepository captchaLoginValidRepository() {
         log.info(LogConstant.COMPONENT_LOG, "默认登陆验证码", "自动配置");
         return new CaptchaLoginValidRepository();

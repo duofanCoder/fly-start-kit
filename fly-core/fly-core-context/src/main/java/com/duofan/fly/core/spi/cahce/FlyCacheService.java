@@ -1,4 +1,4 @@
-package com.duofan.fly.core.cache.constraint;
+package com.duofan.fly.core.spi.cahce;
 
 import java.time.Duration;
 import java.util.Collection;

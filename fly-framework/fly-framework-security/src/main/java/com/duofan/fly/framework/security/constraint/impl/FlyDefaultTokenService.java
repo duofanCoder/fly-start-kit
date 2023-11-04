@@ -12,7 +12,7 @@ import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.cache.constraint.FlyCacheService;
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
