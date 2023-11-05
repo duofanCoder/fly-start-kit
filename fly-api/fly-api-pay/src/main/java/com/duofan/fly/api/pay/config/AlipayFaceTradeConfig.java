@@ -4,7 +4,7 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
-import com.duofan.fly.api.pay.utils.AlipayTradeProperty;
+import com.duofan.fly.api.pay.proptery.AlipayTradeProperty;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

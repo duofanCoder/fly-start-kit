@@ -11,24 +11,24 @@ import com.duofan.fly.framework.security.exception.LoginValidException;
  * @website duofan.top
  * @date 2023/9/28
  */
-public class CaptchaValidException extends LoginValidException {
+public class FlyCaptchaValidException extends LoginValidException {
 
-    public CaptchaValidException() {
+    public FlyCaptchaValidException() {
     }
 
-    public CaptchaValidException(String message) {
+    public FlyCaptchaValidException(String message) {
         super(message);
     }
 
-    public CaptchaValidException(String message, Throwable cause) {
+    public FlyCaptchaValidException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public CaptchaValidException(Throwable cause) {
+    public FlyCaptchaValidException(Throwable cause) {
         super(cause);
     }
 
-    public CaptchaValidException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public FlyCaptchaValidException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

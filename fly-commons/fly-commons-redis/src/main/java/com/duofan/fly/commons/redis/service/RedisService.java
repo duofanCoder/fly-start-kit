@@ -127,7 +127,15 @@ public class RedisService implements FlyCacheService {
 
     @Override
     public boolean hasKey(String key) {
-        return redisTemplate.hasKey(key);
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+    }
+
+    @Override
+    public boolean hasKeyThenDelete(String key) {
+        if (this.hasKey(key)) {
+            return delete(key);
+        }
+        return false;
     }
 
     /**

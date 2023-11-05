@@ -1,5 +1,6 @@
 package com.duofan.fly.framework.security.exception;
 
+import com.duofan.fly.core.base.domain.exception.FlySecurityException;
 import com.duofan.fly.framework.security.exception.loginValid.LoginParamException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

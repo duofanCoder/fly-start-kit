@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.request;
+package com.duofan.fly.api.email.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

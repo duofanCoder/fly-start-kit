@@ -68,7 +68,7 @@ public class LoggerAspect {
         Class[] filterParamClazz = {MultipartFile.class, File.class};
         Object[] args = joinPoint.getArgs();
         HashMap<String, Object> result = new HashMap<>(args.length);
-        if (args.length <= 0) return null;
+        if (args.length == 0) return null;
         Supplier<Stream<Class>> clazzStreamSupplier = () -> Arrays.stream(filterParamClazz);
         // 获取方法
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();

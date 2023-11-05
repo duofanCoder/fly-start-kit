@@ -50,4 +50,11 @@ public class FlyResult implements Serializable {
                 .setMsg(msg)
                 .setData(null);
     }
+
+    public static FlyResult of(String code, String msg) {
+        return new FlyResult()
+                .setCode(code)
+                .setMsg(msg)
+                .setData(null);
+    }
 }

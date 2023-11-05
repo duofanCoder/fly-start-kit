@@ -106,12 +106,6 @@ public class CommonValidExceptionHandler {
         return FlyResult.of(FlyHttpStatus.BAD_REQUEST);
     }
 
-    @ResponseBody
-    @ExceptionHandler(Exception.class)
-    public FlyResult handleException(Exception e) {
-        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.FAIL);
-    }
 
     @ResponseBody
     @ExceptionHandler(FlyInternalException.class)
@@ -120,5 +114,10 @@ public class CommonValidExceptionHandler {
         return FlyResult.of(FlyHttpStatus.Internal_ERROR);
     }
 
-
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public FlyResult handleException(Exception e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.FAIL);
+    }
 }

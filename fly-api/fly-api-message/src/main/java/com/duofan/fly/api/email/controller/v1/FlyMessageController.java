@@ -1,11 +1,12 @@
-package com.duofan.fly.manage.api.controller.v1;
+package com.duofan.fly.api.email.controller.v1;
 
 import cn.hutool.core.util.RandomUtil;
+import com.duofan.fly.api.email.controller.request.MessageRequest;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.spi.message.VerificationCodeSender;
-import com.duofan.fly.manage.api.controller.request.MessageRequest;
+import com.duofan.fly.validate.constraint.api.FlyAccessResourceVerification;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,14 @@ public class FlyMessageController {
     private VerificationCodeSender sender;
 
 
+    /**
+     * TODO 如果想不验证直接发邮箱，抽象出发邮箱发发，内部调用
+     *
+     * @param info
+     * @return
+     */
     @PostMapping("/code/email")
+    @FlyAccessResourceVerification(fakeMessage = "操作成功")
     @FlyAccessInfo(opName = "发邮件验证码", description = "发个邮件", needAuthenticated = false)
     public FlyResult codeEmail(@RequestBody @Valid MessageRequest.SendTo info) {
         taskExecutor.execute(

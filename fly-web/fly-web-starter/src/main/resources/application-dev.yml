@@ -37,12 +37,12 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: com.duofan.fly.web.starter
-    - group: 'fly-api'
+    - group: 'fly-api-manage'
       paths-to-match: '/**'
       packages-to-scan: com.duofan.fly.manage.api.controller.v1
-    - group: 'fly-api-pay'
+    - group: 'fly-api-external'
       paths-to-match: '/**'
-      packages-to-scan: com.duofan.fly.api.pay.controller.v1
+      packages-to-scan: com.duofan.fly.api
 #  devtools:
 #    livereload:
 #      enabled: false

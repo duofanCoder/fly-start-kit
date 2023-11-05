@@ -1,6 +1,4 @@
-package com.duofan.fly.framework.security.exception;
-
-import com.duofan.fly.core.base.domain.exception.FlyException;
+package com.duofan.fly.core.base.domain.exception;
 
 /**
  * 安全相关异常

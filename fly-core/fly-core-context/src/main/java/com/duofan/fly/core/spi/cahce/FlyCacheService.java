@@ -93,4 +93,7 @@ public interface FlyCacheService {
 
     boolean hasKey(String key);
 
+    // 是否存在key 存在则删除
+    boolean hasKeyThenDelete(String key);
+
 }

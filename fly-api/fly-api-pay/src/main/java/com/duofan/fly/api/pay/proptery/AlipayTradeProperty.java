@@ -1,4 +1,4 @@
-package com.duofan.fly.api.pay.utils;
+package com.duofan.fly.api.pay.proptery;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

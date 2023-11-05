@@ -1,4 +1,4 @@
-package com.duofan.fly.framework.security.exception;
+package com.duofan.fly.core.base.domain.exception;
 
 /**
  * 可疑触犯安全类操作异常

@@ -16,21 +16,27 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+
+        <!--        DIY拓展内部功能包-->
+
+        <!--        验证码组件-->
+        <dependency>
+            <groupId>com.duofan.fly.verification</groupId>
+            <artifactId>fly-api-verification</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--        信息组件-->
+        <dependency>
+            <groupId>com.duofan.fly</groupId>
+            <artifactId>fly-api-message</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.duofan.fly.security</groupId>
-            <artifactId>fly-framework-security</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.duofan.fly.commons</groupId>
-            <artifactId>fly-commons-redis</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>spring-boot-docker-compose</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,7 +47,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
@@ -53,11 +58,7 @@
             <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.duofan.fly.commons</groupId>
-            <artifactId>fly-commons-swagger</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
     </dependencies>
 
     <build>

@@ -2,7 +2,7 @@ package com.duofan.fly.framework.security.constraint.impl;
 
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
-import com.duofan.fly.framework.security.exception.loginValid.CaptchaValidException;
+import com.duofan.fly.framework.security.exception.loginValid.FlyCaptchaValidException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ public class CaptchaLoginValidRepository implements FlyLoginValidRepository {
 
     @Override
     public boolean supportError(LoginValidException e) {
-        return e instanceof CaptchaValidException;
+        return e instanceof FlyCaptchaValidException;
     }
 
     @Override

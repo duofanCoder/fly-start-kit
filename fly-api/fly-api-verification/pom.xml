@@ -5,23 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.duofan.fly</groupId>
-        <artifactId>fly-commons</artifactId>
+        <artifactId>fly-api</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.duofan.fly.commons</groupId>
-    <artifactId>fly-commons-logger</artifactId>
+    <groupId>com.duofan.fly.verification</groupId>
+    <artifactId>fly-api-verification</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-
-
-    </dependencies>
-
 
 </project>

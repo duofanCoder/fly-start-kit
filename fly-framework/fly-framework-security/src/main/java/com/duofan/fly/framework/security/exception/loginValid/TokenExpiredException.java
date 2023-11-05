@@ -1,6 +1,6 @@
 package com.duofan.fly.framework.security.exception.loginValid;
 
-import com.duofan.fly.framework.security.exception.FlySecurityException;
+import com.duofan.fly.core.base.domain.exception.FlySecurityException;
 
 /**
  * token 过期

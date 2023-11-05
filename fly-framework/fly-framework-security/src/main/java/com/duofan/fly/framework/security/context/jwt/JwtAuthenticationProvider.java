@@ -1,9 +1,9 @@
 package com.duofan.fly.framework.security.context.jwt;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.core.base.domain.exception.FlySuspiciousSecurityException;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
-import com.duofan.fly.framework.security.exception.FlySuspiciousSecurityException;
 import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

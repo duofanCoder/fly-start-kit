@@ -1,8 +1,8 @@
 package com.duofan.fly.framework.security.context;
 
 import com.duofan.fly.core.base.constant.security.SecurityConstant;
+import com.duofan.fly.core.base.domain.exception.FlySecurityException;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
-import com.duofan.fly.framework.security.exception.FlySecurityException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 

@@ -1,5 +1,7 @@
 package com.duofan.fly.framework.security.exception;
 
+import com.duofan.fly.core.base.domain.exception.FlySecurityException;
+
 /**
  * 自定义校验异常
  * 自定义组件实现校验组件，校验失败抛出继承该异常或其子类
