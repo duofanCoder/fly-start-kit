@@ -11,6 +11,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.hibernate.validator.internal.metadata.aggregated.rule.ParallelMethodsMustNotDefineGroupConversionForCascadedReturnValue;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -40,8 +41,21 @@ public class AccessVerificationAspect {
 
         // 获取方法上的注解
         FlyAccessResourceVerification annotation = method.getAnnotation(FlyAccessResourceVerification.class);
+
+        // TODO 超过次数封锁
+
+
         // 验证失败，可以抛出伪造异常
         throw new FlyAccessVerifyException(annotation.fakeCode(), annotation.fakeMessage());
+    }
+
+
+    // 验证失败次数保存，超过次数封锁IP
+    private void verifyErrorCount(FlyAccessResourceVerification annotation) {
+
+        CacheKeyUtils.getResourceLockCacheKey(request, "");
+        annotation.maxErrorCount();
+
     }
 
 }

@@ -28,4 +28,10 @@ public class CacheKeyUtils {
         log.info("nextId:{}", nextId);
         return StrUtil.format(CacheKey.CAPTCHA, request.getSession().getId(), nextId);
     }
+
+
+    // 敏感资源访问锁缓存key
+    public static String getResourceLockCacheKey(HttpServletRequest request, String nextId) {
+        return StrUtil.format(CacheKey.RESOURCE_LOCK, request.getSession().getId(), nextId);
+    }
 }
