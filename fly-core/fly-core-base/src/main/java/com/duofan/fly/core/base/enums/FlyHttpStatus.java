@@ -20,6 +20,7 @@ public enum FlyHttpStatus {
     Internal_ERROR("501", "内部系统错误，请联系管理员", "系统内部错误"),
     BAD_REQUEST("400", "请求参数校验失败", "参数校验失败"),
     UNAUTHORIZED("401", "请先认证", "未登录操作"),
+    MALICIOUS("405", "请求无法找到", "恶意请求，被锁定"),
     NOT_FOUND("404", "未找到", "没找到数据"),
     FORBIDDEN("403", "无权访问", "没有操作权限"),
     TOO_MANY_REQUESTS("429", "请求过于频繁，请稍后再试", "请求太快了");

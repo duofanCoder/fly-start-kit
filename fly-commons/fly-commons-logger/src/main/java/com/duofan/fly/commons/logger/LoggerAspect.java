@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
+import com.duofan.fly.core.utils.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -53,7 +54,7 @@ public class LoggerAspect {
 
         HashMap<Object, Object> result = new HashMap<>(4);
         result.put("Url", request.getRequestURL().toString());
-        result.put("Ip", request.getRemoteAddr());
+        result.put("Ip", WebUtils.getIp(request));
         result.put("Method", request.getMethod());
         if (!HttpMethod.GET.toString().equals(request.getMethod())) result.put("Body", getRequestBody(joinPoint));
         result.put("Controller", getRequestController(joinPoint));

@@ -83,6 +83,9 @@ fly:
   security:
     login:
       captcha-enabled: true
+    filter:
+      malicious-request-lockout:
+        enabled: true
   pay:
     alipay:
       trade-face:

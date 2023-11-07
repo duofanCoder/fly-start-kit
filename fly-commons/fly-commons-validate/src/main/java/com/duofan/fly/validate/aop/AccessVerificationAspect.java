@@ -43,9 +43,8 @@ public class AccessVerificationAspect {
         // 获取方法上的注解
         FlyAccessResourceVerification annotation = method.getAnnotation(FlyAccessResourceVerification.class);
 
-        // TODO 超过次数封锁
+        // 敏感资源访问，超过次数封锁
         verifyErrorCount(annotation);
-
 
         // 验证失败，可以抛出伪造异常
         throw new FlyAccessVerifyException(annotation.fakeCode(), annotation.fakeMessage());
@@ -56,10 +55,11 @@ public class AccessVerificationAspect {
     private void verifyErrorCount(FlyAccessResourceVerification annotation) {
         String resourceLockCacheKey = CacheKeyUtils.getResourceLockCacheKey(request);
         int maxErrorCount = annotation.maxErrorCount();
-        cacheService.set(resourceLockCacheKey, 1, Duration.ofSeconds(annotation.limitTime()));
-
-
-
+        Long increment = cacheService.increment(resourceLockCacheKey, 1, 1, Duration.ofSeconds(annotation.limitTime()));
+        if (increment > maxErrorCount) {
+            // 封锁IP
+            cacheService.expire(resourceLockCacheKey, Duration.ofSeconds(annotation.limitTime()));
+        }
     }
 
 }

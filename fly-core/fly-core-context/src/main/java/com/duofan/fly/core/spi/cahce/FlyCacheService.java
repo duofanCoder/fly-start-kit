@@ -37,6 +37,12 @@ public interface FlyCacheService {
 
     void set(String key, Object value, Duration duration);
 
+
+    /**
+     * 对数字类型对象增加1或者初始设置为1，其他类型不支持
+     * 开放增加步长，和初始化值
+     */
+    Long increment(String key, long delta, long initValue, Duration duration);
     /**
      * 设置缓存有效期
      *
@@ -44,6 +50,7 @@ public interface FlyCacheService {
      * @param expire 过期时间
      */
     boolean expire(String key, long expire);
+    boolean expire(String key,Duration expire);
 
     boolean expireAt(String key, Date expire);
 

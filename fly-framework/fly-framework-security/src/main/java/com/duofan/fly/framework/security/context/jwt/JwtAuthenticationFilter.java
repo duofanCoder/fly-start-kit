@@ -23,7 +23,7 @@ import java.io.IOException;
  * @date 2023/9/27
  */
 @Slf4j
-public class JwtAuthenticationFilter extends OncePerRequestFilter implements InitializingBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private JwtAuthenticationProvider authenticationProvider;
     private final String loginPath = "/api/v1/passport/login";
@@ -43,12 +43,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Ini
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-
-    @Override
-    public void afterPropertiesSet() {
-        Assert.notNull(this.authenticationProvider, "authenticationProvider未配置");
     }
 
 

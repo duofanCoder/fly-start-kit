@@ -54,6 +54,20 @@ public class RedisService implements FlyCacheService {
         redisTemplate.opsForValue().set(key, value, duration);
     }
 
+    @Override
+    public Long increment(String key, long delta, long initValue, Duration duration) {
+        if (this.hasKey(key)) {
+            // 自增 或者 设置初始值
+            redisTemplate.opsForValue().increment(key, delta);
+            // 获取当前值
+            return (Long) redisTemplate.opsForValue().get(key);
+        }else{
+            // 初始化设置默认值和失效时间
+            this.set(key, initValue, duration);
+            return initValue;
+        }
+    }
+
     /**
      * 设置缓存有效期
      *
@@ -62,6 +76,14 @@ public class RedisService implements FlyCacheService {
      */
     public boolean expire(String key, long expire) {
         return Boolean.TRUE.equals(redisTemplate.expire(key, expire, TimeUnit.SECONDS));
+    }
+
+    @Override
+    public boolean expire(String key, Duration expire) {
+        if (this.hasKey(key)) {
+            return Boolean.TRUE.equals(redisTemplate.expire(key, expire));
+        }
+        return false;
     }
 
     public boolean expireAt(String key, Date expire) {

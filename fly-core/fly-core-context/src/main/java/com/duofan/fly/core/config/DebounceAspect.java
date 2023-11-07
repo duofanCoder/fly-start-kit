@@ -2,6 +2,7 @@ package com.duofan.fly.core.config;
 
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
+import com.duofan.fly.core.utils.WebUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -39,6 +40,6 @@ public class DebounceAspect {
     private String extractUserIdFromArguments(Object[] args) {
         // 实现根据参数获取用户标识的逻辑
         // ...
-        return request.getRemoteAddr();
+        return WebUtils.getIp(request);
     }
 }

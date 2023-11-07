@@ -4,12 +4,15 @@ import com.duofan.fly.core.AuthenticationEndpointAnalysis;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.enums.FlyHttpStatus;
 import com.duofan.fly.core.domain.FlyApi;
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.utils.WebUtils;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationFilter;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
+import com.duofan.fly.framework.security.context.lock.MaliciousRequestLockoutFilter;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -36,7 +39,8 @@ public class FlySecurityFilterConfig {
     @Resource
     private FlyTokenService tokenService;
 
-
+    @Resource
+    private  FlyCacheService cacheService;
     /**
      * <a href="https://www.baeldung.com/csrf-stateless-rest-api#3-credentials-stored-in-cookies" > jwt认证方式无需使用csrf防御配置 </href>
      */
@@ -63,21 +67,24 @@ public class FlySecurityFilterConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetails)
+                // 超过次数封锁ip 我应该在那个spring security 过滤器后面配置
+                .addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(userDetails), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
                                 .accessDeniedHandler((request, response, accessDeniedException) ->
-                                {
-                                    WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN));
-                                })
+                                        WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN)))
                                 .authenticationEntryPoint((request, response, authException) ->
-                                {
-                                    WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN));
-                                }))
+                                        WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN))))
                 .build();
     }
 
     private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails) {
         return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails));
+    }
+    @Bean
+    @ConditionalOnProperty(name = "fly.security.filter.malicious-request-lockout.enabled", havingValue = "true")
+    MaliciousRequestLockoutFilter maliciousRequestLockoutFilter() {
+        return new MaliciousRequestLockoutFilter(cacheService);
     }
 }
