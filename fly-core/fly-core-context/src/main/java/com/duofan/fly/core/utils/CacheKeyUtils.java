@@ -1,5 +1,6 @@
 package com.duofan.fly.core.utils;
 
+import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.duofan.fly.core.base.constant.cache.CacheKey;
@@ -31,7 +32,7 @@ public class CacheKeyUtils {
 
 
     // 敏感资源访问锁缓存key
-    public static String getResourceLockCacheKey(HttpServletRequest request, String nextId) {
-        return StrUtil.format(CacheKey.RESOURCE_LOCK, request.getSession().getId(), nextId);
+    public static String getResourceLockCacheKey(HttpServletRequest request) {
+        return StrUtil.format(CacheKey.RESOURCE_LOCK,WebUtils.getIp(request));
     }
 }

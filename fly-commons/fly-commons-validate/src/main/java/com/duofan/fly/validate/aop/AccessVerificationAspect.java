@@ -15,6 +15,7 @@ import org.hibernate.validator.internal.metadata.aggregated.rule.ParallelMethods
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.time.Duration;
 
 /**
  * 验证信息上下文的切面
@@ -43,6 +44,7 @@ public class AccessVerificationAspect {
         FlyAccessResourceVerification annotation = method.getAnnotation(FlyAccessResourceVerification.class);
 
         // TODO 超过次数封锁
+        verifyErrorCount(annotation);
 
 
         // 验证失败，可以抛出伪造异常
@@ -52,9 +54,11 @@ public class AccessVerificationAspect {
 
     // 验证失败次数保存，超过次数封锁IP
     private void verifyErrorCount(FlyAccessResourceVerification annotation) {
+        String resourceLockCacheKey = CacheKeyUtils.getResourceLockCacheKey(request);
+        int maxErrorCount = annotation.maxErrorCount();
+        cacheService.set(resourceLockCacheKey, 1, Duration.ofSeconds(annotation.limitTime()));
 
-        CacheKeyUtils.getResourceLockCacheKey(request, "");
-        annotation.maxErrorCount();
+
 
     }
 
