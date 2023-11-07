@@ -17,9 +17,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AccessSensitiveResourceConstrainedTarget {
     // 通过IP地址 识别用户
-    LIMIT_IP("LIMIT_IP", "限制IP", "限制IP"),
+    LIMIT_IP("0", "限制IP", "限制IP"),
     // 通过浏览器标识 识别用户
-    LIMIT_USER("LIMIT_USER", "限制用户", "限制用户"),
+    LIMIT_USER("1", "限制用户", "限制用户"),
+    // 限制接口
+    LIMIT_API("2","限制接口","限制接口")
     ;
 
 

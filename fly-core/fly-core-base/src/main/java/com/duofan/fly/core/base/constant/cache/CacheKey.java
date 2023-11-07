@@ -15,5 +15,7 @@ public class CacheKey {
     // 校验成功后，操作码 客户端id:操作接口
     public static final String VERIFY_OPERATION = "verifyOperation:{}:{}";
 
+    // 敏感资源访问锁 IP:接口
+    public static final String RESOURCE_LOCK = "resourceLock:{}:{}";
 
 }

@@ -1,5 +1,7 @@
 package com.duofan.fly.validate.constraint.api;
 
+import com.duofan.fly.validate.constant.AccessSensitiveResourceConstrainedTarget;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,4 +15,19 @@ public @interface FlyAccessResourceVerification {
 
     // 伪造访问出错的错误码
     String fakeCode() default "200";
+
+    // 恶意封锁
+    // 是否开启IP限制
+    boolean limitOpen() default true;
+
+    // 对于恶意访问的请求直接封锁IP
+    // 配置ip封锁时间 单位秒 默认封锁一天
+    int limitTime() default 60 * 60 * 24;
+
+    // 最大出错次数
+    int maxErrorCount() default 5;
+
+    // 封锁维度 ip或者接口
+    AccessSensitiveResourceConstrainedTarget lockTarget() default AccessSensitiveResourceConstrainedTarget.LIMIT_API;
+
 }
