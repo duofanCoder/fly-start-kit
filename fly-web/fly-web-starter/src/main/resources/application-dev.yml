@@ -54,10 +54,10 @@ debug: false
 # 关闭Spring-boot-devtools热部署
 spring.devtools.restart.enabled: false
 
-logging:
-  level:
-    org.springframework.security:
-      TRACE
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
 knife4j:
   enable: true
   setting:
@@ -93,7 +93,7 @@ fly:
   jpa:
     enabled: true
     scanPackages:
-      - com.duofan.fly.web.starter
+      - com.duofan.fly.web.starter.entity
   message:
     email:
       enabled: true
