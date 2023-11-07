@@ -11,7 +11,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.hibernate.validator.internal.metadata.aggregated.rule.ParallelMethodsMustNotDefineGroupConversionForCascadedReturnValue;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -33,7 +32,7 @@ public class AccessVerificationAspect {
 
     @Around("@annotation(com.duofan.fly.validate.constraint.api.FlyAccessResourceVerification)")
     public Object verifyAccess(ProceedingJoinPoint joinPoint) throws Throwable {
-        String cacheKey = CacheKeyUtils.getVerifyCacheKey(request);
+        String cacheKey = CacheKeyUtils.getVerifyCacheKey(request, false);
         if (cacheService.hasKeyThenDelete(cacheKey)) {
             return joinPoint.proceed();
         }
@@ -55,7 +54,7 @@ public class AccessVerificationAspect {
     private void verifyErrorCount(FlyAccessResourceVerification annotation) {
         String resourceLockCacheKey = CacheKeyUtils.getResourceLockCacheKey(request);
         int maxErrorCount = annotation.maxErrorCount();
-        Long increment = cacheService.increment(resourceLockCacheKey, 1, 1, Duration.ofSeconds(annotation.limitTime()));
+        long increment = cacheService.increment(resourceLockCacheKey, 1, 1, Duration.ofSeconds(annotation.limitTime()));
         if (increment > maxErrorCount) {
             // 封锁IP
             cacheService.expire(resourceLockCacheKey, Duration.ofSeconds(annotation.limitTime()));

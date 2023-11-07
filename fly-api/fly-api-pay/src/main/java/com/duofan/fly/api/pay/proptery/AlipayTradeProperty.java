@@ -17,7 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "fly.pay.alipay")
 public class AlipayTradeProperty {
-    private FaceTradeProperties faceTrade = new FaceTradeProperties();
+    public FaceTradeProperties faceTrade = new FaceTradeProperties();
 
     @Data
     public static class FaceTradeProperties {

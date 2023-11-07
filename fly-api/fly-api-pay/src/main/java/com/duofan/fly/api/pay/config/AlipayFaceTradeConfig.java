@@ -7,6 +7,7 @@ import com.alipay.api.DefaultAlipayClient;
 import com.duofan.fly.api.pay.proptery.AlipayTradeProperty;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,7 @@ public class AlipayFaceTradeConfig {
     }
 
     @Bean
-//    @ConditionalOnProperty(prefix = "fly.pay.alipay.trade-face", name = "enabled", value = "true")
+    @ConditionalOnProperty(name = "fly.pay.alipay.trade-face.enabled", havingValue = "true")
     public AlipayClient alipayClient() throws AlipayApiException {
         DefaultAlipayClient client = null;
         try {

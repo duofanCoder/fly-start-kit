@@ -89,7 +89,7 @@ fly:
   pay:
     alipay:
       trade-face:
-        enabled: true
+        enabled: false
   jpa:
     enabled: true
     scanPackages:

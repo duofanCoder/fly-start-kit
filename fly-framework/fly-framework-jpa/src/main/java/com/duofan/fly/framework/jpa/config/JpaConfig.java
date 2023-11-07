@@ -2,7 +2,6 @@ package com.duofan.fly.framework.jpa.config;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.framework.jpa.property.FlyJpaProperty;
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -26,7 +25,6 @@ public class JpaConfig {
     @Resource
     private FlyJpaProperty jpaProperty;
 
-    @PostConstruct
     void cassandraManagedTypes(DefaultListableBeanFactory beanFactory) throws ClassNotFoundException {
         // 获取配置文件fly.jpa.scan-packages的值 增加com.duofan.fly.core.base.entity
         EntityScanPackages.register(beanFactory, "com.duofan.fly.core.base.entity");

@@ -1,6 +1,7 @@
 package com.duofan.fly.framework.security.property;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
@@ -11,6 +12,8 @@ public class SecurityProperties {
 
     private TokenProperties token = new TokenProperties();
 
+    private SecurityFilterProperties filter = new SecurityFilterProperties();
+
     private String defaultPassword = "123456";
 
     @Data
@@ -19,6 +22,14 @@ public class SecurityProperties {
 
         private String usernameParameter = "username";
         private String passwordParameter = "password";
+
+    }
+
+    @Data
+    public static class SecurityFilterProperties {
+        // 配置文件malicious-request-lockout.enabled
+        @Value("${fly.security.filter.malicious-request-lockout.enabled:true}")
+        private boolean enabled = true;
 
     }
 

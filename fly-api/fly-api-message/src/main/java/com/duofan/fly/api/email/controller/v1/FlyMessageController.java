@@ -49,7 +49,7 @@ public class FlyMessageController {
      * @return
      */
     @PostMapping("/code/email")
-    @FlyAccessResourceVerification(fakeMessage = "操作成功")
+    @FlyAccessResourceVerification(fakeMessage = "请求恶意，请离开")
     @FlyAccessInfo(opName = "发邮件验证码", description = "发个邮件", needAuthenticated = false)
     public FlyResult codeEmail(@RequestBody @Valid MessageRequest.SendTo info) {
         taskExecutor.execute(

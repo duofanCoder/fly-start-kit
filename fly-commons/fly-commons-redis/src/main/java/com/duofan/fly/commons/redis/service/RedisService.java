@@ -1,5 +1,6 @@
 package com.duofan.fly.commons.redis.service;
 
+import cn.hutool.core.util.ObjUtil;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -55,13 +56,11 @@ public class RedisService implements FlyCacheService {
     }
 
     @Override
-    public Long increment(String key, long delta, long initValue, Duration duration) {
+    public long increment(String key, long delta, long initValue, Duration duration) {
         if (this.hasKey(key)) {
             // 自增 或者 设置初始值
-            redisTemplate.opsForValue().increment(key, delta);
-            // 获取当前值
-            return (Long) redisTemplate.opsForValue().get(key);
-        }else{
+            return redisTemplate.opsForValue().increment(key, delta);
+        } else {
             // 初始化设置默认值和失效时间
             this.set(key, initValue, duration);
             return initValue;
@@ -111,6 +110,13 @@ public class RedisService implements FlyCacheService {
         return operation.get(key);
     }
 
+    @Override
+    public long getNum(String key) {
+        ValueOperations<String, Object> operation = redisTemplate.opsForValue();
+        String num = String.valueOf(ObjUtil.defaultIfNull(operation.get(key), "0"));
+        return Long.parseLong(num);
+    }
+
     /**
      * 通配符获取缓存键
      *
@@ -154,7 +160,7 @@ public class RedisService implements FlyCacheService {
 
     @Override
     public boolean hasKeyThenDelete(String key) {
-        if (this.hasKey(key)) {
+        if (!this.hasKey(key)) {
             return delete(key);
         }
         return false;

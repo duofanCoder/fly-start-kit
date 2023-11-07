@@ -12,6 +12,7 @@ import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
 import com.duofan.fly.framework.security.context.lock.MaliciousRequestLockoutFilter;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,13 +41,20 @@ public class FlySecurityFilterConfig {
     private FlyTokenService tokenService;
 
     @Resource
-    private  FlyCacheService cacheService;
+    private FlyCacheService cacheService;
+
+    @Value("${fly.security.filter.malicious-request-lockout.enabled:true}")
+    private boolean maliciousRequestLockoutFilterEnabled = true;
+
     /**
      * <a href="https://www.baeldung.com/csrf-stateless-rest-api#3-credentials-stored-in-cookies" > jwt认证方式无需使用csrf防御配置 </href>
      */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetails) throws Exception {
 
+        if (maliciousRequestLockoutFilterEnabled) {
+            http.addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class);
+        }
 
         return http
                 // 跨站攻击关闭
@@ -68,7 +76,6 @@ public class FlySecurityFilterConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetails)
                 // 超过次数封锁ip 我应该在那个spring security 过滤器后面配置
-                .addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(userDetails), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
@@ -82,8 +89,9 @@ public class FlySecurityFilterConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails) {
         return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails));
     }
+
     @Bean
-    @ConditionalOnProperty(name = "fly.security.filter.malicious-request-lockout.enabled", havingValue = "true")
+    @ConditionalOnProperty(name = "fly.security.filter.malicious-request-lockout.enabled")
     MaliciousRequestLockoutFilter maliciousRequestLockoutFilter() {
         return new MaliciousRequestLockoutFilter(cacheService);
     }

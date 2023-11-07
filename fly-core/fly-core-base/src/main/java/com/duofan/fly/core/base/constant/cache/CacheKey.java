@@ -11,7 +11,7 @@ package com.duofan.fly.core.base.constant.cache;
  */
 public class CacheKey {
     // 验证码标识
-    public static final String CAPTCHA = "captchaCode:{}";
+    public static final String CAPTCHA = "captchaCode:{}:{}";
     // 校验成功后，操作码 客户端id:操作接口
     public static final String VERIFY_OPERATION = "verifyOperation:{}:{}";
 

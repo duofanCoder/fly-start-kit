@@ -27,8 +27,8 @@ public class MaliciousRequestLockoutFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String resourceLockCacheKey = CacheKeyUtils.getResourceLockCacheKey(request);
-        if (cacheService.hasKey(resourceLockCacheKey)) {
-            log.warn(LogConstant.SUSPICIOUS_OPERATION_LOG, request.getRequestURI(), WebUtils.getIp(request), "Malicious request, ip: {}");
+        if (cacheService.getNum(resourceLockCacheKey) > 5) {
+            log.warn(LogConstant.SUSPICIOUS_OPERATION_LOG, request.getRequestURI(), WebUtils.getIp(request), "恶意请求");
             WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.MALICIOUS));
             return;
         }

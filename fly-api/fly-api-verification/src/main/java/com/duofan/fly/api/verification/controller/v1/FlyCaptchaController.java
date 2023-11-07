@@ -35,6 +35,13 @@ public class FlyCaptchaController {
     private final Integer effectiveTime = 3;
 
 
+    /**
+     * 验证逻辑-生成验证码，验证的时候传入验证成功后访问的接口
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @GetMapping("/generateCaptcha")
     @FlyAccessInfo(opName = "生成验证码", description = "生成验证码", needAuthenticated = false)
     public void generateCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -53,7 +60,7 @@ public class FlyCaptchaController {
         // 检查用户输入的验证码是否与Session中的验证码匹配
         if (cacheService.hasKey(key) && inputCaptcha.equalsIgnoreCase(String.valueOf(cacheService.get(key)))) {
             cacheService.delete(key);
-            cacheService.set(key, "true", Duration.ofMinutes(30));
+            cacheService.set(CacheKeyUtils.getVerifyCacheKey(request, true), "true", Duration.ofMinutes(30));
             // 验证码匹配，返回验证成功信息
             return new FlyResult("200", "验证成功", null);
         } else {
