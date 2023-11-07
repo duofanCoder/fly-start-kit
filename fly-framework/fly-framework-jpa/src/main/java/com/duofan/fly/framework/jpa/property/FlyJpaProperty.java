@@ -18,5 +18,5 @@ public class FlyJpaProperty {
 
     private boolean enabled = true;
     // 扫描的包数组
-    private String[] scanPackages = new String[]{""};
+    private String[] scanPackages = new String[]{"com.duofan.fly.core.base.entity"};
 }

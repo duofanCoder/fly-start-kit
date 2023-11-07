@@ -88,8 +88,9 @@ fly:
       trade-face:
         enabled: true
   jpa:
-    ddl-auto:
-      enabled: true
+    enabled: true
+    scanPackages:
+      - com.duofan.fly.web.starter
   message:
     email:
       enabled: true
