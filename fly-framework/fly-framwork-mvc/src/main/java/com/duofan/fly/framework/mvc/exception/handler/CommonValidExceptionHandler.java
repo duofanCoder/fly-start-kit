@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.domain.exception.FlyInternalException;
-import com.duofan.fly.core.base.enums.FlyHttpStatus;
+import com.duofan.fly.core.base.enums.web.FlyHttpStatus;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;

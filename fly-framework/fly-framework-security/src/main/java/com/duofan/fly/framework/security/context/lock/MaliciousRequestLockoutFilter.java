@@ -3,7 +3,7 @@ package com.duofan.fly.framework.security.context.lock;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyResult;
-import com.duofan.fly.core.base.enums.FlyHttpStatus;
+import com.duofan.fly.core.base.enums.web.FlyHttpStatus;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.utils.CacheKeyUtils;
 import com.duofan.fly.core.utils.WebUtils;

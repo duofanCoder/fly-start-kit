@@ -1,4 +1,4 @@
-package com.duofan.fly.core.base.enums;
+package com.duofan.fly.core.base.enums.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
