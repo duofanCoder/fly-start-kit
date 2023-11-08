@@ -17,6 +17,7 @@
         <module>fly-api-order</module>
         <module>fly-api-message</module>
         <module>fly-api-verification</module>
+        <module>fly-api-file</module>
     </modules>
 
     <properties>
