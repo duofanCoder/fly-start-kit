@@ -91,7 +91,8 @@ public class FlySecurityFilterConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "fly.security.filter.malicious-request-lockout.enabled")
+    // 配置项为false或者不配置都不会生效
+    @ConditionalOnProperty(name = "fly.security.filter.malicious-request-lockout.enabled", matchIfMissing = true)
     MaliciousRequestLockoutFilter maliciousRequestLockoutFilter() {
         return new MaliciousRequestLockoutFilter(cacheService);
     }
