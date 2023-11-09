@@ -21,8 +21,10 @@ public class FileStorageProperty {
 
     private LocalFileStorageProperties local = new LocalFileStorageProperties();
 
+    // 路径类型 => 存储相对路径
+    private Map<String, String> filePathType = new HashMap<>();
     private Map<String, OssFileStorageProperties> oss = new HashMap<>();
-
+    
 
     @Data
     public static class LocalFileStorageProperties {

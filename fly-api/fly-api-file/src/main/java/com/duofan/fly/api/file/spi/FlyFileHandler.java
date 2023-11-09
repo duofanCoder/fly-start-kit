@@ -1,5 +1,8 @@
 package com.duofan.fly.api.file.spi;
 
+import com.duofan.fly.core.base.entity.FlyFileMetaData;
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * 文件处理
  *
@@ -10,4 +13,5 @@ package com.duofan.fly.api.file.spi;
  * @date 2023/11/9
  */
 public interface FlyFileHandler {
+    FlyFileMetaData upload(MultipartFile file, String storageTypeDic, String filePathType);
 }
