@@ -48,4 +48,13 @@ public enum FileStorageTypeDic {
     private final String code;
     private final String msg;
     private final String desc;
+
+    public static FileStorageTypeDic getByCode(String code) {
+        for (FileStorageTypeDic value : FileStorageTypeDic.values()) {
+            if (value.getCode().equals(code)) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

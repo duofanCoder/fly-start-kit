@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FlyFileStorage {
-    String store(MultipartFile file); // 存储文件，返回文件访问URL
+    FlyFileMetaData store(MultipartFile file, FlyFileMetaData metaData); // 存储文件，返回文件访问URL
 
     Resource loadFile(FlyFileMetaData fileMetaData); // 加载文件
 

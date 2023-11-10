@@ -1,8 +1,9 @@
 package com.duofan.fly.api.file.config;
 
+import com.duofan.fly.api.file.propterty.FileStorageProperty;
 import com.duofan.fly.api.file.spi.FileStorageServiceFactory;
-import com.duofan.fly.api.file.spi.FlyFileHandler;
-import com.duofan.fly.api.file.spi.impl.FlyDefaultFileHandler;
+import com.duofan.fly.api.file.spi.FlyFileStorage;
+import com.duofan.fly.api.file.spi.impl.local.LocalStorageService;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.storage.FlyFileMetaDataStorage;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FlyFileAutoConfig {
 
-
     @Bean
     @ConditionalOnMissingBean
-    FlyFileHandler flyFileHandler(FlyFileMetaDataStorage storage, FileStorageServiceFactory factory) {
+    FlyFileStorage flyFileStorage(FlyFileMetaDataStorage storage, FileStorageServiceFactory factory, FileStorageProperty property) {
         log.info(LogConstant.COMPONENT_LOG, "文件操作组件", "自动配置");
-        return new FlyDefaultFileHandler(storage, factory);
+        return new LocalStorageService(property);
     }
 }

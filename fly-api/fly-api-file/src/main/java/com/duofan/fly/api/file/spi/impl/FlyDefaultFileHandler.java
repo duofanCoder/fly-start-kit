@@ -1,35 +1,30 @@
 package com.duofan.fly.api.file.spi.impl;
 
+import com.duofan.fly.api.file.propterty.FileStorageProperty;
 import com.duofan.fly.api.file.spi.FileStorageServiceFactory;
-import com.duofan.fly.api.file.spi.FlyFileHandler;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
 import com.duofan.fly.core.storage.FlyFileMetaDataStorage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 文件服务
+ * 默认处理文件
  *
  * @author duofan
  * @version 1.0
  * @email 2441051071@qq.com
  * @website duofan.top
- * @date 2023/11/9
+ * @date 2023/11/10
  */
-
-public class FlyDefaultFileHandler implements FlyFileHandler {
-
-    private final FlyFileMetaDataStorage storage;
-    private final FileStorageServiceFactory fileStorageServiceFactory;
-
-    public FlyDefaultFileHandler(FlyFileMetaDataStorage storage, FileStorageServiceFactory fileStorageServiceFactory) {
-        this.storage = storage;
-        this.fileStorageServiceFactory = fileStorageServiceFactory;
+@Slf4j
+public class FlyDefaultFileHandler extends AbstractFileHandler {
+    public FlyDefaultFileHandler(FlyFileMetaDataStorage storage, FileStorageServiceFactory fileStorageServiceFactory, FileStorageProperty property) {
+        super(storage, fileStorageServiceFactory, property);
     }
 
-
     @Override
-    public FlyFileMetaData upload(MultipartFile file, String storageTypeDic, String filePathType) {
+    protected void uploadFile(MultipartFile multipartFile, FlyFileMetaData metaData) throws Exception {
+        super.upload(multipartFile, metaData.getStorageTypeDic(), metaData.getFileStoragePath());
 
-        return null;
     }
 }

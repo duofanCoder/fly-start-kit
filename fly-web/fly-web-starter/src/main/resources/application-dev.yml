@@ -101,3 +101,14 @@ fly:
       port: 465
       from: 2633320940@qq.com
       pass: owrvhhfavcrmdigi
+  file-storage:
+    file-path-info:
+      avatar:
+        path: /avatar
+        maxFileSize: 1024
+        maxSizeUnit: KB
+        allowTypes:
+          - jpg
+          - jpeg
+          - png
+          - gif
