@@ -16,6 +16,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * 解决问题为爆破提交、耗费成本资源的请求
+ * <p>
+ * 未认证，未通过校验直接发请求，伪装报错后锁定IP
+ * <p>
+ * 不能解决字典接口
+ */
 @Slf4j
 public class MaliciousRequestLockoutFilter extends OncePerRequestFilter {
     private final FlyCacheService cacheService;

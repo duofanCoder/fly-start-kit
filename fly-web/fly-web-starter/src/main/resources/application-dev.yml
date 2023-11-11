@@ -1,5 +1,5 @@
 server:
-  port: 2311
+  port: 23111
 spring:
   application:
     name: fly-kit-dev
@@ -86,10 +86,6 @@ fly:
     filter:
       malicious-request-lockout:
         enabled: true
-  pay:
-    alipay:
-      trade-face:
-        enabled: false
   jpa:
     enabled: true
     scanPackages:

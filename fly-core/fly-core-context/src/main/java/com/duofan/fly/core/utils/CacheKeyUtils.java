@@ -48,4 +48,8 @@ public class CacheKeyUtils {
     public static String getResourceLockCacheKey(HttpServletRequest request) {
         return StrUtil.format(CacheKey.RESOURCE_LOCK, WebUtils.getIp(request));
     }
+
+    public static String getDebounceKey(HttpServletRequest request) {
+        return StrUtil.format(CacheKey.DEBOUNCE_LOCK, WebUtils.getIp(request), request.getRequestURI());
+    }
 }

@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,6 +57,28 @@ public class RedisService implements FlyCacheService {
     }
 
     @Override
+    public void removeBefore(String key, long windowStart) {
+        redisTemplate.opsForZSet().removeRangeByScore(key, 0, windowStart);
+    }
+
+    // 获取某一时间内的记录
+    @Override
+    public long getAwhileCount(String key, long windowStart) {
+        // 移除60秒前的请求记录
+        redisTemplate.opsForZSet().removeRangeByScore(key, 0, windowStart);
+
+        // 获取60秒内的请求次数
+        return Optional.ofNullable(redisTemplate.opsForZSet().zCard(key)).orElse(0L);
+    }
+
+    @Override
+    public void setCurrentTime(String key, long currentTime) {
+        redisTemplate.opsForZSet().add(key, String.valueOf(currentTime), currentTime);
+    }
+
+
+    @Override
+
     public long increment(String key, long delta, long initValue, Duration duration) {
         if (this.hasKey(key)) {
             // 自增 或者 设置初始值

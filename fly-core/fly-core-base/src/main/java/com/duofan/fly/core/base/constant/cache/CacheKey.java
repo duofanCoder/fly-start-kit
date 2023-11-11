@@ -17,5 +17,6 @@ public class CacheKey {
 
     // 敏感资源访问锁 IP:接口
     public static final String RESOURCE_LOCK = "resourceLock:{}:{}";
+    public static final String DEBOUNCE_LOCK = "debounceLock:{}:{}";
 
 }

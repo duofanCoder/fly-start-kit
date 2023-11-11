@@ -9,6 +9,7 @@ import com.duofan.fly.core.utils.WebUtils;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationFilter;
 import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
+import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
 import com.duofan.fly.framework.security.context.lock.MaliciousRequestLockoutFilter;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -77,6 +79,7 @@ public class FlySecurityFilterConfig {
                 .userDetailsService(userDetails)
                 // 超过次数封锁ip 我应该在那个spring security 过滤器后面配置
                 .addFilterBefore(jwtAuthenticationFilter(userDetails), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new DebounceRequestLockoutFilter(cacheService), AnonymousAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
                                 .accessDeniedHandler((request, response, accessDeniedException) ->

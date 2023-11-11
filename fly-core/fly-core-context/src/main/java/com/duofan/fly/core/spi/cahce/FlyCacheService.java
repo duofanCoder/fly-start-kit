@@ -37,6 +37,11 @@ public interface FlyCacheService {
 
     void set(String key, Object value, Duration duration);
 
+    void removeBefore(String key, long windowStart);
+
+    long getAwhileCount(String key, long windowStart);
+
+    void setCurrentTime(String key, long currentTime);
 
     /**
      * 对数字类型对象增加1或者初始设置为1，其他类型不支持
