@@ -13,8 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 文件接口
@@ -50,28 +51,16 @@ public class FlyFileController {
 
     @GetMapping("/download/{fileName}")
     @FlyAccessInfo(moduleName = "文件访问", needAuthenticated = false)
-    public ResponseEntity<Object> downloadFile(@PathVariable String fileName) {
+    public ResponseEntity<Object> downloadFile(@PathVariable String fileName) throws UnsupportedEncodingException {
         ResourceVO vo = handler.loadFile(fileName);
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = MediaType.parseMediaType(vo.getMetaData().getFileContentType());
-        // TODO EXCEL 下载没有返回对应文件名称
         headers.setContentType(mediaType);
-        if (!mediaType.equals(MediaType.IMAGE_JPEG) &&
-                !mediaType.equals(MediaType.IMAGE_PNG) &&
-                !mediaType.equals(MediaType.IMAGE_GIF)) {
-            headers.setContentDispositionFormData("attachment", vo.getMetaData().getFileOriginalName());
-        }
-
-
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(vo.getMetaData()
+                .getFileOriginalName(), StandardCharsets.UTF_8));
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(vo.getResource());
     }
 
-    private boolean isAllow(String fileName) {
-        String[] allowFiles = {".gif", ".png", ".jpg", ".jpeg", ".bpm", ".svg"};
-        String suffix = fileName.substring(fileName.lastIndexOf("."));
-        List<String> suffixList = Arrays.stream(allowFiles).toList();
-        return suffixList.contains(suffix);
-    }
 }
