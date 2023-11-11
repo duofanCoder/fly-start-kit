@@ -1,19 +1,25 @@
 package com.duofan.fly.api.file.spi.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.duofan.fly.api.file.object.VO.ResourceVO;
 import com.duofan.fly.api.file.propterty.FileStorageProperty;
 import com.duofan.fly.api.file.spi.FileStorageServiceFactory;
 import com.duofan.fly.api.file.spi.FlyFileHandler;
+import com.duofan.fly.api.file.spi.FlyFileStorage;
 import com.duofan.fly.api.file.util.FlyFileUtils;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
 import com.duofan.fly.core.base.enums.file.FileStorageTypeDic;
 import com.duofan.fly.core.storage.FlyFileMetaDataStorage;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 文件服务抽象
@@ -25,7 +31,9 @@ import java.util.Objects;
  * @date 2023/11/9
  */
 
+@Slf4j
 @AllArgsConstructor
+@Getter
 public abstract class AbstractFileHandler implements FlyFileHandler {
 
     private final FlyFileMetaDataStorage storage;
@@ -47,15 +55,38 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         // TODO 校验当前文件写权限
         FlyFileMetaData metaData = buildFileMetaData(file, storageTypeDic, filePathType);
 
-        FileStorageTypeDic fileStorageType = FileStorageTypeDic.getByCode(storageTypeDic);
 
         // 上传文件
-        fileStorageServiceFactory.getStorageService(fileStorageType)
-                .store(file, metaData);
+        try {
+            this.uploadFile(file, metaData);
+        } catch (Exception e) {
+            log.info("文件上传失败:{}", e.getMessage());
+            throw new FlyBizException("文件上传失败,请稍后重试");
+        }
+
         // DB操作保存文件信息
         storage.save(metaData);
         return metaData;
     }
+
+    @Override
+    public ResourceVO loadFile(String fileUUID) {
+        FlyFileMetaData metaData = Optional.ofNullable(storage.getById(fileUUID)).orElseThrow(() -> new FlyBizException("访问失败，文件不存在"));
+        // TODO 校验当前文件读权限
+
+        Resource resource = null;
+
+        try {
+            // 获取文件操作执行器
+            resource = loadFile(metaData);
+        } catch (Exception e) {
+            log.info("文件读取失败:{}", e.getMessage());
+            throw new FlyBizException(e);
+        }
+
+        return new ResourceVO(resource, metaData);
+    }
+
 
     /**
      * 校验文件
@@ -82,7 +113,10 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
             } else {
                 File file = new File(property.getLocal().getUploadRoot());
                 if (!file.exists()) {
-                    throw new FlyBizException("本地文件路径不存在");
+                    if (!file.mkdir()) {
+                        log.info("本地文件路径不存在,文件夹创建失败:{}", file.getPath());
+                        throw new FlyBizException("本地文件路径不存在");
+                    }
                 }
             }
         } else {
@@ -121,14 +155,37 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         FlyFileMetaData metaData = new FlyFileMetaData();
         metaData.setFileOriginalName(multipartFile.getOriginalFilename());
         metaData.setFileStoragePath(filePathType);
+        metaData.setStoragePath(filePathType);
         metaData.setFileSize(multipartFile.getSize());
         metaData.setFileSuffix(FlyFileUtils.getFileSuffix(multipartFile.getOriginalFilename()));
-        metaData.setFileStorageType(Objects.requireNonNull(FileStorageTypeDic.getByCode(storageTypeDic)).getCode());
+        metaData.setStorageTypeDic(Objects.requireNonNull(FileStorageTypeDic.getByCode(storageTypeDic)).getCode());
         metaData.setFileStorageName(FlyFileUtils.getUniqueFileName());
-        metaData.setFileContentType(FlyFileUtils.getFileType(multipartFile.getContentType()));
+        metaData.setFileContentTypeDesc(FlyFileUtils.getFileType(multipartFile.getContentType()));
+        metaData.setFileContentType(multipartFile.getContentType());
         metaData.setId(FlyFileUtils.getUUID());
         return metaData;
     }
 
+    /**
+     * 获取文件操作执行器
+     *
+     * @param storageTypeDic
+     * @return
+     */
+    protected FlyFileStorage getFileExecutor(String storageTypeDic) {
+        FileStorageTypeDic fileStorageType = FileStorageTypeDic.getByCode(storageTypeDic);
+
+        return fileStorageServiceFactory.getStorageService(fileStorageType);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param multipartFile
+     * @param metaData
+     * @throws Exception
+     */
     protected abstract void uploadFile(MultipartFile multipartFile, FlyFileMetaData metaData) throws Exception;
+
+    protected abstract Resource loadFile(FlyFileMetaData metaData) throws Exception;
 }

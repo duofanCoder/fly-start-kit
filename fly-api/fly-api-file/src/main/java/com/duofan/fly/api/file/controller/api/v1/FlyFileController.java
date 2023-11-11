@@ -1,21 +1,18 @@
 package com.duofan.fly.api.file.controller.api.v1;
 
+import com.duofan.fly.api.file.object.VO.ResourceVO;
 import com.duofan.fly.api.file.spi.FlyFileHandler;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +34,6 @@ public class FlyFileController {
     @Resource
     private FlyFileHandler handler;
 
-
     /**
      * 上传文件
      *
@@ -52,24 +48,24 @@ public class FlyFileController {
         return FlyResult.success(metaData);
     }
 
-    @GetMapping("/download")
+    @GetMapping("/download/{fileName}")
     @FlyAccessInfo(moduleName = "文件访问", needAuthenticated = false)
-    public ResponseEntity<Object> downloadFile(String fileName) throws FileNotFoundException {
-
-        File file = new File(fileName);
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
+    public ResponseEntity<Object> downloadFile(@PathVariable String fileName) {
+        ResourceVO vo = handler.loadFile(fileName);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", String.format("attachment;filename=\"%s", fileName));
-        headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
+        MediaType mediaType = MediaType.parseMediaType(vo.getMetaData().getFileContentType());
+        // TODO EXCEL 下载没有返回对应文件名称
+        headers.setContentType(mediaType);
+        if (!mediaType.equals(MediaType.IMAGE_JPEG) &&
+                !mediaType.equals(MediaType.IMAGE_PNG) &&
+                !mediaType.equals(MediaType.IMAGE_GIF)) {
+            headers.setContentDispositionFormData("attachment", vo.getMetaData().getFileOriginalName());
+        }
+
 
         return ResponseEntity.ok()
                 .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/txt"))
-                .body(resource);
+                .body(vo.getResource());
     }
 
     private boolean isAllow(String fileName) {

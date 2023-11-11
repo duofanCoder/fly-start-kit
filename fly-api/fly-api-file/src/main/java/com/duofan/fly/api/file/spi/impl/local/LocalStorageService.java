@@ -9,6 +9,7 @@ import com.duofan.fly.core.base.entity.FlyFileMetaData;
 import com.duofan.fly.core.base.enums.file.FileStorageTypeDic;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,8 +35,7 @@ public class LocalStorageService implements FlyFileStorage {
     public FlyFileMetaData store(MultipartFile file, FlyFileMetaData metaData) {
         FileStorageProperty.LocalFileStorageProperties local = property.getLocal();
 
-        Map<String, FileStorageProperty.FlyFilePathTypeConfig> info = property.getFilePathInfo();
-        FileStorageProperty.FlyFilePathTypeConfig config = info.get(metaData.getStoragePath());
+        FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(metaData.getStoragePath());
 
         String absolutePath = Paths.get(local.getUploadRoot(), config.getPath(), metaData.getFileStorageName()).toString();
         try {
@@ -48,9 +48,28 @@ public class LocalStorageService implements FlyFileStorage {
         return metaData;
     }
 
+    private FileStorageProperty.FlyFilePathTypeConfig getStorageConfig(String storagePath) {
+        Map<String, FileStorageProperty.FlyFilePathTypeConfig> info = property.getFilePathInfo();
+        return info.get(storagePath);
+    }
+
     @Override
     public Resource loadFile(FlyFileMetaData fileMetaData) {
-        return null;
+        try {
+            FileStorageProperty.LocalFileStorageProperties local = property.getLocal();
+
+            FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(fileMetaData.getStoragePath());
+            String filePath = Paths.get(local.getUploadRoot(), config.getPath(), fileMetaData.getFileStorageName()).toString();
+            Resource resource = new FileSystemResource(filePath);
+//            resource.canRead()
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FlyBizException("Could not read file: " + fileMetaData.getFileStorageName());
+            }
+        } catch (Exception e) {
+            throw new FlyBizException("文件读取失败");
+        }
     }
 
     @Override

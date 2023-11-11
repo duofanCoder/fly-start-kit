@@ -102,13 +102,12 @@ fly:
       from: 2633320940@qq.com
       pass: owrvhhfavcrmdigi
   file-storage:
+    local:
+      upload-root: D:/home/duofan/upload
+      access-root: http://localhost:2311
     file-path-info:
       avatar:
         path: /avatar
         maxFileSize: 1024
-        maxSizeUnit: KB
         allowTypes:
-          - jpg
-          - jpeg
-          - png
-          - gif
+          - zip

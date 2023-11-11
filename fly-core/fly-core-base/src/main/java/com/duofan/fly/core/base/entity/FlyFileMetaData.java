@@ -24,10 +24,11 @@ import lombok.experimental.Accessors;
 public class FlyFileMetaData extends BaseEntity {
     private long fileSize;
     private String storageTypeDic; // 本地(Local) 或 OSS
-    private String storagePath; // 文件在本地或OSS的存储路径
+    private String storagePath; // 文件在本地或OSS的存储路径 这里显示类型为配置文件里的key
     private String fileHash; // 文件hash值
     private String accessUrl; // 文件访问路径
     private String fileSuffix; // 文件后缀
+    private String fileContentTypeDesc; // 文件类型
     private String fileContentType; // 文件类型
     private String fileOriginalName; // 文件原始名称
     private String fileStorageName; // 文件存储名称

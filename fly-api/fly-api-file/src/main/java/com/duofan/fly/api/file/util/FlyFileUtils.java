@@ -69,7 +69,7 @@ public class FlyFileUtils {
         return RandomUtil.randomString(32);
     }
 
-    public static String getAccessUrl(String accessRoot, String accessId) {
-        return Paths.get(accessRoot, accessId).toString();
+    public static String getAccessUrl(String accessRoot, String... more) {
+        return accessRoot + "/" + Paths.get("", more).toString();
     }
 }

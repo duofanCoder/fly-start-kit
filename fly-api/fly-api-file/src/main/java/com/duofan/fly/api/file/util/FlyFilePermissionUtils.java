@@ -1,7 +1,6 @@
 package com.duofan.fly.api.file.util;
 
 import com.duofan.fly.api.file.propterty.FileStorageProperty;
-import com.duofan.fly.core.AuthenticationEndpointAnalysis;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import jakarta.annotation.Resource;
@@ -27,8 +26,8 @@ public class FlyFilePermissionUtils {
     @Resource
     private FileStorageProperty property;
 
-    @Resource
-    private AuthenticationEndpointAnalysis analysis;
+//    @Resource
+//    private AuthenticationEndpointAnalysis analysis;
 
     private boolean checkPermission(String bucket, String filePathType) {
         Map<String, FileStorageProperty.FlyFilePathTypeConfig> info = property.getFilePathInfo();

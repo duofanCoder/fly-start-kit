@@ -5,6 +5,7 @@ import com.duofan.fly.api.file.spi.FileStorageServiceFactory;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
 import com.duofan.fly.core.storage.FlyFileMetaDataStorage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -24,7 +25,18 @@ public class FlyDefaultFileHandler extends AbstractFileHandler {
 
     @Override
     protected void uploadFile(MultipartFile multipartFile, FlyFileMetaData metaData) throws Exception {
-        super.upload(multipartFile, metaData.getStorageTypeDic(), metaData.getFileStoragePath());
+        super.getFileExecutor(metaData.getStorageTypeDic())
+                .store(multipartFile, metaData);
+    }
 
+    @Override
+    protected Resource loadFile(FlyFileMetaData metaData) throws Exception {
+        return super.getFileExecutor(metaData.getStorageTypeDic())
+                .loadFile(metaData);
+    }
+
+    @Override
+    public void deleteFile(String fileUUID) {
+        
     }
 }

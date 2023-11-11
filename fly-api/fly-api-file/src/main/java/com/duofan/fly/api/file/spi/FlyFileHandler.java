@@ -1,5 +1,6 @@
 package com.duofan.fly.api.file.spi;
 
+import com.duofan.fly.api.file.object.VO.ResourceVO;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,4 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FlyFileHandler {
     FlyFileMetaData upload(MultipartFile file, String storageTypeDic, String filePathType);
+
+    ResourceVO loadFile(String fileUUID);
+
+    void deleteFile(String fileUUID);
 }
