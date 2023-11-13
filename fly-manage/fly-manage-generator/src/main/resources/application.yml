@@ -1,0 +1,20 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: fly-kit-code-generator
+  jackson:
+    default-property-inclusion: non_null
+  datasource:
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    #    username: kit-db
+    #    password: mzEM2St3DFsSmeRs
+    #    url: jdbc:mysql://localhost:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: kit-db
+    password: mzEM2St3DFsSmeRs
+    url: jdbc:mysql://101.35.55.200:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    prefix: classpath:/templates/
+
+

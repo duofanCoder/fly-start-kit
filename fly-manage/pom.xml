@@ -12,6 +12,7 @@
     <artifactId>fly-manage</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>fly-manage-generator</module>
         <module>fly-manage-api</module>
         <module>fly-manage-starter</module>
     </modules>
@@ -24,11 +25,7 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>com.duofan.fly.security</groupId>
-            <artifactId>fly-framework-security</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>com.duofan.fly.commons</groupId>
             <artifactId>fly-commons-swagger</artifactId>

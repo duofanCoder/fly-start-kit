@@ -4,29 +4,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.duofan.fly</groupId>
-        <artifactId>fly-framework</artifactId>
+        <groupId>com.duofan</groupId>
+        <artifactId>fly-manage</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fly-framwork-mvc</artifactId>
+    <groupId>com.duofan.generator</groupId>
+    <artifactId>fly-manage-generator</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-
     <dependencies>
         <dependency>
-            <groupId>com.duofan.fly.commons</groupId>
-            <artifactId>fly-commons-logger</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+            <scope>runtime</scope>
         </dependency>
+        <!--thymeleaf 模板引擎-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
     </dependencies>

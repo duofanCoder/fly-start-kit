@@ -7,6 +7,7 @@ import com.duofan.fly.core.service.FlyDictService;
 import com.duofan.fly.core.spi.DictExtension;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@ConditionalOnBean(DictExtension.class)
 public class FlyDefaultDictService implements FlyDictService {
 
     @Resource
