@@ -42,7 +42,6 @@ public class DebounceRequestLockoutFilter extends OncePerRequestFilter {
         long currentTime = System.currentTimeMillis();
         long windowStart = currentTime - DEBOUNCE_INTERVAL; // 60秒前的时间戳
         long awhileCount = cacheService.getAwhileCount(debounceKey, windowStart);
-        System.out.println(awhileCount);
         if (awhileCount > DEBOUNCE_REQUEST_LIMIT) {
             WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.TOO_MANY_REQUESTS));
             return;

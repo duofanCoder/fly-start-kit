@@ -153,7 +153,7 @@ public class FlyDefaultTokenService implements FlyTokenService {
     @Override
     public boolean validate(String token) {
         try {
-            JWTValidator.of(token).validateDate(DateUtil.date(), 0);
+            JWTValidator.of(token).validateDate(DateUtil.date(), 60);
         } catch (ValidateException e) {
             return false;
         }
