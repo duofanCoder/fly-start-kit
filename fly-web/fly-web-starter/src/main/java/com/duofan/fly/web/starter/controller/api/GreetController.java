@@ -6,7 +6,6 @@ import com.duofan.fly.core.mapper.FlyUserMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +22,6 @@ public class GreetController {
     private FlyUserMapper userMapper;
 
     @GetMapping("hello")
-    @PreAuthorize("permitAll()")
     @FlyAccessInfo(opName = "说句你好")
     public ResponseEntity<String> hello() {
         List<FlyUser> flyUsers = userMapper.selectList(null);
@@ -31,9 +29,8 @@ public class GreetController {
         return ResponseEntity.ok("hello");
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("grantHello")
-    @FlyAccessInfo(opName = "说句你好", isGrantToAll = true)
+    @FlyAccessInfo(opName = "说句你好", isGrantToAll = true, needAuthenticated = false)
     public ResponseEntity<String> helloGrantAll() {
         List<FlyUser> flyUsers = userMapper.selectList(null);
         System.out.println(flyUsers);

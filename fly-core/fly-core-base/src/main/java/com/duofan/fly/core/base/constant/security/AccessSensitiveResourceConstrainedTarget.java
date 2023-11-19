@@ -1,4 +1,4 @@
-package com.duofan.fly.validate.constant;
+package com.duofan.fly.core.base.constant.security;
 
 
 import lombok.AllArgsConstructor;
@@ -21,8 +21,7 @@ public enum AccessSensitiveResourceConstrainedTarget {
     // 通过浏览器标识 识别用户
     LIMIT_USER("1", "限制用户", "限制用户"),
     // 限制接口
-    LIMIT_API("2","限制接口","限制接口")
-    ;
+    LIMIT_API("2", "限制接口", "限制接口");
 
 
     private final String code;

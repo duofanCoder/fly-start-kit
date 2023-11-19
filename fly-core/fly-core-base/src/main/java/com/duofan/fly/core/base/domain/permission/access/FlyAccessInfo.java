@@ -42,4 +42,7 @@ public @interface FlyAccessInfo {
     boolean isGrantToAll() default false;
 
     String description() default "";
+
+    // 是否启动防抖
+    boolean isDebounce() default true;
 }

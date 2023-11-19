@@ -1,9 +1,9 @@
-package com.duofan.fly.validate.aop;
+package com.duofan.fly.framework.security.context.lock.aop;
 
 import com.duofan.fly.core.base.domain.exception.FlyAccessVerifyException;
+import com.duofan.fly.core.spi.FlyAccessResourceVerification;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.utils.CacheKeyUtils;
-import com.duofan.fly.validate.constraint.api.FlyAccessResourceVerification;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -20,10 +19,12 @@ import java.time.Duration;
 /**
  * 验证信息上下文的切面
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
-@ConditionalOnBean(FlyCacheService.class)
+// 加上以下注解 因为没有生成这个Bean 会导致切面失效，
+// 但实际是有这个bean的
+//@ConditionalOnBean(FlyCacheService.class)
 public class AccessVerificationAspect {
 
     @Resource
@@ -32,7 +33,7 @@ public class AccessVerificationAspect {
     @Resource
     private HttpServletRequest request;
 
-    @Around("@annotation(com.duofan.fly.validate.constraint.api.FlyAccessResourceVerification)")
+    @Around("@annotation(com.duofan.fly.core.spi.FlyAccessResourceVerification)")
     public Object verifyAccess(ProceedingJoinPoint joinPoint) throws Throwable {
         String cacheKey = CacheKeyUtils.getVerifyCacheKey(request, false);
         if (cacheService.hasKeyThenDelete(cacheKey)) {

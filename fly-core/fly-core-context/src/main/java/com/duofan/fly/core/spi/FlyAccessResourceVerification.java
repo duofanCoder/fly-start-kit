@@ -1,6 +1,6 @@
-package com.duofan.fly.validate.constraint.api;
+package com.duofan.fly.core.spi;
 
-import com.duofan.fly.validate.constant.AccessSensitiveResourceConstrainedTarget;
+import com.duofan.fly.core.base.constant.security.AccessSensitiveResourceConstrainedTarget;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -125,10 +125,11 @@ public class AuthenticationEndpointAnalysis {
     public void run() {
         log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "启动");
         analysis();
-        log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "完毕");
         modules.forEach((module, info) -> {
             log.info(LogConstant.COMPONENT_LOG + "{}", "认证端点分析", "模块【" + info.getModuleName(), "】加载完毕");
         });
+        log.info(LogConstant.COMPONENT_LOG, "认证端点分析", "分析成功");
+
     }
 
     /**

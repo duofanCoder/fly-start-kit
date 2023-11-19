@@ -30,7 +30,8 @@ public class DebounceAspect {
 
     @Around("@annotation(com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo)")
     public Object handleDebounce(ProceedingJoinPoint joinPoint) throws Throwable {
-        String debounceKey = CacheKeyUtils.getDebounceKey(request); // 从方法参数中获取用户标识
+        // 切面 拦截到的必然有mvc的映射
+        String debounceKey = CacheKeyUtils.getDebounceKey(request, true); // 从方法参数中获取用户标识
         // 如果上次请求时间戳存在，并且与当前请求时间戳的间隔小于阈值，拒绝处理请求
         long currentTime = System.currentTimeMillis();
         long windowStart = currentTime - DEBOUNCE_INTERVAL; // 60秒前的时间戳

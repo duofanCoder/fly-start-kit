@@ -49,7 +49,17 @@ public class CacheKeyUtils {
         return StrUtil.format(CacheKey.RESOURCE_LOCK, WebUtils.getIp(request));
     }
 
-    public static String getDebounceKey(HttpServletRequest request) {
-        return StrUtil.format(CacheKey.DEBOUNCE_LOCK, WebUtils.getIp(request), request.getRequestURI());
+    /**
+     * 防抖、防字典爆破
+     *
+     * @param request
+     * @param hasMapper
+     * @return
+     */
+    public static String getDebounceKey(HttpServletRequest request, boolean hasMapper) {
+        if (hasMapper) {
+            return StrUtil.format(CacheKey.DEBOUNCE_LOCK, WebUtils.getIp(request), request.getRequestURI());
+        }
+        return StrUtil.format(CacheKey.DEBOUNCE_LOCK, WebUtils.getIp(request), "no-mapper-uri");
     }
 }

@@ -1,6 +1,7 @@
 package com.duofan.fly.framework.security.config;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
@@ -11,6 +12,7 @@ import com.duofan.fly.framework.security.constraint.impl.CaptchaLoginValidReposi
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginService;
 import com.duofan.fly.framework.security.constraint.impl.FlyDefaultRegisterService;
+import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -38,6 +40,14 @@ public class FlySecurityAutoConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final FlyUserStorage userStorage;
 
+    // 默认直接注入
+    // 超过次数封锁ip 我应该在那个spring security 过滤器后面配置
+//    @Bean
+//    @ConditionalOnProperty(name = "fly.security.filter.debounce-request-lockout.enabled", matchIfMissing = true)
+    public DebounceRequestLockoutFilter debounceRequestLockoutFilter(FlyCacheService cacheService) {
+        log.info(LogConstant.COMPONENT_LOG, "防抖组件", "自动配置");
+        return new DebounceRequestLockoutFilter(cacheService, properties);
+    }
 
     public FlySecurityAutoConfiguration(SecurityProperties properties, AuthenticationProvider authenticationProvider, FlyUserStorage userStorage) {
         this.properties = properties;

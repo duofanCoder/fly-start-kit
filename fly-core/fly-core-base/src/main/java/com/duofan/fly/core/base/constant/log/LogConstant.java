@@ -14,6 +14,9 @@ public class LogConstant {
     public static final String MODULE_LOG = "FLY 模块 -【{}】:{}";
     // 可以操作日志
     public static final String SUSPICIOUS_OPERATION_LOG = "操作名：【{}】,IP地址：【{}】,可疑信息：{}";
+
+    public static final String SUSPICIOUS_OPERATION_URL_LOG = "操作名：【{}】IP地址：【{}】访问URI:【{}】可疑信息：【{}】";
+
     public static final String COMMON_OPERATION_LOG = "操作名：【{}】,信息：{}";
     public static final String BUSINESS_OPERATION_LOG = "业务操作名：【{}】,信息：{}";
     public static final String RESOURCE_USE_LOG = "资源操作：【{}】,信息：{}";

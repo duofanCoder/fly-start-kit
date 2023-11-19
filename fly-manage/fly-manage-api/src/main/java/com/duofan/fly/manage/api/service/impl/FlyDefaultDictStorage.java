@@ -92,7 +92,7 @@ public class FlyDefaultDictStorage extends ServiceImpl<FlyDictMapper, FlyDict> i
 
     @Override
     public void update(FlyDict dict) {
-        UpdateWrapper<FlyDict> wp = QueryUtils.buildUpdateWrapper(dict, List.of("type", "code"), List.of("text", "sort", "remark"), FlyDict.class);
+        UpdateWrapper<FlyDict> wp = QueryUtils.buildUpdateWrapper(dict, List.of("id", "type"), List.of("text", "sort", "remark"), FlyDict.class);
         try {
             dictMapper.update(dict, wp);
         } catch (DuplicateKeyException e) {

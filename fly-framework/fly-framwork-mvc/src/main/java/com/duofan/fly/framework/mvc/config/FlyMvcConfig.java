@@ -1,17 +1,16 @@
 package com.duofan.fly.framework.mvc.config;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,6 +28,15 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class FlyMvcConfig implements WebMvcConfigurer {
+
+
+    @Resource
+    private DebounceRequestLockoutFilter debounceRequestLockoutFilter;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(debounceRequestLockoutFilter);
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
