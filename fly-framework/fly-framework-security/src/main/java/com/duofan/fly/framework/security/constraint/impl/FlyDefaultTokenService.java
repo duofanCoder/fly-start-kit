@@ -8,7 +8,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.*;
 import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.HMacJWTSigner;
-import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.core.base.entity.FlyUser;
@@ -131,9 +130,7 @@ public class FlyDefaultTokenService implements FlyTokenService {
 
     @Override
     public void refresh(String token) {
-        if (!cacheService.expireAt(token, DateUtil.offsetHour(new Date(), 1))) {
-            log.info(LogConstant.COMMON_OPERATION_LOG, "刷新缓存", "操作失败");
-        }
+        cacheService.expireAt(token, DateUtil.offsetHour(new Date(), 1));
     }
 
     @Override

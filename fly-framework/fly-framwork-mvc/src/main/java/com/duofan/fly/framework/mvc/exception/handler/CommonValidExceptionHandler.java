@@ -16,6 +16,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Objects;
 
@@ -112,6 +113,13 @@ public class CommonValidExceptionHandler {
     public FlyResult handleFlyInternalException(FlyInternalException e) {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
         return FlyResult.of(FlyHttpStatus.Internal_ERROR);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public FlyResult handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        return FlyResult.of(FlyHttpStatus.FAIL, "文件大小超过限制");
     }
 
     @ResponseBody

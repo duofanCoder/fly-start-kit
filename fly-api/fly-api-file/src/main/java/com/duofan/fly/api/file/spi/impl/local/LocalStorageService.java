@@ -36,7 +36,10 @@ public class LocalStorageService implements FlyFileStorage {
         FileStorageProperty.LocalFileStorageProperties local = property.getLocal();
 
         FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(metaData.getStoragePath());
-
+        if (config == null) {
+            log.info("服务端配置【fly.file-storage.file-path-info.{}】文件存储路径配置缺失", metaData.getStoragePath());
+            throw new FlyBizException("fly.file-storage.file-path-info文件存储路径配置错误");
+        }
         String absolutePath = Paths.get(local.getUploadRoot(), config.getPath(), metaData.getFileStorageName()).toString();
         try {
             FileUtil.writeFromStream(file.getInputStream(), absolutePath);

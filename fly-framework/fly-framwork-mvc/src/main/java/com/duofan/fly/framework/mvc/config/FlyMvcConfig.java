@@ -1,12 +1,14 @@
 package com.duofan.fly.framework.mvc.config;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.framework.mvc.property.FlyWebProperties;
 import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -27,9 +29,11 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebMvc
+@EnableConfigurationProperties(FlyWebProperties.class)
 public class FlyMvcConfig implements WebMvcConfigurer {
 
-
+    @Resource
+    private FlyWebProperties properties;
     @Resource
     private DebounceRequestLockoutFilter debounceRequestLockoutFilter;
 
@@ -44,7 +48,7 @@ public class FlyMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedHeaders("*")
                 .allowedMethods("*")
-                .allowedOriginPatterns("*")
+                .allowedOriginPatterns(properties.getCorsOrigin())
                 .allowCredentials(true)
                 .maxAge(3600);
     }
