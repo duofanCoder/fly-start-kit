@@ -36,8 +36,13 @@ public class FlyDictController {
         return FlyResult.success(dictStorage.page(pageInfo, dict));
     }
 
+    /**
+     * 查询字典，支持多字典查询用逗号分割
+     * @param type
+     * @return
+     */
     @GetMapping("/list")
-    @FlyAccessInfo(opName = "字典查询")
+    @FlyAccessInfo(opName = "字典查询",isDebounce = false)
     FlyResult batchList(@RequestParam String type) {
         return FlyResult.success(dictStorage.listWrap(type));
     }
