@@ -23,10 +23,18 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisService implements FlyCacheService {
 
+
+    private final String projectName;
+
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisService(RedisTemplate<String, Object> redisTemplate) {
+    public RedisService(RedisTemplate<String, Object> redisTemplate, String projectName) {
+        this.projectName = projectName;
         this.redisTemplate = redisTemplate;
+    }
+
+    private String getRealKey(String key) {
+        return projectName + ":" + key;
     }
 
     /**
@@ -36,7 +44,7 @@ public class RedisService implements FlyCacheService {
      * @param value 缓存值
      */
     public void set(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForValue().set(getRealKey(key), value);
     }
 
     /**
@@ -48,32 +56,32 @@ public class RedisService implements FlyCacheService {
      * @param timeUnit 时间单位
      */
     public void set(String key, Object value, long expire, TimeUnit timeUnit) {
-        redisTemplate.opsForValue().set(key, value, expire, timeUnit);
+        redisTemplate.opsForValue().set(getRealKey(key), value, expire, timeUnit);
     }
 
     @Override
     public void set(String key, Object value, Duration duration) {
-        redisTemplate.opsForValue().set(key, value, duration);
+        redisTemplate.opsForValue().set(getRealKey(key), value, duration);
     }
 
     @Override
     public void removeBefore(String key, long windowStart) {
-        redisTemplate.opsForZSet().removeRangeByScore(key, 0, windowStart);
+        redisTemplate.opsForZSet().removeRangeByScore(getRealKey(key), 0, windowStart);
     }
 
     // 获取某一时间内的记录
     @Override
     public long getAwhileCount(String key, long windowStart) {
         // 移除60秒前的请求记录
-        redisTemplate.opsForZSet().removeRangeByScore(key, 0, windowStart);
+        redisTemplate.opsForZSet().removeRangeByScore(getRealKey(key), 0, windowStart);
 
         // 获取60秒内的请求次数
-        return Optional.ofNullable(redisTemplate.opsForZSet().zCard(key)).orElse(0L);
+        return Optional.ofNullable(redisTemplate.opsForZSet().zCard(getRealKey(key))).orElse(0L);
     }
 
     @Override
     public void setCurrentTime(String key, long currentTime) {
-        redisTemplate.opsForZSet().add(key, String.valueOf(currentTime), currentTime);
+        redisTemplate.opsForZSet().add(getRealKey(key), String.valueOf(currentTime), currentTime);
     }
 
 
@@ -82,7 +90,7 @@ public class RedisService implements FlyCacheService {
     public long increment(String key, long delta, long initValue, Duration duration) {
         if (this.hasKey(key)) {
             // 自增 或者 设置初始值
-            return redisTemplate.opsForValue().increment(key, delta);
+            return redisTemplate.opsForValue().increment(getRealKey(key), delta);
         } else {
             // 初始化设置默认值和失效时间
             this.set(key, initValue, duration);
@@ -97,19 +105,19 @@ public class RedisService implements FlyCacheService {
      * @param expire 过期时间
      */
     public boolean expire(String key, long expire) {
-        return Boolean.TRUE.equals(redisTemplate.expire(key, expire, TimeUnit.SECONDS));
+        return Boolean.TRUE.equals(redisTemplate.expire(getRealKey(key), expire, TimeUnit.SECONDS));
     }
 
     @Override
     public boolean expire(String key, Duration expire) {
         if (this.hasKey(key)) {
-            return Boolean.TRUE.equals(redisTemplate.expire(key, expire));
+            return Boolean.TRUE.equals(redisTemplate.expire(getRealKey(key), expire));
         }
         return false;
     }
 
     public boolean expireAt(String key, Date expire) {
-        return Boolean.TRUE.equals(redisTemplate.expireAt(key, expire));
+        return Boolean.TRUE.equals(redisTemplate.expireAt(getRealKey(key), expire));
     }
 
     /**
@@ -120,7 +128,7 @@ public class RedisService implements FlyCacheService {
      * @param timeUnit 时间单位
      */
     public boolean expire(String key, long expire, TimeUnit timeUnit) {
-        return Boolean.TRUE.equals(redisTemplate.expire(key, expire, timeUnit));
+        return Boolean.TRUE.equals(redisTemplate.expire(getRealKey(key), expire, timeUnit));
     }
 
     /**
@@ -130,13 +138,13 @@ public class RedisService implements FlyCacheService {
      */
     public Object get(String key) {
         ValueOperations<String, Object> operation = redisTemplate.opsForValue();
-        return operation.get(key);
+        return operation.get(getRealKey(key));
     }
 
     @Override
     public long getNum(String key) {
         ValueOperations<String, Object> operation = redisTemplate.opsForValue();
-        String num = String.valueOf(ObjUtil.defaultIfNull(operation.get(key), "0"));
+        String num = String.valueOf(ObjUtil.defaultIfNull(operation.get(getRealKey(key)), "0"));
         return Long.parseLong(num);
     }
 
@@ -146,7 +154,7 @@ public class RedisService implements FlyCacheService {
      * @param pattern 通配符缓存键
      */
     public Collection<String> keys(String pattern) {
-        return redisTemplate.keys(pattern);
+        return redisTemplate.keys(getRealKey(pattern));
     }
 
     /**
@@ -155,7 +163,7 @@ public class RedisService implements FlyCacheService {
      * @param key 缓存键
      */
     public boolean delete(String key) {
-        return Boolean.TRUE.equals(redisTemplate.delete(key));
+        return Boolean.TRUE.equals(redisTemplate.delete(getRealKey(key)));
     }
 
     /**
@@ -164,7 +172,7 @@ public class RedisService implements FlyCacheService {
      * @param collection 多个对象
      */
     public Long delete(Collection<String> collection) {
-        return redisTemplate.delete(collection);
+        return redisTemplate.delete(collection.stream().map(this::getRealKey).toList());
     }
 
     /**
@@ -173,18 +181,18 @@ public class RedisService implements FlyCacheService {
      * @param key 缓存键
      */
     public Long getExpireTime(String key) {
-        return redisTemplate.opsForValue().getOperations().getExpire(key);
+        return redisTemplate.opsForValue().getOperations().getExpire(getRealKey(key));
     }
 
     @Override
     public boolean hasKey(String key) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(getRealKey(key)));
     }
 
     @Override
     public boolean hasKeyThenDelete(String key) {
-        if (!this.hasKey(key)) {
-            return delete(key);
+        if (!this.hasKey(getRealKey(key))) {
+            return delete(getRealKey(key));
         }
         return false;
     }

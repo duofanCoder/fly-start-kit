@@ -4,6 +4,7 @@ import com.duofan.fly.core.base.domain.exception.FlyAccessVerifyException;
 import com.duofan.fly.core.spi.FlyAccessResourceVerification;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.utils.CacheKeyUtils;
+import com.duofan.fly.core.utils.WebUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,7 @@ public class AccessVerificationAspect {
         String resourceLockCacheKey = CacheKeyUtils.getResourceLockCacheKey(request);
         int maxErrorCount = annotation.maxErrorCount();
         long increment = cacheService.increment(resourceLockCacheKey, 1, 1, Duration.ofSeconds(annotation.limitTime()));
+        log.warn("敏感资源非法访问【{}】IP:【{}】访问次数:【{}】", annotation.name(), WebUtils.getIp(request), increment);
         if (increment > maxErrorCount) {
             // 封锁IP
             cacheService.expire(resourceLockCacheKey, Duration.ofSeconds(annotation.limitTime()));

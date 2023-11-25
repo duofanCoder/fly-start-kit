@@ -13,8 +13,10 @@ public @interface FlyAccessResourceVerification {
     // 伪造访问出错的错误信息
     String fakeMessage() default "访问太快,请稍后再试";
 
+    String name() default "资源名称";
+
     // 伪造访问出错的错误码
-    String fakeCode() default "200";
+    String fakeCode() default "500";
 
     // 恶意封锁
     // 是否开启IP限制
