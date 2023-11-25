@@ -12,11 +12,12 @@ package com.duofan.fly.core.base.constant.cache;
 public class CacheKey {
     // 验证码标识
     public static final String CAPTCHA = "captchaCode:{}:{}";
-    // 校验成功后，操作码 客户端id:操作接口
-    public static final String VERIFY_OPERATION = "verifyOperation:{}:{}";
+    // 校验成功后，操作码 客户端id:操作接口:校验级别
+    public static final String VERIFY_OPERATION = "verifyOperation:{}:{}:{}";
 
-    // 敏感资源访问锁 IP:接口
-    public static final String RESOURCE_LOCK = "resourceLock:{}:{}";
+    // TODO: 对应安全级别资源锁定
+    // 敏感资源访问锁 IP:接口:安全级别
+    public static final String RESOURCE_LOCK = "resourceLock:{}:{}:{}";
     public static final String DEBOUNCE_LOCK = "debounceLock:{}:{}";
 
 }

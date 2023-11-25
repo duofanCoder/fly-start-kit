@@ -36,16 +36,16 @@ public class AccessVerificationAspect {
 
     @Around("@annotation(com.duofan.fly.core.spi.FlyAccessResourceVerification)")
     public Object verifyAccess(ProceedingJoinPoint joinPoint) throws Throwable {
-        String cacheKey = CacheKeyUtils.getVerifyCacheKey(request, false);
-        if (cacheService.hasKeyThenDelete(cacheKey)) {
-            return joinPoint.proceed();
-        }
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-
         // 获取方法上的注解
         FlyAccessResourceVerification annotation = method.getAnnotation(FlyAccessResourceVerification.class);
 
+        String cacheKey = CacheKeyUtils.getVerifyCacheKey(request, false, annotation.verificationLevel());
+        if (cacheService.hasKeyThenDelete(cacheKey)) {
+            
+            return joinPoint.proceed();
+        }
         // 敏感资源访问，超过次数封锁
         verifyErrorCount(annotation);
 

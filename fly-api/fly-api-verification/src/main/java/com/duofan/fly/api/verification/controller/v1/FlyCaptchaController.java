@@ -2,6 +2,7 @@ package com.duofan.fly.api.verification.controller.v1;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
+import com.duofan.fly.core.base.constant.security.FlyVerificationLevel;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
@@ -60,10 +61,11 @@ public class FlyCaptchaController {
         // 检查用户输入的验证码是否与Session中的验证码匹配
         if (cacheService.hasKey(key) && inputCaptcha.equalsIgnoreCase(String.valueOf(cacheService.get(key)))) {
             cacheService.delete(key);
-            cacheService.set(CacheKeyUtils.getVerifyCacheKey(request, true), "true", Duration.ofMinutes(30));
+            cacheService.set(CacheKeyUtils.getVerifyCacheKey(request, true, FlyVerificationLevel.CAPTCHA), "true", Duration.ofMinutes(30));
             // 验证码匹配，返回验证成功信息
             return new FlyResult("200", "验证成功", null);
         } else {
+            cacheService.delete(key);
             // 验证码不匹配，返回验证失败信息
             return new FlyResult("500", "验证失败", null);
         }

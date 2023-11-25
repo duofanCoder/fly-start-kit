@@ -1,6 +1,7 @@
 package com.duofan.fly.core.spi;
 
 import com.duofan.fly.core.base.constant.security.AccessSensitiveResourceConstrainedTarget;
+import com.duofan.fly.core.base.constant.security.FlyVerificationLevel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,6 +29,8 @@ public @interface FlyAccessResourceVerification {
 
     // 最大出错次数
     int maxErrorCount() default 5;
+
+    FlyVerificationLevel verificationLevel() default FlyVerificationLevel.CAPTCHA;
 
     // 封锁维度 ip或者接口
     AccessSensitiveResourceConstrainedTarget lockTarget() default AccessSensitiveResourceConstrainedTarget.LIMIT_API;

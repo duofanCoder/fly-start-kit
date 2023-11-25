@@ -19,6 +19,8 @@ import java.util.Map;
 @Slf4j
 public class CaptchaLoginValidRepository implements FlyLoginValidRepository {
 
+    private final String captchaParam = "captcha";
+
 
     @Override
     public void doCheck(Map<String, Object> data) throws LoginValidException {
@@ -32,6 +34,8 @@ public class CaptchaLoginValidRepository implements FlyLoginValidRepository {
 
     @Override
     public void errorHandle(Map<String, Object> data, LoginValidException e) {
+        String captcha = data.getOrDefault(captchaParam, "").toString();
+        
         // TODO 验证码成功处理
         System.out.println(data);
     }

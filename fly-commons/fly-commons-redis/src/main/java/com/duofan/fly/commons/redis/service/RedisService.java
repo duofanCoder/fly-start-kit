@@ -191,8 +191,8 @@ public class RedisService implements FlyCacheService {
 
     @Override
     public boolean hasKeyThenDelete(String key) {
-        if (!this.hasKey(getRealKey(key))) {
-            return delete(getRealKey(key));
+        if (this.hasKey(key)) {
+            return delete(key);
         }
         return false;
     }
