@@ -3,12 +3,13 @@ package com.duofan.fly.manage.api.controller.v1;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
-import com.duofan.fly.core.spi.FlyAccessResourceVerification;
+import com.duofan.fly.core.utils.WebUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyLogoutService;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -49,10 +50,13 @@ public class FlyPassportController {
     @Resource
     private FlyRegisterService registerService;
 
+    @Resource
+    private HttpServletRequest request;
+
     @PostMapping("/login")
-    @FlyAccessResourceVerification
     @FlyAccessInfo(opName = "登陆", needAuthenticated = false)
     public FlyResult login(@RequestBody @Valid Map<String, Object> loginRequest) {
+        loginRequest.put("ip", WebUtils.getIp(request));
         return FlyResult.success(loginService.login(loginRequest));
     }
 

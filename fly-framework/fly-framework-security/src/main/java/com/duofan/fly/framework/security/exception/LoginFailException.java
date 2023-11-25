@@ -46,7 +46,6 @@ public class LoginFailException extends FlySecurityException {
         ACCOUNT_STATUS_ERROR("5", "账户状态异常", AccountStatusException.class),
         ERROR("6", "认证错误", AuthenticationException.class),
         PARAM_ERROR("7", "入参校验失败", LoginParamException.class);
-
         private final String code;
         private final String text;
         private final Class<?> clazz;

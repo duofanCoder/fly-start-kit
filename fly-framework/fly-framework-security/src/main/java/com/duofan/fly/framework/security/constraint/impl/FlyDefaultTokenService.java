@@ -12,6 +12,7 @@ import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
+import com.duofan.fly.core.utils.CacheKeyUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
@@ -61,7 +62,10 @@ public class FlyDefaultTokenService implements FlyTokenService {
                 .setSigner(AlgorithmUtil.getAlgorithm(properties.getToken().getAlgorithm()),
                         properties.getToken().getSignSecret().getBytes())
                 .sign();
-        cacheService.set(token, loginUser.getUsername(), Duration.ofHours(1));
+        String loginTokenKey = CacheKeyUtils.getLoginTokenKey(loginUser.getUsername(), token);
+
+        // TODO 登录身份凭证有效时长 配置化
+        cacheService.set(loginTokenKey, loginUser, Duration.ofHours(1));
         return new FlyToken().setToken(token)
                 .setExpiredAt(new Date(DateUtil.offsetHour(new Date(), 1).getTime()))
                 .setHeaderKey(SecurityConstant.TOKEN_HEADER_KEY);
@@ -135,7 +139,10 @@ public class FlyDefaultTokenService implements FlyTokenService {
 
     @Override
     public void delete(String token) {
-        Map<String, Object> parse = parse(token);
+        Map<String, Object> info = parse(token);
+
+        String username = info.get("sub").toString();
+        CacheKeyUtils.getLoginTokenKey(username, token);
         // TODO 处理防止无状态jwt 多次登陆返回token
         cacheService.delete(token);
     }

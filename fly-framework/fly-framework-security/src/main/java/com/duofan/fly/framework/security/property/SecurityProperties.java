@@ -19,8 +19,8 @@ public class SecurityProperties {
     private String defaultPassword = "123456";
 
     /**
-     *  spring security 允许访问、监控允许访问的url
-     *  一般配置非controller映射的接口、静态资源等
+     * spring security 允许访问、监控允许访问的url
+     * 一般配置非controller映射的接口、静态资源等
      */
     @Value("${fly.security.permit-url:}")
     private List<String> permitUrl;
@@ -28,6 +28,7 @@ public class SecurityProperties {
     @Data
     public static class LoginProperties {
         private boolean captchaEnabled = true;
+        private boolean errorCountEnabled = true;
 
         private String usernameParameter = "username";
         private String passwordParameter = "password";

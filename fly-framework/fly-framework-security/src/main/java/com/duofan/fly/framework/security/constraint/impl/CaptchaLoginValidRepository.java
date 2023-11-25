@@ -1,5 +1,8 @@
 package com.duofan.fly.framework.security.constraint.impl;
 
+import cn.hutool.json.JSONUtil;
+import com.duofan.fly.core.spi.FlyCaptchaService;
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
 import com.duofan.fly.framework.security.exception.loginValid.FlyCaptchaValidException;
@@ -21,10 +24,28 @@ public class CaptchaLoginValidRepository implements FlyLoginValidRepository {
 
     private final String captchaParam = "captcha";
 
+    private final FlyCaptchaService captchaService;
+
+    private final FlyCacheService cacheService;
+
+    public CaptchaLoginValidRepository(FlyCaptchaService captchaService, FlyCacheService cacheService) {
+        this.captchaService = captchaService;
+        this.cacheService = cacheService;
+    }
+
 
     @Override
     public void doCheck(Map<String, Object> data) throws LoginValidException {
-        log.info("校验验证码成功");
+        String code = data.getOrDefault(captchaParam, "").toString();
+        if (code.isBlank()) {
+            throw new FlyCaptchaValidException("验证码不能为空");
+        }
+
+        boolean isSuccess = captchaService.checkCaptcha(code);
+        if (!isSuccess) {
+            throw new FlyCaptchaValidException("验证码错误");
+        }
+        log.info("校验验证码成功：{}", JSONUtil.toJsonStr(data));
     }
 
     @Override
@@ -34,10 +55,7 @@ public class CaptchaLoginValidRepository implements FlyLoginValidRepository {
 
     @Override
     public void errorHandle(Map<String, Object> data, LoginValidException e) {
-        String captcha = data.getOrDefault(captchaParam, "").toString();
-        
-        // TODO 验证码成功处理
-        System.out.println(data);
+        log.warn("校验验证码失败: {}", JSONUtil.toJsonStr(data));
     }
 
     @Override

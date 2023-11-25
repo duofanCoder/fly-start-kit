@@ -1,11 +1,16 @@
 package com.duofan.fly.framework.security.constraint.impl;
 
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
+import com.duofan.fly.core.utils.CacheKeyUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginValidException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +29,13 @@ public class DelegatingLoginValidRepository {
 
     private final List<FlyLoginValidRepository> delegates;
 
-    public DelegatingLoginValidRepository(FlyLoginValidRepository... delegates) {
-        this.delegates = Arrays.stream(delegates).sorted((o1, o2) -> o2.order() - o1.order()).toList();
+    private final FlyCacheService cacheService;
+
+    public DelegatingLoginValidRepository(FlyCacheService cacheService, FlyLoginValidRepository... delegates) {
+        this.cacheService = cacheService;
+        // delegates根据order 从小到大排序
+        Arrays.sort(delegates, Comparator.comparingInt(FlyLoginValidRepository::order));
+        this.delegates = List.of(delegates);
     }
 
     public void doCheck(Map<String, Object> data) throws LoginValidException {
@@ -40,7 +50,16 @@ public class DelegatingLoginValidRepository {
             this.delegates.stream().filter(d ->
                             d.supportError(loginValidException))
                     .forEach(i -> i.errorHandle(data, loginValidException));
+        } else if (e instanceof AuthenticationException) {
+            // 密码错误记录错误次数
+            recordErrorCount(data.get("ip").toString(), data.get("username").toString());
         }
+    }
+
+    // 根据ip和用户账号 为key 记录错误次数
+    // 如果错误次数大于5次，锁定账号
+    private void recordErrorCount(String ip, String username) {
+        cacheService.increment(CacheKeyUtils.getLoginErrorCountKey(ip, username), 1, 0, Duration.ofDays(1));
     }
 
     public void doSuccessHandle(Map<String, Object> data) {

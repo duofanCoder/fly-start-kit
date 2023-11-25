@@ -2,6 +2,7 @@ package com.duofan.fly.core.base.domain.permission;
 
 import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,7 @@ public class FlyResourceInfo {
                 .setGrantToAll(info.isGrantToAll());
     }
 
+    @JsonIgnore
     // 获取operation 权限名
     public String getFullOp() {
         return String.format("%s%s.%s", SecurityConstant.OPERATION_PREFIX, module, op);

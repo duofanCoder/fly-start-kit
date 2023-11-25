@@ -20,4 +20,6 @@ public class CacheKey {
     public static final String RESOURCE_LOCK = "resourceLock:{}:{}:{}";
     public static final String DEBOUNCE_LOCK = "debounceLock:{}:{}";
 
+    public static final CharSequence LOGIN_ERROR_COUNT = "loginErrorCount:{}:{}";
+    public static final CharSequence LOGIN_TOKEN = "loginToken:{}:{}";
 }

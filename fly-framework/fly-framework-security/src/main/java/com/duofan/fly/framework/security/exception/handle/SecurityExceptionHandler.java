@@ -4,6 +4,7 @@ import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.exception.FlySecurityException;
 import com.duofan.fly.core.base.enums.web.FlyHttpStatus;
 import com.duofan.fly.framework.security.exception.LoginFailException;
+import com.duofan.fly.framework.security.exception.LoginValidException;
 import com.duofan.fly.framework.security.exception.RegisterException;
 import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +87,10 @@ public class SecurityExceptionHandler {
     @ResponseBody
     @ExceptionHandler(FlySecurityException.class)
     public FlyResult handleValidException(FlySecurityException e) {
+        if (e instanceof LoginValidException) {
+            return FlyResult.of(FlyHttpStatus.FAIL, e.getMessage());
+        }
+
         log.warn(AUTH_EXCEPTION_LOG, e.getMessage());
         return FlyResult.of(FlyHttpStatus.FAIL);
     }

@@ -2,6 +2,8 @@ package com.duofan.fly.framework.security.context.jwt;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.exception.FlySuspiciousSecurityException;
+import com.duofan.fly.core.spi.cahce.FlyCacheService;
+import com.duofan.fly.core.utils.CacheKeyUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
@@ -38,10 +40,13 @@ public class JwtAuthenticationProvider implements InitializingBean {
     private final FlyTokenService tokenService;
     private final UserDetailsService detailService;
 
+    private final FlyCacheService cacheService;
 
-    public JwtAuthenticationProvider(FlyTokenService tokenService, UserDetailsService detailService) {
+
+    public JwtAuthenticationProvider(FlyTokenService tokenService, UserDetailsService detailService, FlyCacheService cacheService) {
         this.tokenService = tokenService;
         this.detailService = detailService;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -91,8 +96,12 @@ public class JwtAuthenticationProvider implements InitializingBean {
         }
         tokenService.refresh(token);
         Map<String, Object> info = tokenService.parse(token);
-        // TODO use cache
-        FlyLoginUser userDetails = (FlyLoginUser) detailService.loadUserByUsername(info.get("sub").toString());
+        // TODO use cache 、 JWT 配置化控制登录认证方式
+
+        // 用户信息缓存在redis
+        // FlyLoginUser userDetails = (FlyLoginUser) detailService.loadUserByUsername(info.get("sub").toString());
+        // TODO 多角色控制
+        FlyLoginUser userDetails = (FlyLoginUser) cacheService.get(CacheKeyUtils.getLoginTokenKey(info.get("sub").toString(), token));
         userDetails.setCurrentRoleNo((String) info.getOrDefault("currentRoleNo", userDetails.getRoleList().get(0).getRoleNo()));
         UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails,

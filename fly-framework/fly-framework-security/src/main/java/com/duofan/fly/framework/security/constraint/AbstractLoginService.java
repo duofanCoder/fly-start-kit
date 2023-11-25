@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
 import com.duofan.fly.framework.security.exception.LoginFailException;
+import com.duofan.fly.framework.security.exception.LoginValidException;
 import com.duofan.fly.framework.security.exception.loginValid.LoginParamException;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import lombok.val;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.Map;
 
@@ -53,18 +55,30 @@ public abstract class AbstractLoginService implements FlyLoginService {
 
     @Override
     public FlyToken login(Map<String, Object> data) throws RuntimeException {
-        loginValidRepository.doCheck(data);
         loginParamValid(data);
         val username = data.get(obtainUsernameParam()).toString();
         val password = data.get(obtainPasswordParam()).toString();
 
+        data.putIfAbsent("username", username);
+        data.putIfAbsent("password", password);
+
+
         FlyLoginUser loginUser = null;
+
+
         try {
+            loginValidRepository.doCheck(data);
             loginUser = authenticate(username, password);
-        } catch (Exception e) {
+        } catch (LoginValidException e) {
             loginValidRepository.doErrHandle(data, e);
             log.info("{}", e.getMessage());
             throw e;
+        } catch (AuthenticationException e) {
+            log.info("{}", e.getMessage());
+            loginValidRepository.doErrHandle(data, e);
+            throw e;
+        } catch (Exception e) {
+            log.info("{}", e.getMessage());
         }
         loginValidRepository.doSuccessHandle(data);
         return tokenService.create(loginUser);

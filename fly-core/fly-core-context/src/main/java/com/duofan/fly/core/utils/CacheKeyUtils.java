@@ -70,4 +70,14 @@ public class CacheKeyUtils {
         }
         return StrUtil.format(CacheKey.DEBOUNCE_LOCK, WebUtils.getIp(request), "no-mapper-uri");
     }
+
+
+    // 登录出错次数验证key
+    public static String getLoginErrorCountKey(String ip, String username) {
+        return StrUtil.format(CacheKey.LOGIN_ERROR_COUNT, ip, username);
+    }
+
+    public static String getLoginTokenKey(String username, String token) {
+        return StrUtil.format(CacheKey.LOGIN_TOKEN, username, token);
+    }
 }

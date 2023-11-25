@@ -1,6 +1,7 @@
 package com.duofan.fly.framework.security.config;
 
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.core.spi.FlyCaptchaService;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.core.storage.FlyUserStorage;
@@ -8,13 +9,11 @@ import com.duofan.fly.framework.security.constraint.FlyLoginService;
 import com.duofan.fly.framework.security.constraint.FlyLoginValidRepository;
 import com.duofan.fly.framework.security.constraint.FlyRegisterService;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
-import com.duofan.fly.framework.security.constraint.impl.CaptchaLoginValidRepository;
-import com.duofan.fly.framework.security.constraint.impl.DelegatingLoginValidRepository;
-import com.duofan.fly.framework.security.constraint.impl.FlyDefaultLoginService;
-import com.duofan.fly.framework.security.constraint.impl.FlyDefaultRegisterService;
+import com.duofan.fly.framework.security.constraint.impl.*;
 import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
 import com.duofan.fly.framework.security.property.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -56,11 +55,20 @@ public class FlySecurityAutoConfiguration {
     }
 
     @Bean("captchaLoginValidRepository")
+    @ConditionalOnBean(FlyCaptchaService.class)
     @ConditionalOnProperty(name = "fly.security.login.captchaEnabled", havingValue = "true")
-    FlyLoginValidRepository captchaLoginValidRepository() {
-        log.info(LogConstant.COMPONENT_LOG, "默认登陆验证码", "自动配置");
-        return new CaptchaLoginValidRepository();
+    FlyLoginValidRepository captchaLoginValidRepository(FlyCaptchaService captchaService, FlyCacheService cacheService) {
+        log.info(LogConstant.COMPONENT_LOG, "默认登陆验证码组件", "自动配置");
+        return new CaptchaLoginValidRepository(captchaService, cacheService);
     }
+
+    @Bean
+    @ConditionalOnProperty(name = "fly.security.login.errorCountEnabled", matchIfMissing = true)
+    FlyLoginValidRepository errorLoginValidRepository(FlyCacheService cacheService) {
+        log.info(LogConstant.COMPONENT_LOG, "默认密码爆破拦截组件", "自动配置");
+        return new FlyDefaultErrorCountRepository(cacheService);
+    }
+
 
     @Bean("flyLoginService")
     @ConditionalOnMissingBean

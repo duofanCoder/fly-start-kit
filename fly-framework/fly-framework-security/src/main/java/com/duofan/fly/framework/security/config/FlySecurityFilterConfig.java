@@ -96,7 +96,7 @@ public class FlySecurityFilterConfig {
     }
 
     private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails) {
-        return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails));
+        return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails, cacheService));
     }
 
     @Bean
