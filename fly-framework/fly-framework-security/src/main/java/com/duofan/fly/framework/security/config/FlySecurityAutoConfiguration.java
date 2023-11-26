@@ -58,14 +58,14 @@ public class FlySecurityAutoConfiguration {
     @ConditionalOnBean(FlyCaptchaService.class)
     @ConditionalOnProperty(name = "fly.security.login.captchaEnabled", havingValue = "true")
     FlyLoginValidRepository captchaLoginValidRepository(FlyCaptchaService captchaService, FlyCacheService cacheService) {
-        log.info(LogConstant.COMPONENT_LOG, "默认登陆验证码组件", "自动配置");
+        log.info(LogConstant.COMPONENT_LOG, "默认登录验证", "自动配置");
         return new CaptchaLoginValidRepository(captchaService, cacheService);
     }
 
     @Bean
     @ConditionalOnProperty(name = "fly.security.login.errorCountEnabled", matchIfMissing = true)
     FlyLoginValidRepository errorLoginValidRepository(FlyCacheService cacheService) {
-        log.info(LogConstant.COMPONENT_LOG, "默认密码爆破拦截组件", "自动配置");
+        log.info(LogConstant.COMPONENT_LOG, "默认登录密码字典拦截", "自动配置");
         return new FlyDefaultErrorCountRepository(cacheService);
     }
 
@@ -73,7 +73,7 @@ public class FlySecurityAutoConfiguration {
     @Bean("flyLoginService")
     @ConditionalOnMissingBean
     FlyLoginService flyLoginService(DelegatingLoginValidRepository loginValidRepository, FlyTokenService tokenService) {
-        log.info(LogConstant.COMPONENT_LOG, "默认登陆组件", "自动配置");
+        log.info(LogConstant.COMPONENT_LOG, "默认登陆处理", "自动配置");
         return new FlyDefaultLoginService(loginValidRepository, properties, authenticationProvider, tokenService);
     }
 
@@ -81,7 +81,7 @@ public class FlySecurityAutoConfiguration {
     @Bean("flyRegisterService")
     @ConditionalOnMissingBean
     FlyRegisterService flyRegisterService(PasswordEncoder passwordEncoder, FlyRoleStorage roleStorage) {
-        log.info(LogConstant.COMPONENT_LOG, "默认注册组件", "自动配置");
+        log.info(LogConstant.COMPONENT_LOG, "默认注册处理", "自动配置");
         return new FlyDefaultRegisterService(userStorage, roleStorage, passwordEncoder);
     }
 
