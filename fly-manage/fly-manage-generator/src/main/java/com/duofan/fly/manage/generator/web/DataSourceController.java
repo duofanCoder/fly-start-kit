@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataSourceController {
     @GetMapping("/")
     @FlyAccessInfo(module = "模板配置", op = "查询", description = "查询模板配置列表", needAuthenticated = false)
-    String index() {
+    public String index() {
         return "index";
     }
 

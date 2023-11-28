@@ -1,0 +1,132 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: fly-kit-prod
+  datasource:
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    #    username: kit-db
+    #    password: mzEM2St3DFsSmeRs
+    #    url: jdbc:mysql://localhost:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: duofan-cms
+    password: y2mFzPrP2xFLkkjG
+    url: jdbc:mysql://101.35.55.200:3306/duofan-cms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 50MB
+  data:
+    redis:
+      # Redis数据库索引（默认为0）
+      database: 0
+      # Redis服务器地址
+      host: 127.0.0.1
+      # 密码
+      password:
+      # Redis服务器连接端口
+      port: 6379
+      jedis:
+        pool:
+          # 连接池最大连接数（使用负值表示没有限制）
+          max-active: 8
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: 1
+          # 连接池中的最大空闲连接
+          max-idle: 8
+          # 连接池中的最小空闲连接
+          min-idle: 0
+      # 连接超时时间（毫秒）
+      timeout: 5000
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+    groups:
+      enabled: false
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.cms.manage.controller.api.v1
+    - group: 'fly-api-manage'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.fly.manage.api.controller.v1
+    - group: 'fly-api-external'
+      paths-to-match: '/**'
+      packages-to-scan: com.duofan.fly.api
+#  devtools:
+#    livereload:
+#      enabled: false
+#  default-flat-param-object: true
+
+cms:
+  blog-gen-output-path: /www/app/cms/post
+
+debug: false
+
+# 关闭Spring-boot-devtools热部署
+spring.devtools.restart.enabled: false
+
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
+knife4j:
+  enable: false
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+    enable-group: true
+  documents:
+    - name: 标题1
+      locations: classpath:markdown/*
+      group: -v3-api-docs
+    - name: 标题2
+      locations: classpath:markdown/*
+      group: fly
+  basic:
+    enable: false
+    username: abc
+    password: 123
+
+
+fly:
+  security:
+    login:
+      captchaEnabled: true
+      errorCountEnabled: true
+    filter:
+      malicious-request-lockout:
+        enabled: true
+  message:
+    email:
+      enabled: true
+      host: smtp.qq.com
+      port: 465
+      from: 2633320940@qq.com
+      pass: owrvhhfavcrmdigi
+  file-storage:
+    local:
+      upload-root: /www/app/cms/upload
+      access-root: https://cms.duofan.top/cms/api/v1/file/download
+    file-path-info:
+      post:
+        path: /post
+        max-file-size: 4096
+        allow-types:
+          - img
+          - zip
+          - rar
+      avatar:
+        path: /avatar
+        maxFileSize: 1024
+        allowTypes:
+          - zip
+  jpa:
+    enabled: true
