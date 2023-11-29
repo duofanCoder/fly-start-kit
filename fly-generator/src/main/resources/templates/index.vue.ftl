@@ -79,7 +79,7 @@
 
 <template>
     <div class="">
-        <base-page-table table-title="博客列表" :filter-config="filterConfig" :table-config="tableConfig">
+        <base-page-table table-title="列表" :filter-config="filterConfig" :table-config="tableConfig">
             <template #buttons>
                 <base-button type="primary" @click="handleAddType">新增</base-button>
             </template>
