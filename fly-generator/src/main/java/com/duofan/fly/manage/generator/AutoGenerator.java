@@ -20,7 +20,6 @@ import com.duofan.fly.manage.generator.config.builder.ConfigBuilder;
 import com.duofan.fly.manage.generator.config.po.TableInfo;
 import com.duofan.fly.manage.generator.engine.AbstractTemplateEngine;
 import com.duofan.fly.manage.generator.engine.FreemarkerTemplateEngine;
-import com.duofan.fly.manage.generator.engine.VelocityTemplateEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -53,7 +53,6 @@ callFunction: action?.delete
 ];
 
 const dialogColumn: FormColumnType[] = [
-{
 <#list table.fields as field>
     <#if field.comment?has_content>
         <#assign fieldDesc = "${field.comment}">

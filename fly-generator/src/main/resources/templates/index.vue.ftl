@@ -45,7 +45,7 @@
      */
     async function handleSearch() {
         const { pageSize, pageIndex } = tableConfig.pagination;
-        const data = await page${entity}List({ ...filterConfig.searchInfo, pageIndex, pageSize });
+        const data = await page${entity}({ ...filterConfig.searchInfo, pageIndex, pageSize });
         tableConfig.data = data.list || [];
 
         tableConfig.pagination.pageCount = data.pageCount;

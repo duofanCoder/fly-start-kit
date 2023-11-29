@@ -10,7 +10,7 @@
 <script lang="ts" setup>
     import {useColumn} from "../column";
     import {useMessage} from "@/hooks";
-    import {add${entity}, update${entity}} from "@/api/${project}/${entityLowFirst}";
+    import {save${entity}, update${entity}} from "@/api/${project}/${entityLowFirst}";
 
     const emit = defineEmits(["success"]);
 
@@ -75,7 +75,7 @@
             if (!valid) return;
             loading(true);
             try {
-                state.isEdit ? await update${entity}(state.formModel) : await add${entity}(state.formModel);
+                state.isEdit ? await update${entity}(state.formModel) : await save${entity}(state.formModel);
                 success(state.isEdit ? "修改成功" : "新增成功！");
                 emit("success");
                 hideDialog();

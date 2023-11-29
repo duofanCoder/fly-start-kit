@@ -53,7 +53,7 @@ import org.springframework.web.bind.annotation.*;
     return FlyResult.success(service.getById(id));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/remove")
     @FlyAccessInfo(opName = "${entity}-删除信息")
     public FlyResult remove(String id){
     return FlyResult.success(service.removeById(id));
