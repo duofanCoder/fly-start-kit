@@ -71,7 +71,7 @@ import org.springframework.web.bind.annotation.*;
     public FlyResult save(@RequestBody @Valid ${entity} request){
     return FlyResult.success(service.save(request));
     }
-    @DeleteMapping("remove")
+    @DeleteMapping("/remove/batch")
     @FlyAccessInfo(opName = "${entity}-批量删除")
     public FlyResult removeByIds(@RequestParam("ids") String[] ids) {
     service.removeByIds(Arrays.asList(ids));
