@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.duofan.generator</groupId>
-    <artifactId>fly-manage-generator</artifactId>
+    <artifactId>fly-generator</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

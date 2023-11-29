@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <name>起飞 - 父工程</name>
     <modules>
+        <module>fly-generator</module>
         <module>fly-web</module>
         <module>fly-framework</module>
         <module>fly-commons</module>

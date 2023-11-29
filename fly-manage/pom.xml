@@ -12,7 +12,6 @@
     <artifactId>fly-manage</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>fly-manage-generator</module>
         <module>fly-manage-api</module>
         <module>fly-manage-starter</module>
     </modules>
