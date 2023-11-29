@@ -1,6 +1,7 @@
 package com.duofan.fly.manage.generator.web;
 
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
+import com.duofan.fly.manage.generator.AutoGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

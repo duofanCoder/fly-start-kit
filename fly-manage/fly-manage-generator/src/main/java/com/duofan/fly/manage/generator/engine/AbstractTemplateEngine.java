@@ -15,6 +15,9 @@
  */
 package com.duofan.fly.manage.generator.engine;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.duofan.fly.manage.generator.config.*;
@@ -75,6 +78,7 @@ public abstract class AbstractTemplateEngine {
                 filePath = filePath.replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
             }
             String fileName = filePath + File.separator + entityName + file.getFileName();
+            fileName = fileName.replaceAll("%s", entityName);
             outputFile(new File(fileName), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
     }
