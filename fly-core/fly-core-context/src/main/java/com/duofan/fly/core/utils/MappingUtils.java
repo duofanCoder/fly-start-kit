@@ -22,27 +22,22 @@ public class MappingUtils {
         // 获取继承自GetMapping的注解的或其本身的请求路径
         GetMapping getMapping = AnnotationUtils.findAnnotation(annotationEle, GetMapping.class);
         if (getMapping != null) {
-            return getMapping.value()[0];
+            return getMapping.value()[0]+".get";
         }
         // 获取继承自PostMapping的注解的或其本身的请求路径
         PostMapping postMapping = AnnotationUtils.findAnnotation(annotationEle, PostMapping.class);
         if (postMapping != null) {
-            return postMapping.value()[0];
+            return postMapping.value()[0]+".post";
         }
         // 获取继承自DeleteMapping的注解的或其本身的请求路径
         DeleteMapping deleteMapping = AnnotationUtils.findAnnotation(annotationEle, DeleteMapping.class);
         if (deleteMapping != null) {
-            return deleteMapping.value()[0];
+            return deleteMapping.value()[0]+".delete";
         }
         // 获取继承自PutMapping的注解的或其本身的请求路径
         PutMapping putMapping = AnnotationUtils.findAnnotation(annotationEle, PutMapping.class);
         if (putMapping != null) {
-            return putMapping.value()[0];
-        }
-        // 获取继承自PatchMapping的注解的或其本身的请求路径
-        PatchMapping patchMapping = AnnotationUtils.findAnnotation(annotationEle, PatchMapping.class);
-        if (patchMapping != null) {
-            return patchMapping.value()[0];
+            return putMapping.value()[0]+".put";
         }
         // 获取继承自RequestMapping的注解的或其本身的请求路径
         RequestMapping requestMapping = AnnotationUtils.findAnnotation(annotationEle, RequestMapping.class);
