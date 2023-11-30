@@ -41,7 +41,7 @@ const tableColumn: Column[] = [
             {
                 icon: "edit",
                 label: "编辑",
-                callFunction: action?.editContent
+                callFunction: action?.edit
             },
             {
                 icon: "delete",
