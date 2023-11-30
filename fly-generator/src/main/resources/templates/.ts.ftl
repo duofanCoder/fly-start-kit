@@ -1,15 +1,14 @@
 <#assign entityUnderline = entity?replace("[A-Z]", "_$0", "r")?upper_case?substring(1)>
 <#assign entityLowFirst = entity?uncap_first>
-
 import request from "@/utils/request";
 
 export enum Api {
-PAGE_${entityUnderline} = "/api/v1/${entityLowFirst}/page",
-GET_${entityUnderline} = "/api/v1/${entityLowFirst}/get",
-ADD_${entityUnderline} = "/api/v1/${entityLowFirst}/save",
-REMOVE_${entityUnderline} = "/api/v1/${entityLowFirst}/remove",
-UPDATE_${entityUnderline} = "/api/v1/${entityLowFirst}/update",
-SWITCH_${entityUnderline}_STATUS = "/api/v1/${entityLowFirst}/switch/status"
+    PAGE_${entityUnderline} = "/api/v1/${entityLowFirst}/page",
+    GET_${entityUnderline} = "/api/v1/${entityLowFirst}/get",
+    ADD_${entityUnderline} = "/api/v1/${entityLowFirst}/save",
+    REMOVE_${entityUnderline} = "/api/v1/${entityLowFirst}/remove",
+    UPDATE_${entityUnderline} = "/api/v1/${entityLowFirst}/update",
+    SWITCH_${entityUnderline}_STATUS = "/api/v1/${entityLowFirst}/switch/status"
 }
 
 export const page${entity} = (data?: any) => request.get(Api.PAGE_${entityUnderline}, data);

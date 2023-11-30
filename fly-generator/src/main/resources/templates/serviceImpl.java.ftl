@@ -28,39 +28,39 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 }
 <#else>
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
- @Resource
- private ${table.mapperName} mapper;
+    @Resource
+    private ${table.mapperName} mapper;
 
- @Override
- @Transactional(rollbackFor=Exception.class)
- public boolean save(${entity} entity){
- entity.setId(null);
- return super.save(entity);
- }
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public boolean save(${entity} entity){
+        entity.setId(null);
+        return super.save(entity);
+    }
 
- @Override
- @Transactional(rollbackFor=Exception.class)
- public boolean edit(${entity} entity){
- return updateById(entity);
- }
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public boolean edit(${entity} entity){
+        return updateById(entity);
+    }
 
- @Override
- public FlyPageInfo<${entity}>page(FlyPageInfo<${entity}>pageInfo,${entity} user){
- Page<${entity}>page=QueryUtils.buildPage(pageInfo,${entity}.class);
- QueryWrapper<${entity}>wp=QueryUtils.buildQueryWrapper(user,List.of("createTime"),${entity}.class);
- Page<${entity}>data=page(page,wp);
+    @Override
+    public FlyPageInfo<${entity}>page(FlyPageInfo<${entity}>pageInfo,${entity} user){
+        Page<${entity}>page=QueryUtils.buildPage(pageInfo,${entity}.class);
+        QueryWrapper<${entity}>wp=QueryUtils.buildQueryWrapper(user,List.of("createTime"),${entity}.class);
+        Page<${entity}>data=page(page,wp);
+        wp.orderByDesc("create_time");
+        return FlyPageInfo.of(data);
+    }
 
- return FlyPageInfo.of(data);
- }
 
-
- @Override
- public boolean switchStatus(String id, String status) {
- ${entity} model = new ${entity}();
- model
- //.setStatus(status)
- .setId(id);
- return this.updateById(model);
- }
+    @Override
+    public boolean switchStatus(String id, String status) {
+        ${entity} model = new ${entity}();
+        model
+        //.setStatus(status)
+        .setId(id);
+        return this.updateById(model);
+    }
 }
 </#if>

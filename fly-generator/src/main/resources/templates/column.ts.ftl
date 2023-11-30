@@ -12,9 +12,9 @@ const filterColumn: FormColumnType[] = [
         <#assign fieldDesc = "${field.propertyName}">
     </#if>
     {
-    fieldName: "${field.propertyName}",
-    fieldDesc: "${fieldDesc}",
-    fieldType: FormTypeEnum.INPUT
+        fieldName: "${field.propertyName}",
+        fieldDesc: "${fieldDesc}",
+        fieldType: FormTypeEnum.INPUT
     },
 </#list>
 ];
@@ -27,29 +27,29 @@ const tableColumn: Column[] = [
         <#assign fieldDesc = "${field.propertyName}">
     </#if>
     {
-    fieldName: "${field.propertyName}",
-    fieldDesc: "${fieldDesc}",
+        fieldName: "${field.propertyName}",
+        fieldDesc: "${fieldDesc}",
     },
 </#list>
-{
-fieldName: "#",
-fieldDesc: "操作",
-formType: "operation",
-width: 375,
-fixed: "right",
-operation: [
-{
-icon: "edit",
-label: "编辑",
-callFunction: action?.editContent
-},
-{
-icon: "delete",
-label: "删除",
-callFunction: action?.delete
-}
-]
-}
+    {
+        fieldName: "#",
+        fieldDesc: "操作",
+        formType: "operation",
+        width: 375,
+        fixed: "right",
+            operation: [
+            {
+                icon: "edit",
+                label: "编辑",
+                callFunction: action?.editContent
+            },
+            {
+                icon: "delete",
+                label: "删除",
+                callFunction: action?.delete
+            }
+            ]
+    }
 ];
 
 const dialogColumn: FormColumnType[] = [

@@ -7,15 +7,15 @@ import lombok.Data;
 public class ${entity}Request {
 
 
-@Data
-public static class SaveOrUpdate {
-private String id;
-}
-@Data
-public static class SwitchStatus {
-@NotBlank
-private String id;
-@NotBlank
-private String status;
-}
+    @Data
+    public static class SaveOrUpdate {
+        private String id;
+    }
+    @Data
+    public static class SwitchStatus {
+        @NotBlank
+        private String id;
+        @NotBlank
+        private String status;
+    }
 }
