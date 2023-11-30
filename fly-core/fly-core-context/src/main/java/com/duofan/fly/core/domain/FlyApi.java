@@ -1,9 +1,11 @@
 package com.duofan.fly.core.domain;
 
+import ch.qos.logback.core.joran.action.PreconditionValidator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpMethod;
 
 /**
  * @author duofan
@@ -29,6 +31,7 @@ public class FlyApi {
     private boolean isGrantAll;
     private boolean isActivated;
     private String requestUrl;
+    private HttpMethod requestMethod;
     private boolean needAuthenticated;
 
     public FlyApi(String moduleName, String module, String system, String moduleDescription, String opName, String op, String description, boolean isGrantAll, boolean isActivated, String requestUrl, boolean needAuthenticated) {

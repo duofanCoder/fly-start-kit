@@ -2,6 +2,7 @@ package com.duofan.fly.core;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.exception.FlySpecificationException;
@@ -55,7 +56,7 @@ public class AuthenticationEndpointAnalysis {
         this.applicationContext = applicationContext;
     }
 
-    public Collection<FlyApi> getWhiteApis() {
+    public static Collection<FlyApi> getWhiteApis() {
         return CollUtil.unmodifiable(whiteApis);
     }
 
@@ -90,10 +91,16 @@ public class AuthenticationEndpointAnalysis {
             Object controller = entry.getValue();
             Class<?> clazz = ClassUtils.getUserClass(controller.getClass());
             FlyAccessInfo annotation = AnnotationUtils.findAnnotation(clazz, FlyAccessInfo.class);
-            String reqRoot = MappingUtils.getMappingUrl(clazz);
+            Tuple reqRoot = MappingUtils.getMappingUrl(clazz);
+            // controller 没有FlyAccessInfo 注解
             if (annotation == null) {
-                log.error("【{}】接口类型不支持", clazz.getName());
-                throw new FlySpecificationException("请在Controller层配置FlyAccessInfo");
+                log.info("Controller类【{}】没有配置注解FlyAccessInfo,将无法访问该控制器的所有接口", clazz.getName());
+                return;
+            }
+
+            // controller 没有配置requestMapping
+            if (reqRoot == null) {
+                reqRoot = new Tuple("", null);
             }
 
             FlyModule module = new FlyModule();
@@ -104,10 +111,9 @@ public class AuthenticationEndpointAnalysis {
             List<Method> flyMethods = Arrays.stream(controllerMethods).filter(m -> m.isAnnotationPresent(FlyAccessInfo.class)).toList();
             for (Method flyMethod : flyMethods) {
                 FlyAccessInfo methodAnnotation = flyMethod.getAnnotation(FlyAccessInfo.class);
-                String reqUrl = MappingUtils.getMappingUrl(flyMethod);
+                Tuple reqUrl = MappingUtils.getMappingUrl(flyMethod);
                 if (reqUrl == null){
-                    log.error("Controller层【{}】，方法【{}】接口类型不支持", clazz.getName(),flyMethod.getName());
-                    throw new FlySpecificationException();
+                    throw new FlySpecificationException(StrUtil.format("如果是Controller层，请在类【{}】方法【{}】配置注解FlyAccessInfo", clazz.getName(), flyMethod.getName()));
                 }
                 FlyApi api = new FlyApi()
                         .setModule(module.getModule()).setModuleName(module.getModuleName())
@@ -115,7 +121,8 @@ public class AuthenticationEndpointAnalysis {
                         .setOp(flyMethod.getName()).setDescription(methodAnnotation.description())
                         .setGrantAll(methodAnnotation.isGrantToAll())
                         .setNeedAuthenticated(methodAnnotation.needAuthenticated())
-                        .setRequestUrl((reqRoot + "/" + reqUrl).replace("//", "/"));
+                        .setRequestMethod(reqUrl.get(1))
+                        .setRequestUrl((reqRoot.get(0) + "/" + reqUrl.get(0)).replace("//", "/"));
                 apis.put(flyMethod.getName(), api);
                 if (!api.isNeedAuthenticated()) {
                     whiteApis.add(api);

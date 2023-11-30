@@ -19,15 +19,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 拦截器配置
+ * 依赖分析接口模板，要注入接口白名单
  *
  * @author duofan
  * @version 1.0
@@ -36,10 +44,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @date 2023/10/12
  */
 @Slf4j
+@DependsOn("analysis")
 @Configuration
 public class FlySecurityFilterConfig {
-    @Resource
-    private AuthenticationEndpointAnalysis analysis;
     @Resource
     private FlyTokenService tokenService;
 
@@ -68,14 +75,28 @@ public class FlySecurityFilterConfig {
                     req.requestMatchers(properties.getPermitUrl().toArray(new String[1]))
                             .permitAll());
         }
+        // 请求白名单配置
+        if (CollUtil.isNotEmpty(AuthenticationEndpointAnalysis.getWhiteApis())) {
+            Collection<FlyApi> whiteApis = AuthenticationEndpointAnalysis.getWhiteApis();
+            http.authorizeHttpRequests(req -> {
+                req.requestMatchers(whiteApis.stream().map(whiteApi ->
+                                        new AntPathRequestMatcher(
+                                                whiteApi.getRequestUrl(),
+                                                whiteApi.getRequestMethod().name()
+                                        )
+                                )
+                                .toList()
+                                .toArray(new AntPathRequestMatcher[1]))
+                        .permitAll();
+
+            });
+        }
 
         return http
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(SecurityConst.defaultPermitUrl.toArray(new String[1]))
                         .permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                        .requestMatchers(analysis.getWhiteApis().stream().map(FlyApi::getRequestUrl).toList().toArray(new String[1]))
-                        .permitAll()
                         .requestMatchers("/api/**")
                         .authenticated()
                         .anyRequest()

@@ -20,7 +20,7 @@ public class GreetController {
     @Resource
     private FlyUserMapper userMapper;
 
-    @GetMapping("hello")
+    @GetMapping("hello1")
     @FlyAccessInfo(opName = "说句你好")
     public ResponseEntity<String> hello() {
         List<FlyUser> flyUsers = userMapper.selectList(null);

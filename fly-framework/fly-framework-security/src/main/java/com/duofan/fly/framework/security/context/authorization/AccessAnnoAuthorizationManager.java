@@ -43,6 +43,8 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
             return new AuthorizationDecision(true);
         }
 
+        // 访问权限控制是通过模块和操作来控制的
+        // 不是通过url来控制的，因此请求method是不影响判断的。只要是op值不同即可
         if (authorities.contains(
                 new SimpleGrantedAuthority(attribute.getFullOp())
         )) {
