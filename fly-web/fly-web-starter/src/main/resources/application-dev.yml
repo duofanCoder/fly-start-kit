@@ -49,7 +49,7 @@ springdoc:
 #  default-flat-param-object: true
 
 
-debug: true
+debug: false
 # 关闭Spring-boot-devtools热部署
 spring.devtools.restart.enabled: false
 

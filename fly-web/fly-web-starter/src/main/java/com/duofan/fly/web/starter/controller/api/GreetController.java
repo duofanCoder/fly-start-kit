@@ -15,7 +15,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/greet")
-@FlyAccessInfo(system = "启动实例", module = "Greet", moduleName = "打招呼的")
 public class GreetController {
 
     @Resource
@@ -29,7 +28,7 @@ public class GreetController {
         return ResponseEntity.ok("hello");
     }
 
-    @GetMapping("grantHello")
+    @GetMapping("hello")
     @FlyAccessInfo(opName = "说句你好", isGrantToAll = true, needAuthenticated = false)
     public ResponseEntity<String> helloGrantAll() {
         List<FlyUser> flyUsers = userMapper.selectList(null);

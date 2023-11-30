@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;
+import com.duofan.fly.core.base.domain.exception.FlySpecificationException;
 import com.duofan.fly.core.base.domain.permission.FlyResourceInfo;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.domain.FlyApi;
@@ -11,7 +12,6 @@ import com.duofan.fly.core.domain.FlyModule;
 import com.duofan.fly.core.utils.MappingUtils;
 import com.duofan.fly.core.utils.PermissionStrUtils;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -33,11 +33,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2023/9/14
  */
 @Slf4j
-@Component
 public class AuthenticationEndpointAnalysis {
 
-    @Resource
-    private ApplicationContext applicationContext;
+    
+    private final ApplicationContext applicationContext;
 
     private final static Map<String, FlyModule> modules = new ConcurrentHashMap<>();
     // 懒加载 key => module + method
@@ -51,6 +50,10 @@ public class AuthenticationEndpointAnalysis {
 
     // 授权所有认证用户
     private final static List<FlyApi> grantAlleApis = new ArrayList<>();
+
+    public AuthenticationEndpointAnalysis(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     public Collection<FlyApi> getWhiteApis() {
         return CollUtil.unmodifiable(whiteApis);
@@ -88,7 +91,11 @@ public class AuthenticationEndpointAnalysis {
             Class<?> clazz = ClassUtils.getUserClass(controller.getClass());
             FlyAccessInfo annotation = AnnotationUtils.findAnnotation(clazz, FlyAccessInfo.class);
             String reqRoot = MappingUtils.getMappingUrl(clazz);
-            if (annotation == null) continue;
+            if (annotation == null) {
+                log.error("【{}】接口类型不支持", clazz.getName());
+                throw new FlySpecificationException("请在Controller层配置FlyAccessInfo");
+            }
+
             FlyModule module = new FlyModule();
             ConcurrentHashMap<String, FlyApi> apis = new ConcurrentHashMap<>();
             module.setModuleName(StrUtil.emptyToDefault(annotation.moduleName(), clazz.getName())).setModule(clazz.getName()).setDescription(annotation.description()).setSystem(annotation.system()).setApis(apis);
@@ -98,6 +105,10 @@ public class AuthenticationEndpointAnalysis {
             for (Method flyMethod : flyMethods) {
                 FlyAccessInfo methodAnnotation = flyMethod.getAnnotation(FlyAccessInfo.class);
                 String reqUrl = MappingUtils.getMappingUrl(flyMethod);
+                if (reqUrl == null){
+                    log.error("Controller层【{}】，方法【{}】接口类型不支持", clazz.getName(),flyMethod.getName());
+                    throw new FlySpecificationException();
+                }
                 FlyApi api = new FlyApi()
                         .setModule(module.getModule()).setModuleName(module.getModuleName())
                         .setOpName(StrUtil.emptyToDefault(methodAnnotation.opName(), flyMethod.getName()))
