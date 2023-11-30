@@ -49,7 +49,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         Page<${entity}>page=QueryUtils.buildPage(pageInfo,${entity}.class);
         QueryWrapper<${entity}>wp=QueryUtils.buildQueryWrapper(user,List.of("createTime"),${entity}.class);
         Page<${entity}>data=page(page,wp);
-        wp.orderByDesc("create_time");
+        wp.orderByDesc("update_time");
         return FlyPageInfo.of(data);
     }
 
