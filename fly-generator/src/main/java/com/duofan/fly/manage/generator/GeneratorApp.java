@@ -24,8 +24,13 @@ public class GeneratorApp implements CommandLineRunner {
             .Builder("jdbc:mysql://101.35.55.200:3306/duofan-cms?serverTimezone=Asia/Shanghai", "duofan-cms", "y2mFzPrP2xFLkkjG")
             .build();
 
+    private static final DataSourceConfig START_DATA_SOURCE_CONFIG = new DataSourceConfig
+            .Builder("jdbc:mysql://101.35.55.200:3306/kit-db?serverTimezone=Asia/Shanghai", "kit-db", "mzEM2St3DFsSmeRs")
+            .build();
+
     private static final StrategyConfig GENERATOR_STRATEGY_CONFIG = new StrategyConfig.Builder()
-            .likeTable(new LikeTable("nav_%"))
+            .addInclude("fly_dict_data","fly_dict_type")
+//            .likeTable(new LikeTable("nav_%"))
             .controllerBuilder()
             .enableFileOverride()
             .serviceBuilder()
@@ -61,9 +66,9 @@ public class GeneratorApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        AutoGenerator generator = new AutoGenerator(DATA_SOURCE_CONFIG);
+        AutoGenerator generator = new AutoGenerator(START_DATA_SOURCE_CONFIG);
 
-        ConfigBuilder configBuilder = new ConfigBuilder(GENERATOR_PACKAGE_CONFIG, DATA_SOURCE_CONFIG,
+        ConfigBuilder configBuilder = new ConfigBuilder(GENERATOR_PACKAGE_CONFIG, START_DATA_SOURCE_CONFIG,
                 GENERATOR_STRATEGY_CONFIG, GENERATOR_TEMPLATE_CONFIG, GENERATOR_GLOBAL_CONFIG, null);
 
 
