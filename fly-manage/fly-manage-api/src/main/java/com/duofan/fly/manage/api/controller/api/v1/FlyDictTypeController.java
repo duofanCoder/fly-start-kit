@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.v1;
+package com.duofan.fly.manage.api.controller.api.v1;
 
 
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
@@ -69,6 +69,6 @@ public class FlyDictTypeController {
     @PutMapping("/switch/status")
     @FlyAccessInfo(opName = "FlyDictType-切换状态")
     public FlyResult switchVisible(@RequestBody @Valid FlyDictTypeRequest.SwitchStatus request) {
-        return FlyResult.success(service.switchStatus(request.getId(), request.getStatus()));
+        return FlyResult.success(service.switchStatus(request.getId(), request.getIsEnabled()));
     }
 }

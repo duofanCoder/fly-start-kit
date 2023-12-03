@@ -1,7 +1,7 @@
 package com.duofan.fly.api.file.spi;
 
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
-import com.duofan.fly.core.base.enums.file.FileStorageTypeDic;
+import com.duofan.fly.core.base.enums.file.FileStorageTypeDict;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,5 +16,5 @@ public interface FlyFileStorage {
 
     List<FlyFileMetaData> listFiles(); // 获取所有文件列表
 
-    FileStorageTypeDic getStorageType(); // 获取存储类型
+    FileStorageTypeDict getStorageType(); // 获取存储类型
 }

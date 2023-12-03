@@ -42,7 +42,7 @@ public class CommonValidExceptionHandler {
         log.warn(VALID_EXCEPTION_LOG, e.getMessage());
         // 返回第一个错误显示错误内容和字段
         e.getBindingResult().getAllErrors().forEach(error -> {
-            log.warn("入参校验统一异常处理：{}，字段：{}，错误内容：{}", e.getMessage(), error.getCodes()[1], error.getDefaultMessage());
+            log.warn("入参校验统一异常处理：{}，字段：{}，错误内容：{}", e.getMessage(), Objects.requireNonNull(error.getCodes())[1], error.getDefaultMessage());
         });
 
         String msg = StrUtil.format("{} {}", Objects.requireNonNull(

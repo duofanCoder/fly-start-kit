@@ -9,7 +9,7 @@ import com.duofan.fly.api.file.spi.FlyFileStorage;
 import com.duofan.fly.api.file.util.FlyFileUtils;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
-import com.duofan.fly.core.base.enums.file.FileStorageTypeDic;
+import com.duofan.fly.core.base.enums.file.FileStorageTypeDict;
 import com.duofan.fly.core.storage.FlyFileMetaDataStorage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -100,7 +100,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         if (StrUtil.isBlank(storageTypeDic)) {
             throw new FlyBizException("存储类型不能为空");
         }
-        FileStorageTypeDic fileStorageType = FileStorageTypeDic.getByCode(storageTypeDic);
+        FileStorageTypeDict fileStorageType = FileStorageTypeDict.getByCode(storageTypeDic);
         if (fileStorageType == null) {
             throw new FlyBizException("存储类型不存在");
         }
@@ -158,7 +158,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         metaData.setStoragePath(filePathType);
         metaData.setFileSize(multipartFile.getSize());
         metaData.setFileSuffix(FlyFileUtils.getFileSuffix(multipartFile.getOriginalFilename()));
-        metaData.setStorageTypeDic(Objects.requireNonNull(FileStorageTypeDic.getByCode(storageTypeDic)).getCode());
+        metaData.setStorageTypeDic(Objects.requireNonNull(FileStorageTypeDict.getByCode(storageTypeDic)).getCode());
         metaData.setFileStorageName(FlyFileUtils.getUniqueFileName());
         metaData.setFileContentTypeDesc(FlyFileUtils.getFileType(multipartFile.getContentType()));
         metaData.setFileContentType(multipartFile.getContentType());
@@ -173,7 +173,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
      * @return
      */
     protected FlyFileStorage getFileExecutor(String storageTypeDic) {
-        FileStorageTypeDic fileStorageType = FileStorageTypeDic.getByCode(storageTypeDic);
+        FileStorageTypeDict fileStorageType = FileStorageTypeDict.getByCode(storageTypeDic);
 
         return fileStorageServiceFactory.getStorageService(fileStorageType);
     }

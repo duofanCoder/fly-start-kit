@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.v1;
+package com.duofan.fly.manage.api.controller.api.v1;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.extra.cglib.CglibUtil;
@@ -9,8 +9,8 @@ import com.duofan.fly.core.base.entity.FlyRole;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
 import com.duofan.fly.core.dto.RoleDto;
 import com.duofan.fly.core.storage.FlyRoleStorage;
-import com.duofan.fly.manage.api.request.RoleRelRequest;
-import com.duofan.fly.manage.api.request.RoleRequest;
+import com.duofan.fly.manage.api.controller.request.RoleRelRequest;
+import com.duofan.fly.manage.api.controller.request.RoleRequest;
 import com.duofan.fly.validate.plugins.ValidationList;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -62,7 +62,7 @@ public class FlyRoleController {
 
     @PostMapping("/update")
     @FlyAccessInfo(opName = "修改角色")
-    FlyResult update(@RequestBody RoleRequest.SaveOrUpdate request) {
+    FlyResult update(@RequestBody @Validated RoleRequest.SaveOrUpdate request) {
         roleStorage.saveOrUpdate(BeanUtil.copyProperties(request, RoleDto.class));
         return FlyResult.SUCCESS;
     }

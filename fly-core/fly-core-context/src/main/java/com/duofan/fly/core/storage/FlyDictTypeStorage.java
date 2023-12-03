@@ -26,9 +26,11 @@ public interface FlyDictTypeStorage extends IService<FlyDictType> {
 
     FlyPageInfo<FlyDictType> page(FlyPageInfo<FlyDictType> pageInfo,FlyDictType entity);
 
-    boolean switchStatus(String id, String status);
+    boolean switchStatus(String id, String isEnabled);
 
     Map<String, List<FlyDictionary>> list(Set<String> typeList);
+     List<FlyDictionary> getOne(String dictType);
+    
 
     Object listWrap(String type);
 }

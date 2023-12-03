@@ -1,14 +1,17 @@
 package com.duofan.fly.manage.api;
 
-import com.duofan.fly.core.base.entity.FlyRole;
-import com.duofan.fly.core.base.entity.FlyRoleRel;
-import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.base.domain.common.FlyDictionary;
+import com.duofan.fly.core.base.entity.*;
+import com.duofan.fly.core.storage.FlyDictDataStorage;
+import com.duofan.fly.core.storage.FlyDictTypeStorage;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import com.duofan.fly.manage.api.service.impl.FlyDefaultUserStorage;
 import jakarta.annotation.Resource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 初始化
@@ -28,16 +31,51 @@ public class ManageInitRunner implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Resource
+    private FlyDictTypeStorage dictTypeStorage;
+
+    @Resource
+    private FlyDictDataStorage dictDataStorage;
+
+    @Resource
     private FlyRoleStorage roleStorage;
 
     @Override
     public void run(String... args) throws Exception {
+        dictInit();
+
         if (!isInit()) {
             return;
         }
         userInit();
         roleInit();
+        dictInit();
         roleRelInit();
+    }
+
+    /**
+     * 系统字典初始化
+     */
+    private void dictInit() {
+        List<FlyDictionary> booleanDict = dictTypeStorage.getOne("booleanDict");
+        if (booleanDict == null) {
+            // 先插入type ，再插入data
+            ;
+            dictTypeStorage.save(new FlyDictType()
+                    .setIsEnabled("1")
+                    .setType("booleanDict")
+                    .setName("布尔字典"));
+            dictDataStorage.save(new FlyDictData()
+                    .setType("booleanDict")
+                    .setIsEnabled("1")
+                    .setValue("0")
+                    .setLabel("否"));
+            dictDataStorage.save(new FlyDictData()
+                    .setType("booleanDict")
+                    .setIsEnabled("1")
+                    .setValue("1")
+                    .setLabel("是"));
+        }
+
     }
 
     private boolean isInit() {

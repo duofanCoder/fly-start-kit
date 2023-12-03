@@ -1,5 +1,6 @@
-package com.duofan.fly.manage.api.request;
+package com.duofan.fly.manage.api.controller.request;
 
+import com.duofan.fly.validate.constraint.Dict;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -26,6 +27,7 @@ public class RoleRequest {
         @NotBlank(message = "角色名称不能为空")
         @Length(min = 2, max = 16, message = "角色名称至少3-16个字符")
         private String roleName;
+        @Dict(dict = "booleanDict", message = "字典类型不存在")
         private String isEnabled = "1";
         private List<String> permissions;
     }

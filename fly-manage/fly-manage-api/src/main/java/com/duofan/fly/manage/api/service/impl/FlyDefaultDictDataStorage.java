@@ -1,5 +1,6 @@
 package com.duofan.fly.manage.api.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -49,6 +50,7 @@ public class FlyDefaultDictDataStorage extends ServiceImpl<FlyDictDataMapper, Fl
         dictData.setType(entity.getType());
         dictData.setValue(entity.getValue());
         QueryWrapper<FlyDictData> wp = QueryUtils.buildQueryWrapper(dictData, List.of("type","value"), FlyDictData.class);
+        wp.ne(StrUtil.isNotBlank(entity.getId()),"id", entity.getId());
         if (mapper.selectCount(wp) > 0) {
             throw new FlyConstraintException("字典数据已存在");
         }

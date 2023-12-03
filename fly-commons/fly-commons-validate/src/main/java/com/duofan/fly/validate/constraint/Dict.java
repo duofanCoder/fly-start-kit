@@ -32,7 +32,7 @@ public @interface Dict {
 
     Class<?>[] groups() default {};
 
-    Class<? extends DictExtension> dict();
+    String dict();
 
     String dictKey() default "";
 

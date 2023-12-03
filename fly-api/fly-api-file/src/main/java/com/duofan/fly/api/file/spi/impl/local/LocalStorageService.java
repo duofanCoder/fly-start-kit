@@ -6,7 +6,7 @@ import com.duofan.fly.api.file.spi.FlyFileStorage;
 import com.duofan.fly.api.file.util.FlyFileUtils;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
-import com.duofan.fly.core.base.enums.file.FileStorageTypeDic;
+import com.duofan.fly.core.base.enums.file.FileStorageTypeDict;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -86,8 +86,8 @@ public class LocalStorageService implements FlyFileStorage {
     }
 
     @Override
-    public FileStorageTypeDic getStorageType() {
-        return FileStorageTypeDic.LOCAL;
+    public FileStorageTypeDict getStorageType() {
+        return FileStorageTypeDict.LOCAL;
     }
 
 }

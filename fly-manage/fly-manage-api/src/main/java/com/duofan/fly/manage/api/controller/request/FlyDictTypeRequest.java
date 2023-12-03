@@ -1,5 +1,6 @@
 package com.duofan.fly.manage.api.controller.request;
 
+import com.duofan.fly.validate.constraint.Dict;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -16,6 +17,7 @@ public class FlyDictTypeRequest {
         @NotBlank
         private String id;
         @NotBlank
-        private String status;
+        @Dict(dict = "booleanDic", message = "字典类型不存在")
+        private String isEnabled;
     }
 }

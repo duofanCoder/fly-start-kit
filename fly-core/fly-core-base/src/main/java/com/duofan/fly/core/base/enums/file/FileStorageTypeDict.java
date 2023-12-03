@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum FileStorageTypeDic {
+public enum FileStorageTypeDict {
 
     /**
      * 本地存储
@@ -49,8 +49,8 @@ public enum FileStorageTypeDic {
     private final String msg;
     private final String desc;
 
-    public static FileStorageTypeDic getByCode(String code) {
-        for (FileStorageTypeDic value : FileStorageTypeDic.values()) {
+    public static FileStorageTypeDict getByCode(String code) {
+        for (FileStorageTypeDict value : FileStorageTypeDict.values()) {
             if (value.getCode().equals(code)) {
                 return value;
             }

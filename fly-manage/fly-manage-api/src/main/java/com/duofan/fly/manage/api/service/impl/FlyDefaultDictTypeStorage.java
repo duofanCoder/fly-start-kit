@@ -56,6 +56,7 @@ public class FlyDefaultDictTypeStorage extends ServiceImpl<FlyDictTypeMapper, Fl
         FlyDictType dictType = new FlyDictType();
         dictType.setType(entity.getType());
         QueryWrapper<FlyDictType> wp = QueryUtils.buildQueryWrapper(dictType, List.of("type"), FlyDictType.class);
+        wp.ne(StrUtil.isNotBlank(entity.getId()),"id", entity.getId());
         if (mapper.selectCount(wp) > 0) {
             throw new FlyConstraintException("字典类型已存在");
         }
@@ -72,10 +73,10 @@ public class FlyDefaultDictTypeStorage extends ServiceImpl<FlyDictTypeMapper, Fl
 
 
     @Override
-    public boolean switchStatus(String id, String status) {
+    public boolean switchStatus(String id, String isEnabled) {
         FlyDictType model = new FlyDictType();
         model
-        //.setStatus(status)
+        .setIsEnabled(isEnabled)
         .setId(id);
         return this.updateById(model);
     }
@@ -123,6 +124,12 @@ public class FlyDefaultDictTypeStorage extends ServiceImpl<FlyDictTypeMapper, Fl
         }
         return result;
     }
+
+    @Override
+    public List<FlyDictionary> getOne(String dictType) {
+        return list(dictType);
+    }
+
     public List<FlyDictionary> list(String type) {
         FlyDictData dict = new FlyDictData()
                 .setType(type);

@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.v1;
+package com.duofan.fly.manage.api.controller.api.v1;
 
 
 import com.duofan.fly.core.base.entity.FlyDictData;

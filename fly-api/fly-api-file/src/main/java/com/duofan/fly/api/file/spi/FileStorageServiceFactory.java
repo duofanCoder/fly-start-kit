@@ -1,7 +1,7 @@
 package com.duofan.fly.api.file.spi;
 
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
-import com.duofan.fly.core.base.enums.file.FileStorageTypeDic;
+import com.duofan.fly.core.base.enums.file.FileStorageTypeDict;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 public class FileStorageServiceFactory {
 
     // FileStorageTypeDic
-    private final Map<FileStorageTypeDic, FlyFileStorage> storageServiceMap;
+    private final Map<FileStorageTypeDict, FlyFileStorage> storageServiceMap;
 
     public FileStorageServiceFactory(List<FlyFileStorage> storageServices) {
         storageServiceMap = new HashMap<>();
@@ -23,7 +23,7 @@ public class FileStorageServiceFactory {
         }
     }
 
-    public FlyFileStorage getStorageService(FileStorageTypeDic storageType) {
+    public FlyFileStorage getStorageService(FileStorageTypeDict storageType) {
         if (!storageServiceMap.containsKey(storageType)) {
             throw new FlyBizException("不支持的存储类型");
         }
