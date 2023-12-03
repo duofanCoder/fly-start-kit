@@ -11,6 +11,7 @@ import cn.hutool.jwt.signers.HMacJWTSigner;
 import com.duofan.fly.core.base.constant.security.SecurityConstant;
 import com.duofan.fly.core.base.domain.permission.FlyToken;
 import com.duofan.fly.core.base.entity.FlyUser;
+import com.duofan.fly.core.base.enums.BooleanDict;
 import com.duofan.fly.core.spi.cahce.FlyCacheService;
 import com.duofan.fly.core.utils.CacheKeyUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
@@ -64,10 +66,13 @@ public class FlyDefaultTokenService implements FlyTokenService {
                 .sign();
         String loginTokenKey = CacheKeyUtils.getLoginTokenKey(loginUser.getUsername(), token);
 
+        int activateTime = 1;
+        if (BooleanDict.YES.getCode().equals(loginUser.getIsRemember())) {
+            activateTime = 24 * 31;
+        }
         // TODO 登录身份凭证有效时长 配置化
-        cacheService.set(loginTokenKey, loginUser, Duration.ofHours(1));
-        return new FlyToken().setToken(token)
-                .setExpiredAt(new Date(DateUtil.offsetHour(new Date(), 1).getTime()))
+        cacheService.set(loginTokenKey, loginUser, Duration.ofHours(activateTime));
+        return new FlyToken().setToken(token).setExpiredAt(new Date(DateUtil.offsetHour(new Date(), activateTime).getTime()))
                 .setHeaderKey(SecurityConstant.TOKEN_HEADER_KEY);
     }
 

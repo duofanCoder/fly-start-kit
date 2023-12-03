@@ -32,6 +32,7 @@ public class SecurityProperties {
 
         private String usernameParameter = "username";
         private String passwordParameter = "password";
+        private String isRememberParameter = "isRemember";
 
     }
 

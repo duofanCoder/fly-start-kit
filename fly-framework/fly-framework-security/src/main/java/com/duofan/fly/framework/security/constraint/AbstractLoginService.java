@@ -58,6 +58,7 @@ public abstract class AbstractLoginService implements FlyLoginService {
         loginParamValid(data);
         val username = data.get(obtainUsernameParam()).toString();
         val password = data.get(obtainPasswordParam()).toString();
+        val isRemember = data.getOrDefault(obtainIsRememberParam(),"0").toString();
 
         data.putIfAbsent("username", username);
         data.putIfAbsent("password", password);
@@ -69,6 +70,7 @@ public abstract class AbstractLoginService implements FlyLoginService {
         try {
             loginValidRepository.doCheck(data);
             loginUser = authenticate(username, password);
+            loginUser.setIsRemember(isRemember);
         } catch (LoginValidException e) {
             loginValidRepository.doErrHandle(data, e);
             log.info("{}", e.getMessage());
@@ -99,5 +101,7 @@ public abstract class AbstractLoginService implements FlyLoginService {
 
     protected String obtainPasswordParam() {
         return properties.getLogin().getPasswordParameter();
+    }    protected String obtainIsRememberParam() {
+        return properties.getLogin().getIsRememberParameter();
     }
 }
