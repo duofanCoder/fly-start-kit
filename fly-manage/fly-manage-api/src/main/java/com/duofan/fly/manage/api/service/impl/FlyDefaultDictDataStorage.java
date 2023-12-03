@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
+import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.mapper.FlyDictDataMapper;
-import com.duofan.fly.core.storage.FlyDictDataService;
+import com.duofan.fly.core.storage.FlyDictDataStorage;
 import com.duofan.fly.core.utils.QueryUtils;
 import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ import java.util.List;
  * @since 2023-12-03
  */
 @Service
-public class FlyDictDataServiceImpl extends ServiceImpl<FlyDictDataMapper, FlyDictData> implements FlyDictDataService {
+public class FlyDefaultDictDataStorage extends ServiceImpl<FlyDictDataMapper, FlyDictData> implements FlyDictDataStorage {
     @Resource
     private FlyDictDataMapper mapper;
 
@@ -31,19 +32,32 @@ public class FlyDictDataServiceImpl extends ServiceImpl<FlyDictDataMapper, FlyDi
     @Transactional(rollbackFor = Exception.class)
     public boolean save(FlyDictData entity) {
         entity.setId(null);
+        duplicateCheck(entity);
+
         return super.save(entity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean edit(FlyDictData entity) {
+        duplicateCheck(entity);
         return updateById(entity);
+    }
+
+    private void duplicateCheck(FlyDictData entity) {
+        FlyDictData dictData = new FlyDictData();
+        dictData.setType(entity.getType());
+        dictData.setValue(entity.getValue());
+        QueryWrapper<FlyDictData> wp = QueryUtils.buildQueryWrapper(dictData, List.of("type","value"), FlyDictData.class);
+        if (mapper.selectCount(wp) > 0) {
+            throw new FlyConstraintException("字典数据已存在");
+        }
     }
 
     @Override
     public FlyPageInfo<FlyDictData> page(FlyPageInfo<FlyDictData> pageInfo, FlyDictData user) {
         Page<FlyDictData> page = QueryUtils.buildPage(pageInfo, FlyDictData.class);
-        QueryWrapper<FlyDictData> wp = QueryUtils.buildQueryWrapper(user, List.of("createTime"), FlyDictData.class);
+        QueryWrapper<FlyDictData> wp = QueryUtils.buildQueryWrapper(user, List.of("type","label","value","isEnabled"), FlyDictData.class);
         Page<FlyDictData> data = page(page, wp);
         wp.orderByDesc("update_time");
         return FlyPageInfo.of(data);
@@ -51,10 +65,10 @@ public class FlyDictDataServiceImpl extends ServiceImpl<FlyDictDataMapper, FlyDi
 
 
     @Override
-    public boolean switchStatus(String id, String status) {
+    public boolean switchStatus(String id, String isEnabled) {
         FlyDictData model = new FlyDictData();
         model
-                //.setStatus(status)
+                .setIsEnabled(isEnabled)
                 .setId(id);
         return this.updateById(model);
     }

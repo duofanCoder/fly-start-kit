@@ -1,6 +1,6 @@
 package com.duofan.fly.manage.api.dict;
 
-import com.duofan.fly.core.base.entity.FlyDict;
+import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.spi.DictExtension;
 import com.duofan.fly.core.storage.FlyRoleStorage;
 import jakarta.annotation.Resource;
@@ -27,9 +27,9 @@ public class RoleDict implements DictExtension {
     }
 
     @Override
-    public List<FlyDict> list() {
+    public List<FlyDictData> list() {
         return service.list().stream()
-                .map(i -> new FlyDict(getType(), i.getRoleName(), i.getRoleNo()))
+                .map(i -> new FlyDictData(getType(), i.getRoleName(), i.getRoleNo()))
                 .collect(Collectors.toList());
     }
 

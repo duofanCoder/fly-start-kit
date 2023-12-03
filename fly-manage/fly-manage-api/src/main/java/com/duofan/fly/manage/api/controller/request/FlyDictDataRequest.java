@@ -12,10 +12,10 @@ public class FlyDictDataRequest {
         private String id;
     }
     @Data
-    public static class SwitchStatus {
+    public static class SwitchIsEnabled {
         @NotBlank
         private String id;
         @NotBlank
-        private String status;
+        private String isEnabled;
     }
 }

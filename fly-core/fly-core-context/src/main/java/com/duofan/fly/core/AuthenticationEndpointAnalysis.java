@@ -95,7 +95,7 @@ public class AuthenticationEndpointAnalysis {
             // controller 没有FlyAccessInfo 注解
             if (annotation == null) {
                 log.info("Controller类【{}】没有配置注解FlyAccessInfo,将无法访问该控制器的所有接口", clazz.getName());
-                return;
+                continue;
             }
 
             // controller 没有配置requestMapping

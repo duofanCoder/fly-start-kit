@@ -2,7 +2,7 @@ package com.duofan.fly.core.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.duofan.fly.core.base.entity.FlyDict;
+import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.service.FlyDictService;
 import com.duofan.fly.core.spi.DictExtension;
 import jakarta.annotation.Resource;
@@ -28,7 +28,7 @@ public class FlyDefaultDictService implements FlyDictService {
     List<DictExtension> dictExtensionList;
 
     @Override
-    public List<FlyDict> list(String dicType) {
+    public List<FlyDictData> list(String dicType) {
 
         DictExtension dic = dictExtensionList.stream()
                 .filter(dictExtension -> StrUtil.equalsIgnoreCase(dicType, dictExtension.getType()))
@@ -47,12 +47,12 @@ public class FlyDefaultDictService implements FlyDictService {
     }
 
     @Override
-    public List<FlyDict> listBase(String dicType) {
+    public List<FlyDictData> listBase(String dicType) {
         return null;
     }
 
     @Override
-    public List<FlyDict> listTree(String dicType) {
+    public List<FlyDictData> listTree(String dicType) {
         return null;
     }
 }

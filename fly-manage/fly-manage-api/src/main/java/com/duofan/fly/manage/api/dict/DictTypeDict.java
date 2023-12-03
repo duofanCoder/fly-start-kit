@@ -1,8 +1,8 @@
 package com.duofan.fly.manage.api.dict;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.duofan.fly.core.base.entity.FlyDict;
-import com.duofan.fly.core.mapper.FlyDictMapper;
+import com.duofan.fly.core.base.entity.FlyDictData;
+import com.duofan.fly.core.mapper.FlyDictDataMapper;
 import com.duofan.fly.core.spi.DictExtension;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Component
 public class DictTypeDict implements DictExtension {
     @Resource
-    private FlyDictMapper mapper;
+    private FlyDictDataMapper mapper;
 
     @Override
     public String getType() {
@@ -28,12 +28,12 @@ public class DictTypeDict implements DictExtension {
     }
 
     @Override
-    public List<FlyDict> list() {
+    public List<FlyDictData> list() {
         return mapper.selectList(
-                        new LambdaQueryWrapper<FlyDict>()
-                                .groupBy(FlyDict::getType)
+                        new LambdaQueryWrapper<FlyDictData>()
+                                .groupBy(FlyDictData::getType)
                 ).stream()
-                .map(i -> new FlyDict(getType(), i.getName(), i.getType()))
+                .map(i -> new FlyDictData(getType(), i.getLabel(), i.getValue()))
                 .collect(Collectors.toList());
     }
 

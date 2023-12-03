@@ -1,8 +1,8 @@
-package com.duofan.fly.manage.api.controller.api.v1.nav;
+package com.duofan.fly.manage.api.controller.v1;
 
 
 import com.duofan.fly.core.base.entity.FlyDictData;
-import com.duofan.fly.core.storage.FlyDictDataService;
+import com.duofan.fly.core.storage.FlyDictDataStorage;
 import com.duofan.fly.manage.api.controller.request.FlyDictDataRequest;
 import org.springframework.web.bind.annotation.*;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 @FlyAccessInfo(opName = "FlyDictData模块")
 public class FlyDictDataController {
     @Resource
-    private FlyDictDataService service;
+    private FlyDictDataStorage service;
 
     @GetMapping("/page")
     @FlyAccessInfo(opName = "FlyDictData-分页")
@@ -49,7 +49,7 @@ public class FlyDictDataController {
     @PutMapping("/update")
     @FlyAccessInfo(opName = "FlyDictData-修改信息")
     public FlyResult updateById(@RequestBody @Valid FlyDictData request){
-        service.updateById(request);
+        service.edit(request);
         return FlyResult.SUCCESS;
     }
 
@@ -65,9 +65,9 @@ public class FlyDictDataController {
         return FlyResult.SUCCESS;
     }
 
-    @PutMapping("/switch/status")
+    @PutMapping("/switch/isEnabled")
     @FlyAccessInfo(opName = "FlyDictData-切换状态")
-    public FlyResult switchVisible(@RequestBody @Valid FlyDictDataRequest.SwitchStatus request) {
-        return FlyResult.success(service.switchStatus(request.getId(), request.getStatus()));
+    public FlyResult switchVisible(@RequestBody @Valid FlyDictDataRequest.SwitchIsEnabled request) {
+        return FlyResult.success(service.switchStatus(request.getId(), request.getIsEnabled()));
     }
 }

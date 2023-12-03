@@ -1,5 +1,5 @@
 server:
-  port: 23111
+  port: 8000
 spring:
   application:
     name: fly-kit-dev
@@ -49,14 +49,14 @@ springdoc:
 #  default-flat-param-object: true
 
 
-debug: false
+debug: true
 # 关闭Spring-boot-devtools热部署
 spring.devtools.restart.enabled: false
 
-#logging:
-#  level:
-#    org.springframework.security:
-#      TRACE
+logging:
+  level:
+    org.springframework.security:
+      TRACE
 knife4j:
   enable: true
   setting:
@@ -81,8 +81,8 @@ knife4j:
 fly:
   security:
     login:
-      captchaEnabled: true
-      errorCountEnabled: true
+      captchaEnabled: false
+      errorCountEnabled: false
     filter:
       malicious-request-lockout:
         enabled: true

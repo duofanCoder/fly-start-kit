@@ -1,9 +1,9 @@
-package com.duofan.fly.manage.api.controller.api.v1.nav;
+package com.duofan.fly.manage.api.controller.v1;
 
 
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.entity.FlyDictType;
-import com.duofan.fly.core.storage.FlyDictTypeService;
+import com.duofan.fly.core.storage.FlyDictTypeStorage;
 import com.duofan.fly.manage.api.controller.request.FlyDictTypeRequest;
 import org.springframework.web.bind.annotation.*;
 import com.duofan.fly.core.base.domain.common.FlyResult;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 @FlyAccessInfo(opName = "FlyDictType模块")
 public class FlyDictTypeController {
     @Resource
-    private FlyDictTypeService service;
+    private FlyDictTypeStorage service;
 
     @GetMapping("/page")
     @FlyAccessInfo(opName = "FlyDictType-分页")
@@ -49,7 +49,7 @@ public class FlyDictTypeController {
     @PutMapping("/update")
     @FlyAccessInfo(opName = "FlyDictType-修改信息")
     public FlyResult updateById(@RequestBody @Valid FlyDictType request) {
-        service.updateById(request);
+        service.edit(request);
         return FlyResult.SUCCESS;
     }
 

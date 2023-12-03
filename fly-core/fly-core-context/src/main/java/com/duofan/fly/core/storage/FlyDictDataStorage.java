@@ -1,7 +1,6 @@
 package com.duofan.fly.core.storage;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.entity.FlyDictData;
 
@@ -13,12 +12,12 @@ import com.duofan.fly.core.base.entity.FlyDictData;
  * @author duofan
  * @since 2023-12-03
  */
-public interface FlyDictDataService extends IService<FlyDictData> {
+public interface FlyDictDataStorage extends IService<FlyDictData> {
     boolean save(FlyDictData entity);
 
     boolean edit(FlyDictData entity);
 
-    FlyPageInfo<FlyDictData> page(FlyPageInfo<FlyDictData> pageInfo,FlyDictData entity);
+    FlyPageInfo<FlyDictData> page(FlyPageInfo<FlyDictData> pageInfo, FlyDictData entity);
 
-    boolean switchStatus(String id, String status);
+    boolean switchStatus(String id, String isEnabled);
 }

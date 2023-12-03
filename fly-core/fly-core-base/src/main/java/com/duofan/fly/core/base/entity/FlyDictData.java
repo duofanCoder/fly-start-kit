@@ -1,25 +1,24 @@
 package com.duofan.fly.core.base.entity;
 
 import com.duofan.fly.core.base.entity.abstact.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
 
 /**
  * @author duofan
  * @version 1.0
  * @email 2441051071@qq.com
  * @website duofan.top
- * @date 2023/1/7
+ * @date 2023/9/11
  */
 @Setter
 @Getter
 @Entity
-@Table
+@Table(indexes = {@Index(name = "dict_index", columnList = "type")},
+        uniqueConstraints = @UniqueConstraint(columnNames = {"type", "value"})
+)
 @Accessors(chain = true)
 public class FlyDictData extends BaseEntity {
 
@@ -59,4 +58,14 @@ public class FlyDictData extends BaseEntity {
      */
     @Column(columnDefinition = "varchar(255) NOT NULL DEFAULT '1'", nullable = false)
     private String isEnabled;
+
+    public FlyDictData(String type, String label, String value) {
+        this.type = type;
+        this.label = label;
+        this.value = value;
+    }
+
+    public FlyDictData() {
+
+    }
 }
