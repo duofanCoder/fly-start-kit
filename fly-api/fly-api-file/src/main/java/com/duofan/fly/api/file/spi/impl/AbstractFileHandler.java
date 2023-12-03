@@ -6,6 +6,7 @@ import com.duofan.fly.api.file.propterty.FileStorageProperty;
 import com.duofan.fly.api.file.spi.FileStorageServiceFactory;
 import com.duofan.fly.api.file.spi.FlyFileHandler;
 import com.duofan.fly.api.file.spi.FlyFileStorage;
+import com.duofan.fly.api.file.util.FlyFilePermissionUtils;
 import com.duofan.fly.api.file.util.FlyFileUtils;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
@@ -39,7 +40,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
     private final FlyFileMetaDataStorage storage;
     private final FileStorageServiceFactory fileStorageServiceFactory;
     private final FileStorageProperty property;
-
+    private final FlyFilePermissionUtils permissionUtils;
 
     /**
      * 上传操作
@@ -55,7 +56,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         // TODO 校验当前文件写权限
         FlyFileMetaData metaData = buildFileMetaData(file, storageTypeDic, filePathType);
 
-
+        permissionUtils.checkPermission(storageTypeDic, filePathType);
         // 上传文件
         try {
             this.uploadFile(file, metaData);

@@ -29,7 +29,8 @@ public class FlyFilePermissionUtils {
 //    @Resource
 //    private AuthenticationEndpointAnalysis analysis;
 
-    private boolean checkPermission(String bucket, String filePathType) {
+    // TODO 文件上传类型校验、文件读写角色校验、大小校验
+    public boolean checkPermission(String bucket, String filePathType) {
         Map<String, FileStorageProperty.FlyFilePathTypeConfig> info = property.getFilePathInfo();
         if (info.containsKey(filePathType)) {
             log.info(LogConstant.COMMON_OPERATION_LOG, "文件操作权限判断", "文件路径类型不存在，请检查filePathType是否存在");
