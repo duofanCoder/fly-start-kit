@@ -1,6 +1,7 @@
 package com.duofan.fly.manage.api.dict;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.mapper.FlyDictDataMapper;
 import com.duofan.fly.core.spi.DictExtension;
@@ -28,12 +29,12 @@ public class DictTypeDict implements DictExtension {
     }
 
     @Override
-    public List<FlyDictData> list() {
+    public List<FlyDictionary> list() {
         return mapper.selectList(
                         new LambdaQueryWrapper<FlyDictData>()
                                 .groupBy(FlyDictData::getType)
                 ).stream()
-                .map(i -> new FlyDictData(getType(), i.getLabel(), i.getValue()))
+                .map(i -> new FlyDictionary(getType(), i.getLabel(), i.getValue()))
                 .collect(Collectors.toList());
     }
 

@@ -2,6 +2,7 @@ package com.duofan.fly.core.storage;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.base.entity.FlyDictType;
@@ -27,7 +28,7 @@ public interface FlyDictTypeStorage extends IService<FlyDictType> {
 
     boolean switchStatus(String id, String status);
 
-    Map<String, List<FlyDictData>> list(Set<String> typeList);
+    Map<String, List<FlyDictionary>> list(Set<String> typeList);
 
     Object listWrap(String type);
 }

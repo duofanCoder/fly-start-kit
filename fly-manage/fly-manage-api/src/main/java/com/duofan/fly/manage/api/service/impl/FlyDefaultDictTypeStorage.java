@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.entity.FlyDictData;
@@ -85,15 +86,15 @@ public class FlyDefaultDictTypeStorage extends ServiceImpl<FlyDictTypeMapper, Fl
     private FlyDictService dictService;
 
     @Override
-    public Map<String, List<FlyDictData>> list(Set<String> typeList) {
-        LinkedHashMap<String, List<FlyDictData>> result = new LinkedHashMap<>();
+    public Map<String, List<FlyDictionary>> list(Set<String> typeList) {
+        LinkedHashMap<String, List<FlyDictionary>> result = new LinkedHashMap<>();
 
         ArrayList<String> nonDynamicDictTypeList
                 = new ArrayList<>();
         // TODO 动态字典数据安全
         // 动态字典
         typeList.forEach(type -> {
-            List<FlyDictData> list = dictService.list(type);
+            List<FlyDictionary> list = dictService.list(type);
             if (list != null) {
                 result.put(type, list);
             } else {
@@ -112,22 +113,22 @@ public class FlyDefaultDictTypeStorage extends ServiceImpl<FlyDictTypeMapper, Fl
         Set<String> typeSet = data.stream().map(FlyDictData::getType).collect(Collectors.toSet());
 
         for (String type : typeSet) {
-            ArrayList<FlyDictData> tmp = new ArrayList<>();
+            ArrayList<FlyDictionary> tmp = new ArrayList<>();
             for (FlyDictData datum : data) {
                 if (datum.getType().equals(type)) {
-                    tmp.add(new FlyDictData(datum.getType(), datum.getLabel(), datum.getValue()));
+                    tmp.add(new FlyDictionary(datum.getType(), datum.getLabel(), datum.getValue()));
                 }
             }
             result.put(type, tmp);
         }
         return result;
     }
-    public List<FlyDictData> list(String type) {
+    public List<FlyDictionary> list(String type) {
         FlyDictData dict = new FlyDictData()
                 .setType(type);
         QueryWrapper<FlyDictData> wp = QueryUtils.buildQueryWrapper(dict, List.of("type"), FlyDictData.class);
         wp.orderByAsc("sort");
-        List<FlyDictData> data = dictDataStorage.list(wp);
+        List<FlyDictionary> data = dictDataStorage.list(wp).stream().map(i -> new FlyDictionary(i.getType(), i.getLabel(), i.getValue())).toList();
         if (CollUtil.isNotEmpty(data)) {
             return data;
         }

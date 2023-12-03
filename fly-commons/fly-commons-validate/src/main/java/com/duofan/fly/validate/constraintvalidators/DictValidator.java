@@ -2,6 +2,7 @@ package com.duofan.fly.validate.constraintvalidators;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.spi.DictExtension;
 import com.duofan.fly.validate.constraint.Dict;
@@ -41,7 +42,7 @@ public class DictValidator implements ConstraintValidator<Dict, CharSequence> {
         if (StrUtil.isBlank(value)) {
             return false;
         }
-        for (FlyDictData dict : dictService.list()) {
+        for (FlyDictionary dict : dictService.list()) {
             if (dict.getValue().contentEquals(value)) {
                 return true;
             }

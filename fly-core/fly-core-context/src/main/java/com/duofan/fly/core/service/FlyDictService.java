@@ -1,6 +1,7 @@
 package com.duofan.fly.core.service;
 
 
+import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.entity.FlyDictData;
 
 import java.util.List;
@@ -16,9 +17,9 @@ import java.util.List;
  */
 
 public interface FlyDictService {
-    List<FlyDictData> list(String dicType);
+    List<FlyDictionary> list(String dicType);
 
-    List<FlyDictData> listBase(String dicType);
+    List<FlyDictionary> listBase(String dicType);
 
-    List<FlyDictData> listTree(String dicType);
+    List<FlyDictionary> listTree(String dicType);
 }
