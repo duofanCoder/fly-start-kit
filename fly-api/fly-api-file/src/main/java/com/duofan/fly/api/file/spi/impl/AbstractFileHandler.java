@@ -163,7 +163,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         FlyFileMetaData metaData = new FlyFileMetaData();
         metaData.setFileOriginalName(multipartFile.getOriginalFilename());
         // 文件存储的相对路径 设置默认值（实际从配置文件取）
-        metaData.setFileStoragePath(filePathType);
+        metaData.setFileRelativePath(filePathType);
         metaData.setStoragePathKey(filePathType);
         metaData.setFileSize(multipartFile.getSize());
         metaData.setFileSuffix(FlyFileUtils.getFileSuffix(multipartFile.getOriginalFilename()));

@@ -44,15 +44,15 @@ public class FlyFilePermissionUtils implements ApplicationContextAware {
         }
         FileStorageProperty.FlyFilePathTypeConfig config = info.get(metaData.getStoragePathKey());
         if (StrUtil.isNotBlank(config.getPath())) {
-            metaData.setFileStoragePath(config.getPath());
+            metaData.setFileRelativePath(config.getPath());
         }
 
         // local存储类型配置下绝对的路径
         if (metaData.getStorageTypeDic().equals(FileStorageTypeDict.LOCAL.getCode())) {
-            metaData.setFileStoragePath(Paths.get(property.getLocal().getUploadRoot(), metaData.getFileStoragePath(), metaData.getFileStorageName()).toString());
+            metaData.setFileAbsolutePath(Paths.get(property.getLocal().getUploadRoot(), metaData.getFileRelativePath(), metaData.getFileStorageName()).toString());
         } else {
             FileStorageProperty.OssFileStorageProperties ossProperties = property.getOss().get(metaData.getStorageTypeDic());
-            metaData.setFileStoragePath(Paths.get(ossProperties.getUploadRoot(), metaData.getFileStoragePath(), metaData.getFileStorageName()).toString());
+            metaData.setFileAbsolutePath(Paths.get(ossProperties.getUploadRoot(), metaData.getFileRelativePath(), metaData.getFileStorageName()).toString());
         }
 
 
