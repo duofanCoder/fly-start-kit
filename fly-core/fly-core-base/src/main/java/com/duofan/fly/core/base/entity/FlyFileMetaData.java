@@ -33,7 +33,8 @@ public class FlyFileMetaData extends BaseEntity {
     private String fileContentType; // 文件类型 （文件上传content-type 内容
     private String fileOriginalName; // 文件原始名称
     private String fileStorageName; // 文件存储名称  （修改后，存在文件夹里文件的名称
-    private String fileStoragePath; // 文件存储路径
+    private String fileStoragePath; // 文件存储相对路径
+    private String fileStorageUrl; // 文件存储访问路径
 
 
     // 一下内容存在自定义的配置内容里面 json存储
@@ -41,7 +42,6 @@ public class FlyFileMetaData extends BaseEntity {
     private String fileStorageEndpoint; // 文件存储节点
     private String fileStorageAccessKeyId; // 文件存储访问ID
     private String fileStorageAccessKeySecret; // 文件存储访问密钥
-    private String fileStorageUrl; // 文件存储访问路径
     private String fileStorageType; // 文件存储类型
     private String fileStorageRegion; // 文件存储区域
     private String fileStorageDomain; // 文件存储域名

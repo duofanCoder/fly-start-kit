@@ -27,6 +27,9 @@ public class FileStorageProperty {
     private Map<String, OssFileStorageProperties> oss = new HashMap<>();
 
 
+    /**
+     * 本地文件存储配置
+     */
     @Data
     public static class LocalFileStorageProperties {
         // 文件上传的根目录 fly.file-storage.upload-path配置项
@@ -36,6 +39,9 @@ public class FileStorageProperty {
 
     }
 
+    /**
+     * 云OSS配置
+     */
     @Data
     public static class OssFileStorageProperties {
         private String endpoint;
@@ -46,9 +52,16 @@ public class FileStorageProperty {
         private String region;
         private String domain;
         private String path;
+        // 文件上传的根目录 fly.file-storage.upload-path配置项
+        private String uploadRoot = "/home/duofan/upload";
+        // 文件访问的根目录 fly.file-storage.access-root配置项
+        private String accessRoot = "img";
         private Map<String, String> properties = new HashMap<>();
     }
 
+    /**
+     * 文件上传相对路径 配置
+     */
     @Data
     public static class FlyFilePathTypeConfig {
         // 文件存放相对路径     默认用key

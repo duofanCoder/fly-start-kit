@@ -6,12 +6,14 @@ import com.duofan.fly.api.file.propterty.FileStorageProperty;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
+import com.duofan.fly.core.base.enums.file.FileStorageTypeDict;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Paths;
 import java.util.Map;
 
 /**
@@ -44,11 +46,21 @@ public class FlyFilePermissionUtils implements ApplicationContextAware {
         if (StrUtil.isNotBlank(config.getPath())) {
             metaData.setFileStoragePath(config.getPath());
         }
+
+        // local存储类型配置下绝对的路径
+        if (metaData.getStorageTypeDic().equals(FileStorageTypeDict.LOCAL.getCode())) {
+            metaData.setFileStoragePath(Paths.get(property.getLocal().getUploadRoot(), metaData.getFileStoragePath(), metaData.getFileStorageName()).toString());
+        } else {
+            FileStorageProperty.OssFileStorageProperties ossProperties = property.getOss().get(metaData.getStorageTypeDic());
+            metaData.setFileStoragePath(Paths.get(ossProperties.getUploadRoot(), metaData.getFileStoragePath(), metaData.getFileStorageName()).toString());
+        }
+
+
         if (config.getMaxFileSize() != null && metaData.getFileSize() > config.getMaxFileSize().toBytes()) {
             log.info(LogConstant.COMMON_OPERATION_LOG, "文件上传配置权限判断", "文件大小超过限制【%s】".formatted(FileUtil.readableFileSize(metaData.getFileSize())));
             throw new FlyBizException("文件大小超过限制");
         }
-                
+
         // 类型判断
         if (config.getAllowTypes() != null && config.getAllowTypes().length > 0) {
             String[] allowTypes = config.getAllowTypes();

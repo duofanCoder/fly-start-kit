@@ -40,7 +40,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
     private final FlyFileMetaDataStorage storage;
     private final FileStorageServiceFactory fileStorageServiceFactory;
     private final FileStorageProperty property;
-    
+
 
     /**
      * 上传操作
@@ -55,7 +55,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         validateFile(file, storageTypeDic, filePathType);
         // TODO 校验当前文件写权限
         FlyFileMetaData metaData = buildFileMetaData(file, storageTypeDic, filePathType);
-        
+
         FlyFilePermissionUtils.checkUploadPermission(metaData);
         // 上传文件
         try {
@@ -109,7 +109,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         if (StrUtil.isBlank(filePathType)) {
             throw new FlyBizException("文件路径类型不能为空");
         }
-        if (storageTypeDic.equals("local")) {
+        if (storageTypeDic.equals(FileStorageTypeDict.LOCAL.getCode())) {
             if (StrUtil.isBlank(property.getLocal().getUploadRoot())) {
                 throw new FlyBizException("本地文件路径不能为空");
             } else {

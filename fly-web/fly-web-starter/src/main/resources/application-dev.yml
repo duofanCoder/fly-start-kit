@@ -113,3 +113,6 @@ fly:
           - bmp
           - webp
           - svg
+      cache:
+        path: /cache
+        maxFileSize: 200MB

@@ -64,7 +64,7 @@ public class FlyFileUtils {
     }
 
     public static String getUniqueFileName() {
-        return RandomUtil.randomString(128);
+        return RandomUtil.randomString(32);
     }
 
     public static String getUUID() {
