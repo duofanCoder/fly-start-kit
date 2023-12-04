@@ -13,6 +13,7 @@ import com.duofan.fly.framework.security.context.jwt.JwtAuthenticationProvider;
 import com.duofan.fly.framework.security.context.lock.MaliciousRequestLockoutFilter;
 import com.duofan.fly.framework.security.property.SecurityConst;
 import com.duofan.fly.framework.security.property.SecurityProperties;
+import com.duofan.fly.framework.security.utils.SecurityUrlUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,12 +27,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 拦截器配置
@@ -64,33 +62,15 @@ public class FlySecurityFilterConfig {
      */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetails) throws Exception {
-        // 跨站攻击关闭
+        // 跨站攻击原因来自与使用cookie存储认证信息
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable);
+
         if (maliciousRequestLockoutFilterEnabled) {
             http.addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class);
         }
-        if (CollUtil.isNotEmpty(properties.getPermitUrl())) {
-            http.authorizeHttpRequests(req ->
-                    req.requestMatchers(properties.getPermitUrl().toArray(new String[1]))
-                            .permitAll());
-        }
-        // 请求白名单配置
-        if (CollUtil.isNotEmpty(AuthenticationEndpointAnalysis.getWhiteApis())) {
-            Collection<FlyApi> whiteApis = AuthenticationEndpointAnalysis.getWhiteApis();
-            http.authorizeHttpRequests(req -> {
-                req.requestMatchers(whiteApis.stream().map(whiteApi ->
-                                        new AntPathRequestMatcher(
-                                                whiteApi.getRequestUrl(),
-                                                whiteApi.getRequestMethod().name()
-                                        )
-                                )
-                                .toList()
-                                .toArray(new AntPathRequestMatcher[1]))
-                        .permitAll();
 
-            });
-        }
+        whiteApiConfig(http);
 
         return http
                 .authorizeHttpRequests(req -> req
@@ -114,6 +94,48 @@ public class FlySecurityFilterConfig {
                                 .authenticationEntryPoint((request, response, authException) ->
                                         WebUtils.responseJson(response, FlyResult.of(FlyHttpStatus.FORBIDDEN))))
                 .build();
+    }
+
+    private void whiteApiConfig(HttpSecurity http) throws Exception {
+        doCfgWhiteApi(http);
+        doAnnotationWhiteApi(http);
+    }
+
+    /**
+     * 配置文件白名单配置
+     *
+     * @param http http
+     * @throws Exception
+     */
+    private void doCfgWhiteApi(HttpSecurity http) throws Exception {
+        if (CollUtil.isNotEmpty(properties.getPermitUrl())) {
+            http.authorizeHttpRequests(req ->
+                    req.requestMatchers(properties.getPermitUrl().toArray(new String[1]))
+                            .permitAll());
+        }
+    }
+
+    /**
+     * 接口注解 白名单配置
+     *
+     * @param http
+     * @throws Exception
+     */
+    private static void doAnnotationWhiteApi(HttpSecurity http) throws Exception {
+        if (CollUtil.isNotEmpty(AuthenticationEndpointAnalysis.getWhiteApis())) {
+            Collection<FlyApi> whiteApis = AuthenticationEndpointAnalysis.getWhiteApis();
+            http.authorizeHttpRequests(req -> {
+                req.requestMatchers(whiteApis.stream().map(whiteApi ->
+                                        new AntPathRequestMatcher(
+                                                SecurityUrlUtils.pathVariable(whiteApi.getRequestUrl()),
+                                                whiteApi.getRequestMethod().name()
+                                        )
+                                )
+                                .toList()
+                                .toArray(new AntPathRequestMatcher[1]))
+                        .permitAll();
+            });
+        }
     }
 
     private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails) {

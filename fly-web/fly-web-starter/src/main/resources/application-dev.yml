@@ -100,7 +100,7 @@ fly:
   file-storage:
     local:
       upload-root: D:/home/duofan/upload
-      access-root: http://localhost:2311
+      access-root: http://localhost:8000/api/v1/file/download
     file-path-info:
       avatar:
         path: /avatar

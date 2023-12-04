@@ -1,10 +1,12 @@
 package com.duofan.fly.api.file.util;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.RandomUtil;
 
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 /**
  * 文件工具类
@@ -70,6 +72,31 @@ public class FlyFileUtils {
     }
 
     public static String getAccessUrl(String accessRoot, String... more) {
-        return accessRoot + "/" + Paths.get("", more).toString();
+        UrlBuilder urlBuilder = UrlBuilder.of(accessRoot);
+        Arrays.stream(more).forEach(urlBuilder::addPath);
+        String url = urlBuilder.build();
+        // 最后一个字符是/，去掉
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+        return url;
+    }
+
+    public static void main(String[] args) {
+        // Base URL
+        String baseUrl = "http://example.com/api";
+
+        // Path segments to append
+        String pathSegment1 = "users";
+        String pathSegment2 = "123";
+
+        // Use UrlBuilder to concatenate paths
+        String concatenatedUrl = UrlBuilder.of(baseUrl)
+                .addPath(pathSegment1)
+                .addPath(pathSegment2)
+                .build();
+
+        // Output the concatenated URL
+        System.out.println("Concatenated URL: " + concatenatedUrl);
     }
 }

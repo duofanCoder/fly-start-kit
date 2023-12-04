@@ -34,9 +34,12 @@ public class AccessAnnoAuthorizationManager implements AuthorizationManager<Meth
                 .contains(new SimpleGrantedAuthority(SecurityConstant.ROLE_PREFIX + FlyRoleEnums.ADMIN))) {
             return new AuthorizationDecision(true);
         }
+
+        // TODO 是否有必要做这个拦截应当不会走到这里，需要认证的授权处理执行check
         if (!attribute.isNeedAuthenticated()) {
             return new AuthorizationDecision(true);
         }
+        
         if (attribute.isGrantToAll() && !authInfo.getAuthorities().contains(
                 new SimpleGrantedAuthority(SecurityConstant.AUTHORITY_ROLE_ANONYMOUS)
         )) {

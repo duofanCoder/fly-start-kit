@@ -51,7 +51,7 @@ public class FileStorageProperty {
 
     @Data
     public static class FlyFilePathTypeConfig {
-        // 相对路径     默认用key
+        // 文件存放相对路径     默认用key
         private String path;
         // 最大存储文件大小 单位KB
         private DataSize maxFileSize;
