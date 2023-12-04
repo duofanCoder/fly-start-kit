@@ -35,9 +35,9 @@ public class LocalStorageService implements FlyFileStorage {
     public FlyFileMetaData store(MultipartFile file, FlyFileMetaData metaData) {
         FileStorageProperty.LocalFileStorageProperties local = property.getLocal();
 
-        FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(metaData.getStoragePath());
+        FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(metaData.getStoragePathKey());
         if (config == null) {
-            log.info("服务端配置【fly.file-storage.file-path-info.{}】文件存储路径配置缺失", metaData.getStoragePath());
+            log.info("服务端配置【fly.file-storage.file-path-info.{}】文件存储路径配置缺失", metaData.getStoragePathKey());
             throw new FlyBizException("fly.file-storage.file-path-info文件存储路径配置错误");
         }
         String absolutePath = Paths.get(local.getUploadRoot(), config.getPath(), metaData.getFileStorageName()).toString();
@@ -61,14 +61,15 @@ public class LocalStorageService implements FlyFileStorage {
         try {
             FileStorageProperty.LocalFileStorageProperties local = property.getLocal();
 
-            FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(fileMetaData.getStoragePath());
+            FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(fileMetaData.getStoragePathKey());
             String filePath = Paths.get(local.getUploadRoot(), config.getPath(), fileMetaData.getFileStorageName()).toString();
             Resource resource = new FileSystemResource(filePath);
 //            resource.canRead()
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new FlyBizException("Could not read file: " + fileMetaData.getFileStorageName());
+                log.info("文件不存在:【{}】", filePath);
+                throw new FlyBizException("文件不存在");
             }
         } catch (Exception e) {
             throw new FlyBizException("文件读取失败");

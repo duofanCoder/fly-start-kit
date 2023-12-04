@@ -37,7 +37,9 @@ public class FlyFileController {
 
     /**
      * 上传文件
-     *
+     * @param file 文件
+     * @param storageTypeDic 存储类型 本地(Local) 或 OSS
+     * @param filePathType 文件路径类型 配置文件存储key
      * @return
      */
     @PostMapping("/upload")
@@ -50,7 +52,7 @@ public class FlyFileController {
     }
 
     @GetMapping("/download/{fileName}")
-    @FlyAccessInfo(moduleName = "文件访问", needAuthenticated = false)
+    @FlyAccessInfo(moduleName = "文件访问", needAuthenticated = false, isDebounce = false)
     public ResponseEntity<Object> downloadFile(@PathVariable String fileName) throws UnsupportedEncodingException {
         ResourceVO vo = handler.loadFile(fileName);
         HttpHeaders headers = new HttpHeaders();

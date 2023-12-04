@@ -2,6 +2,7 @@ package com.duofan.fly.framework.mvc.exception.handler;
 
 import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.domain.common.FlyResult;
+import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.domain.exception.FlyInternalException;
 import com.duofan.fly.core.base.enums.web.FlyHttpStatus;
@@ -122,6 +123,11 @@ public class CommonValidExceptionHandler {
         return FlyResult.of(FlyHttpStatus.FAIL, "文件大小超过限制");
     }
 
+    @ResponseBody
+    @ExceptionHandler(FlyBizException.class)
+    public FlyResult handleFlyBizException(FlyBizException e) {
+        return FlyResult.of(FlyHttpStatus.FAIL, e.getMessage());
+    }
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public FlyResult handleException(Exception e) {

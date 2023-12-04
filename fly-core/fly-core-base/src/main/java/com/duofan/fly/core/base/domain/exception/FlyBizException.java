@@ -1,7 +1,8 @@
 package com.duofan.fly.core.base.domain.exception;
 
 /**
- * 约束异常
+ * 业务夜场
+ * 该异常包裹的message会原封不动返回给前端
  *
  * @author duofan
  * @version 1.0

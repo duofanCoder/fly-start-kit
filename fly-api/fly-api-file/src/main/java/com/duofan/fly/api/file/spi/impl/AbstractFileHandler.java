@@ -40,7 +40,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
     private final FlyFileMetaDataStorage storage;
     private final FileStorageServiceFactory fileStorageServiceFactory;
     private final FileStorageProperty property;
-    private final FlyFilePermissionUtils permissionUtils;
+    
 
     /**
      * 上传操作
@@ -55,8 +55,8 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         validateFile(file, storageTypeDic, filePathType);
         // TODO 校验当前文件写权限
         FlyFileMetaData metaData = buildFileMetaData(file, storageTypeDic, filePathType);
-
-        permissionUtils.checkPermission(storageTypeDic, filePathType);
+        
+        FlyFilePermissionUtils.checkUploadPermission(metaData);
         // 上传文件
         try {
             this.uploadFile(file, metaData);
@@ -103,7 +103,8 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         }
         FileStorageTypeDict fileStorageType = FileStorageTypeDict.getByCode(storageTypeDic);
         if (fileStorageType == null) {
-            throw new FlyBizException("存储类型不存在");
+            log.info("【{}】存储类型方式不支持", storageTypeDic);
+            throw new FlyBizException("存储类型方式不支持");
         }
         if (StrUtil.isBlank(filePathType)) {
             throw new FlyBizException("文件路径类型不能为空");
@@ -115,7 +116,7 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
                 File file = new File(property.getLocal().getUploadRoot());
                 if (!file.exists()) {
                     if (!file.mkdir()) {
-                        log.info("本地文件路径不存在,文件夹创建失败:{}", file.getPath());
+                        log.info("本地文件路径不存在,文件夹创建失败:【{}】", file.getPath());
                         throw new FlyBizException("本地文件路径不存在");
                     }
                 }
@@ -127,6 +128,11 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
         }
     }
 
+    /**
+     * 文件合法性校验
+     *
+     * @param multipartFile 文件
+     */
     private void validateFile(MultipartFile multipartFile) {
         if (multipartFile == null) {
             throw new FlyBizException("文件不能为空");
@@ -145,18 +151,20 @@ public abstract class AbstractFileHandler implements FlyFileHandler {
 
 
     /**
-     * 构建文件元数据
+     * 构建文件元数据，
+     * 配置文件信息存储相关信息在下一步确定
      *
-     * @param multipartFile
-     * @param storageTypeDic
-     * @param filePathType
+     * @param multipartFile  文件
+     * @param storageTypeDic 存储类型 local or oss
+     * @param filePathType   文件路径类型 例如：avatar
      * @return
      */
     protected FlyFileMetaData buildFileMetaData(MultipartFile multipartFile, String storageTypeDic, String filePathType) {
         FlyFileMetaData metaData = new FlyFileMetaData();
         metaData.setFileOriginalName(multipartFile.getOriginalFilename());
+        // 文件存储的相对路径 设置默认值（实际从配置文件取）
         metaData.setFileStoragePath(filePathType);
-        metaData.setStoragePath(filePathType);
+        metaData.setStoragePathKey(filePathType);
         metaData.setFileSize(multipartFile.getSize());
         metaData.setFileSuffix(FlyFileUtils.getFileSuffix(multipartFile.getOriginalFilename()));
         metaData.setStorageTypeDic(Objects.requireNonNull(FileStorageTypeDict.getByCode(storageTypeDic)).getCode());

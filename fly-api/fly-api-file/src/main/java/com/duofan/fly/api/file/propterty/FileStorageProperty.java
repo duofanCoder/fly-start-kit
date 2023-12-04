@@ -2,6 +2,7 @@ package com.duofan.fly.api.file.propterty;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.unit.DataSize;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class FileStorageProperty {
     public static class LocalFileStorageProperties {
         // 文件上传的根目录 fly.file-storage.upload-path配置项
         private String uploadRoot = "/home/duofan/upload";
-        // 文件访问的根目录 fly.file-storage.access-path配置项
+        // 文件访问的根目录 fly.file-storage.access-root配置项
         private String accessRoot = "img";
 
     }
@@ -50,10 +51,10 @@ public class FileStorageProperty {
 
     @Data
     public static class FlyFilePathTypeConfig {
+        // 相对路径     默认用key
         private String path;
-        private String accessUrl;
-        // 最大存储文件大小
-        private Long maxFileSize;
+        // 最大存储文件大小 单位KB
+        private DataSize maxFileSize;
         // 最大存储文件数量
         private Integer maxFileCount;
         // 存储文件类型

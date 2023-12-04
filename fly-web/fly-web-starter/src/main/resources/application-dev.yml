@@ -49,14 +49,14 @@ springdoc:
 #  default-flat-param-object: true
 
 
-debug: false
+debug: true
 # 关闭Spring-boot-devtools热部署
 spring.devtools.restart.enabled: false
 
-#logging:
-#  level:
-#    org.springframework.security:
-#      TRACE
+logging:
+  level:
+    org.springframework.security:
+      TRACE
 knife4j:
   enable: true
   setting:
@@ -104,6 +104,12 @@ fly:
     file-path-info:
       avatar:
         path: /avatar
-        maxFileSize: 1024
+        maxFileSize: 1024KB
         allowTypes:
-          - zip
+          - png
+          - jpg
+          - jpeg
+          - gif
+          - bmp
+          - webp
+          - svg
