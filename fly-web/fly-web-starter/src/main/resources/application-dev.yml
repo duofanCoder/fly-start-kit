@@ -39,7 +39,8 @@ springdoc:
       packages-to-scan: com.duofan.fly.web.starter
     - group: 'fly-api-manage'
       paths-to-match: '/**'
-      packages-to-scan: com.duofan.fly.manage.api.controller.v1
+      #      TODO 生产关闭swagger等白名单配置TODO
+      packages-to-scan: com.duofan.fly.manage.api.controller.api.v1
     - group: 'fly-api-external'
       paths-to-match: '/**'
       packages-to-scan: com.duofan.fly.api
