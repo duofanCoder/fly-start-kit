@@ -6,12 +6,12 @@ import com.duofan.fly.api.file.propterty.FileStorageProperty;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.entity.FlyFileMetaData;
+import com.duofan.fly.core.base.enums.BooleanDict;
 import com.duofan.fly.core.base.enums.file.FileStorageTypeDict;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Paths;
@@ -58,7 +58,7 @@ public class FlyFilePermissionUtils implements ApplicationContextAware {
         if (config.isKeepSuffix()) {
             metaData.setFileAbsolutePath(metaData.getFileAbsolutePath() + StrUtil.DOT + metaData.getFileSuffix());
             metaData.setResourceMapRootUrl(config.getResourceMapRootPrefixUrl());
-
+            metaData.setIsKeepSuffix(BooleanDict.YES.getCode());
             metaData.setResourceMapRootUrl(config.getResourceMapRootPrefixUrl());
             String visitFileName = FlyFileUtils.getFileName(metaData.getFileStorageName(), metaData.getFileSuffix());
             // 如果没有设置通过默认方式生成访问路径  nginx映射域名+nginx映射根目录下上传文件的相对路径+文件名

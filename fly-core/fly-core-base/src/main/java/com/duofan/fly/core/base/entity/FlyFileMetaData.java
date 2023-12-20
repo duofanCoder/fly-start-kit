@@ -1,6 +1,7 @@
 package com.duofan.fly.core.base.entity;
 
 import com.duofan.fly.core.base.entity.abstact.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -35,6 +36,8 @@ public class FlyFileMetaData extends BaseEntity {
     private String fileStorageName; // 文件存储名称  （修改后，存在文件夹里文件的名称
     private String fileRelativePath; // 文件存储相对路径
     private String fileAbsolutePath; // 文件存储访问路径
+    // 定义默认值为0
+    @Column(columnDefinition = "varchar(1) default 0")
     private String isKeepSuffix;
     private String resourceMapVisitUrl; // 访问路径
     private String resourceMapRootUrl; // 访问路径
