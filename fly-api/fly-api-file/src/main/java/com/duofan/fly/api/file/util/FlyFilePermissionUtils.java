@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Paths;
@@ -47,12 +48,33 @@ public class FlyFilePermissionUtils implements ApplicationContextAware {
             metaData.setFileRelativePath(config.getPath());
         }
 
-        // local存储类型配置下绝对的路径
+        // local存储类型配置下绝对的路径 不带原拓展名
         if (metaData.getStorageTypeDic().equals(FileStorageTypeDict.LOCAL.getCode())) {
             metaData.setFileAbsolutePath(Paths.get(property.getLocal().getUploadRoot(), metaData.getFileRelativePath(), metaData.getFileStorageName()).toString());
         } else {
             FileStorageProperty.OssFileStorageProperties ossProperties = property.getOss().get(metaData.getStorageTypeDic());
             metaData.setFileAbsolutePath(Paths.get(ossProperties.getUploadRoot(), metaData.getFileRelativePath(), metaData.getFileStorageName()).toString());
+        }
+        if (config.isKeepSuffix()) {
+            metaData.setFileAbsolutePath(metaData.getFileAbsolutePath() + StrUtil.DOT + metaData.getFileSuffix());
+            metaData.setResourceMapRootUrl(config.getResourceMapRootPrefixUrl());
+
+            metaData.setResourceMapRootUrl(config.getResourceMapRootPrefixUrl());
+            String visitFileName = FlyFileUtils.getFileName(metaData.getFileStorageName(), metaData.getFileSuffix());
+            // 如果没有设置通过默认方式生成访问路径  nginx映射域名+nginx映射根目录下上传文件的相对路径+文件名
+            String mappingAccessUrl = null;
+            if (StrUtil.isNotBlank(config.getResourceMapVisitPrefixUrl())) {
+                // 访问路径解析
+                mappingAccessUrl = FlyFileUtils.getAccessUrl(config.getResourceMapVisitPrefixUrl(), visitFileName);
+            } else {
+                if (StrUtil.isBlank(config.getResourceMapRootPrefixUrl())) {
+                    log.warn("存储类型【{}】，缺少访问映射根路径配置，请检查【{}.{}】配置", metaData.getStoragePathKey(),
+                            metaData.getStoragePathKey(), "resource-map-root-prefix-url");
+                    throw new FlyBizException("缺少文件映射访问访问根目录配置");
+                }
+                mappingAccessUrl = FlyFileUtils.getAccessUrl(config.getResourceMapRootPrefixUrl(), metaData.getFileRelativePath(), visitFileName);
+            }
+            metaData.setResourceMapVisitUrl(mappingAccessUrl);
         }
 
 

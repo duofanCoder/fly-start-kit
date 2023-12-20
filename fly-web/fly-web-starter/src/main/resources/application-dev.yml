@@ -117,3 +117,5 @@ fly:
       cache:
         path: /cache
         maxFileSize: 200MB
+        keep-suffix: true
+        resource-map-root-prefix-url:  http://172.20.10.6:9000/

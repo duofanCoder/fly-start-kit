@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@FlyAccessInfo(moduleName = "案例模块")
 @RequestMapping("/api/v1/greet")
 public class GreetController {
 
@@ -34,5 +36,11 @@ public class GreetController {
         List<FlyUser> flyUsers = userMapper.selectList(null);
         System.out.println(flyUsers);
         return ResponseEntity.ok("hello");
+    }
+    @GetMapping("hi/{msg}")
+    @FlyAccessInfo(opName = "说句你好HI", isGrantToAll = true, needAuthenticated = false)
+    public ResponseEntity<String> hiGrantAll(@PathVariable String msg) {
+        System.out.println(msg);
+        return ResponseEntity.ok(msg);
     }
 }

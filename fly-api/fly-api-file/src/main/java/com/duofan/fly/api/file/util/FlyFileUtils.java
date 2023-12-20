@@ -3,6 +3,7 @@ package com.duofan.fly.api.file.util;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -61,6 +62,17 @@ public class FlyFileUtils {
 
     public static String getFilePath(String filePathType) {
         return Paths.get(filePathType, LocalDate.now().toString()).toString();
+    }
+
+    /**
+     * 获取文件名
+     *
+     * @param name   文件名
+     * @param suffix 后缀
+     * @return
+     */
+    public static String getFileName(String name, String suffix) {
+        return name + StrUtil.DOT + suffix;
     }
 
     public static String getUniqueFileName() {

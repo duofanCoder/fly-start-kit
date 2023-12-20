@@ -35,6 +35,9 @@ public class FlyFileMetaData extends BaseEntity {
     private String fileStorageName; // 文件存储名称  （修改后，存在文件夹里文件的名称
     private String fileRelativePath; // 文件存储相对路径
     private String fileAbsolutePath; // 文件存储访问路径
+    private String isKeepSuffix;
+    private String resourceMapVisitUrl; // 访问路径
+    private String resourceMapRootUrl; // 访问路径
 
 
     // 一下内容存在自定义的配置内容里面 json存储

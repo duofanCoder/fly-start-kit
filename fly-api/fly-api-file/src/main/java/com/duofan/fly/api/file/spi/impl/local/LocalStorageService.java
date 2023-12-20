@@ -14,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +39,8 @@ public class LocalStorageService implements FlyFileStorage {
             log.info("服务端配置【fly.file-storage.file-path-info.{}】文件存储路径配置缺失", metaData.getStoragePathKey());
             throw new FlyBizException("fly.file-storage.file-path-info文件存储路径配置错误");
         }
-        String absolutePath = Paths.get(local.getUploadRoot(), config.getPath(), metaData.getFileStorageName()).toString();
         try {
-            FileUtil.writeFromStream(file.getInputStream(), absolutePath);
+            FileUtil.writeFromStream(file.getInputStream(), metaData.getFileAbsolutePath());
         } catch (IOException e) {
             throw new FlyBizException("文件写入失败");
         }
@@ -59,10 +57,7 @@ public class LocalStorageService implements FlyFileStorage {
     @Override
     public Resource loadFile(FlyFileMetaData fileMetaData) {
         try {
-            FileStorageProperty.LocalFileStorageProperties local = property.getLocal();
-
-            FileStorageProperty.FlyFilePathTypeConfig config = getStorageConfig(fileMetaData.getStoragePathKey());
-            String filePath = Paths.get(local.getUploadRoot(), config.getPath(), fileMetaData.getFileStorageName()).toString();
+            String filePath = fileMetaData.getFileAbsolutePath();
             Resource resource = new FileSystemResource(filePath);
 //            resource.canRead()
             if (resource.exists() || resource.isReadable()) {

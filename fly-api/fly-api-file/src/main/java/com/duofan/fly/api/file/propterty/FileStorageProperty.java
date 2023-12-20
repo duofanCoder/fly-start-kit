@@ -76,5 +76,11 @@ public class FileStorageProperty {
         private String permissionWrite;
         // 权限-读
         private String permissionRead;
+        // 保留拓展名 目的 兼容astro图片优化功能
+        private boolean keepSuffix = false;
+        // 保留拓展名文件 访问域名
+        private String resourceMapRootPrefixUrl;
+        // 保留拓展名文件 映射访问路径
+        private String resourceMapVisitPrefixUrl;
     }
 }
