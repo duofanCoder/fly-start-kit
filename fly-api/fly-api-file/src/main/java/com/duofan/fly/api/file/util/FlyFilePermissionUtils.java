@@ -68,7 +68,7 @@ public class FlyFilePermissionUtils implements ApplicationContextAware {
                 mappingAccessUrl = FlyFileUtils.getAccessUrl(config.getResourceMapVisitPrefixUrl(), visitFileName);
             } else {
                 if (StrUtil.isBlank(config.getResourceMapRootPrefixUrl())) {
-                    log.warn("存储类型【{}】，缺少访问映射根路径配置，请检查【{}.{}】配置", metaData.getStoragePathKey(),
+                    log.warn("存储类型【{}】，缺少访问映射根路径配置，请检查【{}.{}】配置", metaData.getStorageTypeDic(),
                             metaData.getStoragePathKey(), "resource-map-root-prefix-url");
                     throw new FlyBizException("缺少文件映射访问访问根目录配置");
                 }
