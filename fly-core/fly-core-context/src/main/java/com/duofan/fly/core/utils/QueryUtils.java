@@ -119,10 +119,10 @@ public class QueryUtils {
             wrapper.like(colQuery, StrUtil.subAfter(valQuery, ":", false));
         } else if (valQuery.contains(",")) {
             List<String> existInList = Arrays.asList(valQuery.split(","));
-            wrapper.exists(colQuery, existInList);
+            wrapper.in(colQuery, existInList);
         } else if (valQuery.contains("~")) {
             List<String> betweenList = Arrays.asList(valQuery.split("~"));
-            wrapper.exists(colQuery, betweenList);
+            wrapper.between(colQuery, betweenList.get(0), betweenList.get(1));
         } else {
             wrapper.eq(colQuery, valQuery);
         }
@@ -181,10 +181,10 @@ public class QueryUtils {
                     wrapper.like(colQuery, StrUtil.subAfter(valQuery, ":", false));
                 } else if (valQuery.contains(",")) {
                     List<String> existInList = Arrays.asList(valQuery.split(","));
-                    wrapper.exists(colQuery, existInList);
+                    wrapper.in(colQuery, existInList);
                 } else if (valQuery.contains("~")) {
                     List<String> betweenList = Arrays.asList(valQuery.split("~"));
-                    wrapper.exists(colQuery, betweenList);
+                    wrapper.between(colQuery, betweenList.get(0), betweenList.get(1));
                 } else {
                     wrapper.eq(colQuery, valQuery);
                 }

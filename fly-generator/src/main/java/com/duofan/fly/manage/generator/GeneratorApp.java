@@ -3,15 +3,15 @@ package com.duofan.fly.manage.generator;
 import com.duofan.fly.manage.generator.config.*;
 import com.duofan.fly.manage.generator.config.builder.ConfigBuilder;
 import com.duofan.fly.manage.generator.config.builder.CustomFile;
-import com.duofan.fly.manage.generator.config.po.LikeTable;
 import com.duofan.fly.manage.generator.config.rules.DateType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @SpringBootApplication(scanBasePackages = {"com.duofan.fly"})
@@ -29,7 +29,7 @@ public class GeneratorApp implements CommandLineRunner {
             .build();
 
     private static final StrategyConfig GENERATOR_STRATEGY_CONFIG = new StrategyConfig.Builder()
-            .addInclude("fly_dict_data","fly_dict_type")
+            .addInclude("fly_dict_data", "fly_dict_type")
 //            .likeTable(new LikeTable("nav_%"))
             .controllerBuilder()
             .enableFileOverride()
@@ -100,7 +100,7 @@ public class GeneratorApp implements CommandLineRunner {
                                 .filePath(GENERATOR_GLOBAL_CONFIG.getOutputDir())
                                 .packageName("vue.%s".formatted(projectName))
                                 .templatePath("templates/index.vue.ftl").build(),
-        new CustomFile.Builder()
+                        new CustomFile.Builder()
                                 .fileName("Request.java")
                                 .filePath(GENERATOR_GLOBAL_CONFIG.getOutputDir())
                                 .packageName(requestPackage)
