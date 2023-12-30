@@ -23,6 +23,7 @@ import java.io.IOException;
 
 /**
  * 恶意字典接口锁定
+ * 接口不在映射的，无法出现,会被security直接拦截
  *
  * @author duofan
  * @version 1.0
@@ -90,6 +91,16 @@ public class DebounceRequestLockoutFilter implements HandlerInterceptor {
         return AnnotationUtils.findAnnotation(controllerClass, FlyAccessInfo.class);
     }
 
+    /**
+     * 判断是否需要处理请求，限制访问或者通过
+     *
+     * @param request
+     * @param response
+     * @param hasMapper
+     * @return
+     * @throws ServletException
+     * @throws IOException
+     */
     protected boolean determineKeepRequest(HttpServletRequest request, HttpServletResponse response, boolean hasMapper) throws ServletException, IOException {
         String debounceKey = CacheKeyUtils.getDebounceKey(request, hasMapper); // 从方法参数中获取用户标识
         // 如果上次请求时间戳存在，并且与当前请求时间戳的间隔小于阈值，拒绝处理请求

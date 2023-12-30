@@ -33,7 +33,7 @@ public class FlyUserController {
 
     @PostMapping("/password/reset")
     @FlyAccessInfo(opName = "重置密码")
-    public FlyResult passwdReset(UserRequest.PasswdReset request) {
+    public FlyResult passwdReset(@RequestBody UserRequest.PasswdReset request) {
         userStorage.passwdReset(BeanUtil.copyProperties(request, UserDto.class));
         return FlyResult.SUCCESS;
     }

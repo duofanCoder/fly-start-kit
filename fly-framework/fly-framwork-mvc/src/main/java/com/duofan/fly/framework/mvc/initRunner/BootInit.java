@@ -3,6 +3,8 @@ package com.duofan.fly.framework.mvc.initRunner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
@@ -18,6 +20,7 @@ import java.net.InetAddress;
  */
 @Component
 @Slf4j
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class BootInit implements CommandLineRunner {
 
     @Value("${spring.application.name}")

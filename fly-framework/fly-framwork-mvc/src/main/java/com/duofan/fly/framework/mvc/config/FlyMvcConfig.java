@@ -1,6 +1,5 @@
 package com.duofan.fly.framework.mvc.config;
 
-import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.framework.mvc.property.FlyWebProperties;
 import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,12 +38,11 @@ public class FlyMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(debounceRequestLockoutFilter);
+        registry.addInterceptor(debounceRequestLockoutFilter);
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        log.info(LogConstant.COMPONENT_LOG, "MVC配置", "跨域已关闭【生产环境开启跨域】");
         registry.addMapping("/**")
                 .allowedHeaders("*")
                 .allowedMethods("*")
@@ -53,7 +51,11 @@ public class FlyMvcConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-    // 序列化 配置
+    /**
+     * 返前端，序列化 配置
+     *
+     * @return
+     */
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)

@@ -11,7 +11,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
-import com.duofan.fly.core.base.domain.exception.FlyException;
 import com.duofan.fly.core.base.domain.exception.FlySuspiciousSecurityException;
 import com.duofan.fly.core.base.domain.permission.FlyRoleEnums;
 import com.duofan.fly.core.base.entity.FlyRoleRel;
@@ -70,14 +69,14 @@ public class FlyDefaultUserStorage extends ServiceImpl<FlyUserMapper, FlyUser> i
         if (!FlySessionHolder.hasRole(FlyRoleEnums.ADMIN.getRoleNo()) && !FlySessionHolder.currentUsername().equals(userDto.getUsername())) {
             log.info(LogConstant.SUSPICIOUS_OPERATION_LOG + "，被修改用户名：{}", "重置密码", "越权修改其他用户密码", userDto.getUsername());
             throw new FlySuspiciousSecurityException("密码修改失败，请稍后再试");
+        } else {
+            userDto.setUsername(FlySessionHolder.currentUsername());
         }
-
         FlyUser user = getByUsername(userDto.getUsername());
-        String rawEncoderPasswd = passwordEncoder.encode(userDto.getRawPassword());
-        String newEncoderPasswd = passwordEncoder.encode(userDto.getNewPassword());
-        if (!user.getPassword().equals(rawEncoderPasswd)) {
-            throw new FlyException("修改失败，原密码错误");
+        if (!this.passwordEncoder.matches(userDto.getRawPassword(), user.getPassword())) {
+            throw new FlyConstraintException("修改失败，原密码错误");
         }
+        String newEncoderPasswd = passwordEncoder.encode(userDto.getNewPassword());
         FlyUser flyUser = new FlyUser().setUsername(userDto.getUsername()).setPassword(newEncoderPasswd);
         flyUser.setId(user.getId());
         this.updateById(flyUser);

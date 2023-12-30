@@ -59,6 +59,7 @@ public class CacheKeyUtils {
 
     /**
      * 防抖、防字典爆破
+     * 无映射接口访问超过次数直接锁定，不通过uri区分
      *
      * @param request
      * @param hasMapper

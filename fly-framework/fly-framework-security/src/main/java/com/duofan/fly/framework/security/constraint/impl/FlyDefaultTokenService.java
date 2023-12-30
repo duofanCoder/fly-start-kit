@@ -17,11 +17,11 @@ import com.duofan.fly.core.utils.CacheKeyUtils;
 import com.duofan.fly.framework.security.constraint.FlyLoginUser;
 import com.duofan.fly.framework.security.constraint.FlyTokenService;
 import com.duofan.fly.framework.security.property.SecurityProperties;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.swing.*;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,15 +39,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class FlyDefaultTokenService implements FlyTokenService {
+    @Resource
+    private SecurityProperties properties;
 
-    private final SecurityProperties properties;
-
-    private final FlyCacheService cacheService;
-
-    public FlyDefaultTokenService(SecurityProperties properties, FlyCacheService cacheService) {
-        this.properties = properties;
-        this.cacheService = cacheService;
-    }
+    @Resource
+    private FlyCacheService cacheService;
 
     @Override
     public FlyToken create(FlyLoginUser loginUser) {
@@ -60,19 +56,20 @@ public class FlyDefaultTokenService implements FlyTokenService {
                 .setPayload("currentRoleNo", Optional.ofNullable(loginUser.getCurrentRoleNo()).orElse(loginUser.getRoleList().get(0).getRoleNo()))
                 .setIssuedAt(new Date())
                 // 注销 续签信息 保存在redis
-//                .setExpiresAt(DateUtil.offsetHour(new Date(), 1))
+                .setExpiresAt(DateUtil.offsetDay(new Date(), 7))
                 .setSigner(AlgorithmUtil.getAlgorithm(properties.getToken().getAlgorithm()),
                         properties.getToken().getSignSecret().getBytes())
                 .sign();
         String loginTokenKey = CacheKeyUtils.getLoginTokenKey(loginUser.getUsername(), token);
-
-        int activateTime = 1;
+        SecurityProperties.TokenProperties tokenProperties = properties.getToken();
+        Duration activateTime = tokenProperties.getExpired();
         if (BooleanDict.YES.getCode().equals(loginUser.getIsRemember())) {
-            activateTime = 24 * 31;
+            activateTime = activateTime.plusDays(7);
         }
         // TODO 登录身份凭证有效时长 配置化
-        cacheService.set(loginTokenKey, loginUser, Duration.ofHours(activateTime));
-        return new FlyToken().setToken(token).setExpiredAt(new Date(DateUtil.offsetHour(new Date(), activateTime).getTime()))
+        cacheService.set(loginTokenKey, loginUser, activateTime);
+        return new FlyToken().setToken(token)
+                .setExpiredAt(DateUtil.offsetHour(new Date(), Math.toIntExact(activateTime.toHours())))
                 .setHeaderKey(SecurityConstant.TOKEN_HEADER_KEY);
     }
 
@@ -139,7 +136,7 @@ public class FlyDefaultTokenService implements FlyTokenService {
 
     @Override
     public void refresh(String token) {
-        cacheService.expireAt(token, DateUtil.offsetHour(new Date(), 1));
+        cacheService.expireAt(token, DateUtil.offsetHour(new Date(), 24));
     }
 
     @Override

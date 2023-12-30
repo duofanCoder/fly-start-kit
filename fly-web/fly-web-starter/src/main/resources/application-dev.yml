@@ -50,14 +50,14 @@ springdoc:
 #  default-flat-param-object: true
 
 
-debug: true
+debug: false
 # 关闭Spring-boot-devtools热部署
 spring.devtools.restart.enabled: false
 
-logging:
-  level:
-    org.springframework.security:
-      TRACE
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
 knife4j:
   enable: true
   setting:
@@ -118,4 +118,4 @@ fly:
         path: /cache
         maxFileSize: 200MB
         keep-suffix: true
-        resource-map-root-prefix-url:  http://172.20.10.6:9000/
+        resource-map-root-prefix-url: http://172.20.10.6:9000/

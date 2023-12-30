@@ -39,12 +39,16 @@ public class FlySecurityAutoConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final FlyUserStorage userStorage;
 
-    // 默认直接注入
-    // 超过次数封锁ip 我应该在那个spring security 过滤器后面配置
-//    @Bean
-//    @ConditionalOnProperty(name = "fly.security.filter.debounce-request-lockout.enabled", matchIfMissing = true)
+    /**
+     * 防字典组件 2023-12-30 修改默认直接注入 非实现filter接口，mvc 拦截器，
+     * 不会自动进入过滤器链，需要手动添加的mvc拦截器
+     *
+     * @param cacheService
+     * @return
+     */
+    @Deprecated
     public DebounceRequestLockoutFilter debounceRequestLockoutFilter(FlyCacheService cacheService) {
-        log.info(LogConstant.COMPONENT_LOG, "防抖组件", "自动配置");
+        log.info(LogConstant.COMPONENT_LOG, "防字典组件", "自动配置");
         return new DebounceRequestLockoutFilter(cacheService, properties);
     }
 

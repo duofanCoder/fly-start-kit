@@ -3,7 +3,10 @@ package com.duofan.fly.framework.security.property;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.convert.DurationUnit;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Data
@@ -51,8 +54,8 @@ public class SecurityProperties {
 
     @Data
     public static class TokenProperties {
-        private long expired = 60 * 24 * 30;
-
+        @DurationUnit(ChronoUnit.HOURS)
+        private Duration expired = Duration.ofHours(24);
         // 签名密钥
         private String signSecret = "fly-boot-by-duofan";
         private String algorithm = "HS256";
