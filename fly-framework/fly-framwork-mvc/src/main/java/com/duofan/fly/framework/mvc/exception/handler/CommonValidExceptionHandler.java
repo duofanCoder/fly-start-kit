@@ -128,6 +128,7 @@ public class CommonValidExceptionHandler {
     public FlyResult handleFlyBizException(FlyBizException e) {
         return FlyResult.of(FlyHttpStatus.FAIL, e.getMessage());
     }
+
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public FlyResult handleException(Exception e) {
