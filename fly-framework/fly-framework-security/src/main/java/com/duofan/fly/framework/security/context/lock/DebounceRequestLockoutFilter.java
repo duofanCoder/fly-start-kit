@@ -1,5 +1,6 @@
 package com.duofan.fly.framework.security.context.lock;
 
+import cn.hutool.core.util.StrUtil;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
@@ -13,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -41,7 +43,8 @@ public class DebounceRequestLockoutFilter implements HandlerInterceptor {
     // 设置访问次数阈值
     private static final int DEBOUNCE_REQUEST_LIMIT = 5;
     private final FlyCacheService cacheService;
-
+    @Value("${server.servlet.context-path:}")
+    private String serverContextPath;
     private final SecurityProperties properties;
 
 
@@ -74,13 +77,16 @@ public class DebounceRequestLockoutFilter implements HandlerInterceptor {
     }
 
     private boolean ignoreUrl(String uri) {
+        String fixServerContextPath = StrUtil.endWith(serverContextPath, "/") ?
+                serverContextPath.subSequence(0, serverContextPath.length() - 1).toString()
+                : serverContextPath;
         for (String url : properties.getPermitUrl()) {
             if (pathMatcher.match(url, uri)) {
                 return true;
             }
         }
         for (String url : SecurityConst.defaultPermitUrl) {
-            if (pathMatcher.match(url, uri)) {
+            if (pathMatcher.match(fixServerContextPath + url, uri)) {
                 return true;
             }
         }
