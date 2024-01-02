@@ -3,11 +3,9 @@
 package ${package.Controller};
 
 <#if restControllerStyle>
-    import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController;
 <#else>
-    import org.springframework.stereotype.Controller;
 </#if>
-
 import org.springframework.web.bind.annotation.*;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.common.FlyResult;
@@ -16,7 +14,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 <#if superControllerClassPackage??>
-    import ${superControllerClassPackage};
+import ${superControllerClassPackage};
 </#if>
 
 /**
