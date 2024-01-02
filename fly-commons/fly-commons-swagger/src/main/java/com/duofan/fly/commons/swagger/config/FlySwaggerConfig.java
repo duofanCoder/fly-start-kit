@@ -4,10 +4,14 @@ import cn.hutool.core.util.RandomUtil;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import lombok.val;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,13 +43,20 @@ public class FlySwaggerConfig {
         };
     }
 
-//    @Bean
-//    GroupedOpenApi flyApi() {
-//        return GroupedOpenApi.builder()
-//                .group("fly-manage-api")
-//                .packagesToScan("com.duofan.fly.manage.api.controller.v1")
-//                .build();
-//    }
+    @Bean
+    GroupedOpenApi flyApi() {
+        return GroupedOpenApi.builder()
+                .group("fly-api-manage")
+                .packagesToScan("com.duofan.fly.manage.api.controller")
+                .build();
+    }
+    @Bean
+    GroupedOpenApi flyExternalApi() {
+        return GroupedOpenApi.builder()
+                .group("fly-api-external")
+                .packagesToScan("com.duofan.fly.api")
+                .build();
+    }
 //
 //    @Bean
 //    GroupedOpenApi customer() {

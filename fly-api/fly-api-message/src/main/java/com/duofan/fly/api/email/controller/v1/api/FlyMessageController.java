@@ -1,7 +1,7 @@
-package com.duofan.fly.api.email.controller.v1;
+package com.duofan.fly.api.email.controller.v1.api;
 
 import cn.hutool.core.util.RandomUtil;
-import com.duofan.fly.api.email.controller.request.MessageRequest;
+import com.duofan.fly.api.email.controller.v1.request.MessageRequest;
 import com.duofan.fly.core.base.constant.log.LogConstant;
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;

@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.api.v1;
+package com.duofan.fly.manage.api.controller.v1.api;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
@@ -7,7 +7,7 @@ import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
 import com.duofan.fly.core.dto.UserDto;
 import com.duofan.fly.core.storage.FlyUserStorage;
-import com.duofan.fly.manage.api.controller.request.UserRequest;
+import com.duofan.fly.manage.api.controller.v1.request.UserRequest;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

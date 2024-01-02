@@ -77,24 +77,6 @@ spring.devtools.restart.enabled: false
 #  level:
 #    org.springframework.security:
 #      TRACE
-knife4j:
-  enable: false
-  setting:
-    language: zh_cn
-    swagger-model-name: 实体类列表
-    enable-group: true
-  documents:
-    - name: 标题1
-      locations: classpath:markdown/*
-      group: -v3-api-docs
-    - name: 标题2
-      locations: classpath:markdown/*
-      group: fly
-  basic:
-    enable: false
-    username: abc
-    password: 123
-
 
 fly:
   security:

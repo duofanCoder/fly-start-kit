@@ -26,24 +26,7 @@ spring:
     #      password: root
     #      name: root
     #      roles: ADMIN
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: order
-  api-docs:
-    path: /v3/api-docs
-  group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      packages-to-scan: com.duofan.fly.web.starter
-    - group: 'fly-api-manage'
-      paths-to-match: '/**'
-      #      TODO 生产关闭swagger等白名单配置TODO
-      packages-to-scan: com.duofan.fly.manage.api.controller.api.v1
-    - group: 'fly-api-external'
-      paths-to-match: '/**'
-      packages-to-scan: com.duofan.fly.api
+
 #  devtools:
 #    livereload:
 #      enabled: false

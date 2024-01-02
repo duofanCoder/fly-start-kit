@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.request;
+package com.duofan.fly.manage.api.controller.v1.request;
 
 import com.duofan.fly.core.base.entity.FlyRolePermission;
 import com.duofan.fly.core.utils.PermissionStrUtils;

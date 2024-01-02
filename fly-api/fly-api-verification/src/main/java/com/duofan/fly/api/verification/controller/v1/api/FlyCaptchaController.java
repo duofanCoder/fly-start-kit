@@ -1,4 +1,4 @@
-package com.duofan.fly.api.verification.controller.v1;
+package com.duofan.fly.api.verification.controller.v1.api;
 
 import cn.hutool.captcha.ICaptcha;
 import com.duofan.fly.core.base.domain.common.FlyResult;

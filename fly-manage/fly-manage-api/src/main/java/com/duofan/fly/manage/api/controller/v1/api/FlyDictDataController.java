@@ -1,9 +1,9 @@
-package com.duofan.fly.manage.api.controller.api.v1;
+package com.duofan.fly.manage.api.controller.v1.api;
 
 
 import com.duofan.fly.core.base.entity.FlyDictData;
 import com.duofan.fly.core.storage.FlyDictDataStorage;
-import com.duofan.fly.manage.api.controller.request.FlyDictDataRequest;
+import com.duofan.fly.manage.api.controller.v1.request.FlyDictDataRequest;
 import org.springframework.web.bind.annotation.*;
 import com.duofan.fly.core.base.domain.common.FlyPageInfo;
 import com.duofan.fly.core.base.domain.common.FlyResult;

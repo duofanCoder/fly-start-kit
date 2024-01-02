@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.validator;
+package com.duofan.fly.manage.api.controller.v1.validator;
 
 /**
  * @author duofan

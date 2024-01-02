@@ -1,10 +1,11 @@
-package com.duofan.fly.manage.api.controller.request;
+package com.duofan.fly.manage.api.controller.v1.request;
 
+import com.duofan.fly.validate.constraint.Dict;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class FlyDictDataRequest {
+public class FlyDictTypeRequest {
 
 
     @Data
@@ -12,10 +13,11 @@ public class FlyDictDataRequest {
         private String id;
     }
     @Data
-    public static class SwitchIsEnabled {
+    public static class SwitchStatus {
         @NotBlank
         private String id;
         @NotBlank
+        @Dict(dict = "booleanDic", message = "字典类型不存在")
         private String isEnabled;
     }
 }

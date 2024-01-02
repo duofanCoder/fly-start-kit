@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.response;
+package com.duofan.fly.manage.api.controller.v1.response;
 
 import com.duofan.fly.core.domain.FlyModule;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,4 +1,4 @@
-package com.duofan.fly.api.pay.controller.v1;
+package com.duofan.fly.api.pay.controller.v1.api;
 
 import com.duofan.fly.api.pay.service.PayService;
 import com.duofan.fly.core.base.domain.common.FlyResult;

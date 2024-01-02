@@ -1,10 +1,10 @@
-package com.duofan.fly.manage.api.controller.api.v1;
+package com.duofan.fly.manage.api.controller.v1.api;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.storage.FlyRoleStorage;
-import com.duofan.fly.manage.api.controller.request.PermissionRequest;
-import com.duofan.fly.manage.api.controller.response.MenuResponse;
+import com.duofan.fly.manage.api.controller.v1.request.PermissionRequest;
+import com.duofan.fly.manage.api.controller.v1.response.MenuResponse;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

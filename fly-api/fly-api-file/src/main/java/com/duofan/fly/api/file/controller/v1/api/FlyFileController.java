@@ -1,4 +1,4 @@
-package com.duofan.fly.api.file.controller.api.v1;
+package com.duofan.fly.api.file.controller.v1.api;
 
 import com.duofan.fly.api.file.object.VO.ResourceVO;
 import com.duofan.fly.api.file.spi.FlyFileHandler;

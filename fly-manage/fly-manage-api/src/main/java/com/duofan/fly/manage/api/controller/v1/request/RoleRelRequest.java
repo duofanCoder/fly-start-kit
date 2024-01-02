@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.controller.request;
+package com.duofan.fly.manage.api.controller.v1.request;
 
 import com.duofan.fly.manage.api.dict.RoleDict;
 import com.duofan.fly.validate.constraint.Dict;

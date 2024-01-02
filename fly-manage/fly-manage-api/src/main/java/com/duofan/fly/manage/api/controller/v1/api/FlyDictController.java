@@ -1,8 +1,7 @@
-package com.duofan.fly.manage.api.controller.api.v1;
+package com.duofan.fly.manage.api.controller.v1.api;
 
 import com.duofan.fly.core.base.domain.common.FlyResult;
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
-import com.duofan.fly.core.base.entity.FlyDictType;
 import com.duofan.fly.core.storage.FlyDictTypeStorage;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
