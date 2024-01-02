@@ -15,7 +15,8 @@ public class BlogConfigInfo {
     public final static String PARENT_NAME = "com.duofan";
     // 项目名称
     public final static String PROJECT_NAME = "cms";
-    public final static String MODULE_NAME = "cms";
+    // 前端api 目录
+    public final static String MODULE_NAME = "blog";
     // 包名称
     public final static String PACKAGE_NAME = "com.duofan.cms";
     public final static String ENTITY_NAME = "persistence.entity";
