@@ -1,4 +1,4 @@
-package com.duofan.fly.web.starter.controller.api;
+package com.duofan.fly.web.starter.controller.v1.api;
 
 import com.duofan.fly.core.base.domain.permission.access.FlyAccessInfo;
 import com.duofan.fly.core.base.entity.FlyUser;
