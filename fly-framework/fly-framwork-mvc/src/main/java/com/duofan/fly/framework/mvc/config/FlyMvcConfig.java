@@ -2,6 +2,7 @@ package com.duofan.fly.framework.mvc.config;
 
 import com.duofan.fly.framework.mvc.property.FlyWebProperties;
 import com.duofan.fly.framework.security.context.lock.DebounceRequestLockoutFilter;
+import com.duofan.fly.framework.security.property.SecurityProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,11 +35,15 @@ public class FlyMvcConfig implements WebMvcConfigurer {
     @Resource
     private FlyWebProperties properties;
     @Resource
+    private SecurityProperties securityProperties;
+    @Resource
     private DebounceRequestLockoutFilter debounceRequestLockoutFilter;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(debounceRequestLockoutFilter);
+        if (securityProperties.getFilter().isDebounceRequestLockoutEnabled()) {
+            registry.addInterceptor(debounceRequestLockoutFilter);
+        }
     }
 
     @Override

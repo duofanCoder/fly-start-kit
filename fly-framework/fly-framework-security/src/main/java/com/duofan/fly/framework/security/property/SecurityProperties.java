@@ -42,13 +42,13 @@ public class SecurityProperties {
     @Data
     public static class SecurityFilterProperties {
         // 配置文件malicious-request-lockout.enabled
-        @Value("${fly.security.filter.malicious-request-lockout.enabled:true}")
-        private boolean enabled = true;
+        @Value("${fly.security.filter.debounce-request-lockout.enabled:false}")
+        private boolean debounceRequestLockoutEnabled;
 
         // 配置文件malicious-request-lockout.ignored-url
-        @Value("${fly.security.filter.malicious-request-lockout.ignored-url:}")
+        @Value("${fly.security.filter.debounce-request-lockout.ignored-url:}")
         private List<String> debounceRequestLockoutIgnoredUrl = List.of("/api/v1/dict/list");
-
+        
 
     }
 

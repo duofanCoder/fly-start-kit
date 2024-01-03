@@ -69,7 +69,7 @@ fly:
       errorCountEnabled: false
     filter:
       malicious-request-lockout:
-        enabled: true
+        enabled: false
   jpa:
     enabled: true
     scanPackages:

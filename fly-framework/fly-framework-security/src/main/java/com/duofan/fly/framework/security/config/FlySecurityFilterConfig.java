@@ -52,7 +52,7 @@ public class FlySecurityFilterConfig {
     private FlyCacheService cacheService;
 
     @Value("${fly.security.filter.malicious-request-lockout.enabled:true}")
-    private boolean maliciousRequestLockoutFilterEnabled = true;
+    private boolean maliciousRequestLockoutFilterEnabled;
 
     @Resource
     private SecurityProperties properties;
@@ -66,6 +66,8 @@ public class FlySecurityFilterConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable);
 
+        
+        // 搭配需要真实认证的资源拦截操作
         if (maliciousRequestLockoutFilterEnabled) {
             http.addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class);
         }
