@@ -132,7 +132,7 @@ public class CommonValidExceptionHandler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public FlyResult handleException(Exception e) {
-        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+        log.warn("未知异常统一处理：{}", e.getMessage());
         return FlyResult.of(FlyHttpStatus.FAIL);
     }
 }
