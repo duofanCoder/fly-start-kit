@@ -34,7 +34,7 @@ public class FlyLoginUser implements UserDetails {
     private List<FlyRole> roleList;
     private List<FlyResourceInfo> operations;
     private String currentRoleNo;
-    
+
     private String isRemember;
 
     @JsonCreator()
