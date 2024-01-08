@@ -1,0 +1,104 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: fly-kit-dev
+  datasource:
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    #    username: kit-db
+    #    password: mzEM2St3DFsSmeRs
+    #    url: jdbc:mysql://localhost:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: kit-db
+    password: mzEM2St3DFsSmeRs
+    url: jdbc:mysql://101.35.55.200:3306/kit-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+  data:
+    redis:
+      password:
+      host: 127.0.0.1
+      port: 6379
+    #  security:
+    #    user:
+    #      password: root
+    #      name: root
+    #      roles: ADMIN
+
+#  devtools:
+#    livereload:
+#      enabled: false
+#  default-flat-param-object: true
+
+
+debug: false
+# 关闭Spring-boot-devtools热部署
+spring.devtools.restart.enabled: false
+
+#logging:
+#  level:
+#    org.springframework.security:
+#      TRACE
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+    enable-group: true
+  #    enable-document-manage: true
+  #  documents:
+  #    - name: 标题1
+  #      locations: classpath:markdown/*
+  #      group: -v3-api-docs
+  #    - name: 标题2
+  #      locations: classpath:markdown/*
+  #      group: fly
+
+  basic:
+    enable: false
+    username: abc
+    password: 123
+
+
+fly:
+  security:
+    login:
+      captchaEnabled: false
+      errorCountEnabled: false
+    filter:
+      malicious-request-lockout:
+        enabled: false
+  jpa:
+    enabled: true
+    scanPackages:
+      - com.duofan.fly.web.starter.entity
+  message:
+    email:
+      enabled: true
+      host: smtp.qq.com
+      port: 465
+      from: 2633320940@qq.com
+      pass: owrvhhfavcrmdigi
+  file-storage:
+    local:
+      upload-root: D:/home/duofan/upload
+      access-root: http://localhost:8000/api/v1/file/download
+    file-path-info:
+      avatar:
+        path: /avatar
+        maxFileSize: 1024KB
+        allowTypes:
+          - png
+          - jpg
+          - jpeg
+          - gif
+          - bmp
+          - webp
+          - svg
+      cache:
+        path: /cache
+        maxFileSize: 200MB
+        keep-suffix: true
+        resource-map-root-prefix-url: http://172.20.10.6:9000/

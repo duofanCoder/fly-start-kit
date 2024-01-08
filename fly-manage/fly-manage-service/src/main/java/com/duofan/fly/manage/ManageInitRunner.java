@@ -1,11 +1,11 @@
-package com.duofan.fly.manage.api;
+package com.duofan.fly.manage;
 
 import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.entity.*;
 import com.duofan.fly.core.storage.FlyDictDataStorage;
 import com.duofan.fly.core.storage.FlyDictTypeStorage;
 import com.duofan.fly.core.storage.FlyRoleStorage;
-import com.duofan.fly.manage.api.service.impl.FlyDefaultUserStorage;
+import com.duofan.fly.manage.service.impl.FlyDefaultUserStorage;
 import jakarta.annotation.Resource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

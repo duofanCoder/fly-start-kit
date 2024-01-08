@@ -28,14 +28,15 @@ import java.util.stream.Collectors;
  * @date 2023/9/15
  */
 @Slf4j
-@Component
 public class FlyUserDetailService implements UserDetailsService {
-    @Resource
-    private FlyUserMapper userMapper;
+    private final FlyUserMapper userMapper;
 
-    @Resource
-    private FlyRoleMapper roleMapper;
+    private final FlyRoleMapper roleMapper;
 
+    public FlyUserDetailService(FlyUserMapper userMapper, FlyRoleMapper roleMapper) {
+        this.userMapper = userMapper;
+        this.roleMapper = roleMapper;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

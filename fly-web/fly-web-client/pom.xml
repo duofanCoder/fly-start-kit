@@ -1,33 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.duofan.web</groupId>
         <artifactId>fly-web</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.duofan.fly.web</groupId>
-    <artifactId>fly-web-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>起飞 - 启动实例</name>
-    <description>fly-starter</description>
+
+    <groupId>com.duofan.cms</groupId>
+    <artifactId>fly-web-client</artifactId>
+
     <properties>
-        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
-
-        <!--        DIY拓展内部功能包-->
-
-        <!--        验证码组件-->
         <dependency>
             <groupId>com.duofan.fly.verification</groupId>
             <artifactId>fly-api-verification</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.duofan</groupId>
-            <artifactId>fly-manage-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <!--        信息组件-->
@@ -62,37 +56,5 @@
             <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
-
     </dependencies>
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <activatedProperties>dev</activatedProperties>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <activatedProperties>prod</activatedProperties>
-            </properties>
-        </profile>
-    </profiles>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

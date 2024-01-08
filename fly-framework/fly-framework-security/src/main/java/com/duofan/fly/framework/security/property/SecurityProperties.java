@@ -21,6 +21,8 @@ public class SecurityProperties {
 
     private String defaultPassword = "123456";
 
+    @Value("${fly.security.admin-mode:true}")
+    private String adminMode;
     /**
      * spring security 允许访问、监控允许访问的url
      * 一般配置非controller映射的接口、静态资源等
