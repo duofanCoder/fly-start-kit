@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.service.impl;
+package com.duofan.fly.manage.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;

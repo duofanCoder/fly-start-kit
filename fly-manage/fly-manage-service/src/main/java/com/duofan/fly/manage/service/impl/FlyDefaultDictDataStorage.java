@@ -1,4 +1,4 @@
-package com.duofan.fly.manage.api.service.impl;
+package com.duofan.fly.manage.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

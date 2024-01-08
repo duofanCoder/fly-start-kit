@@ -1,10 +1,9 @@
-package com.duofan.fly.manage.api.dict;
+package com.duofan.fly.manage.dict;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.duofan.fly.core.base.domain.common.FlyDictionary;
 import com.duofan.fly.core.base.entity.FlyDictData;
-import com.duofan.fly.core.mapper.FlyDictDataMapper;
 import com.duofan.fly.core.spi.DictExtension;
+import com.duofan.fly.core.storage.FlyRoleStorage;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -19,22 +18,19 @@ import java.util.stream.Collectors;
  * @date 2023/7/14
  */
 @Component
-public class DictTypeDict implements DictExtension {
+public class RoleDict implements DictExtension {
     @Resource
-    private FlyDictDataMapper mapper;
+    private FlyRoleStorage service;
 
     @Override
     public String getType() {
-        return "dictTypeDict";
+        return "roleDict";
     }
 
     @Override
     public List<FlyDictionary> list() {
-        return mapper.selectList(
-                        new LambdaQueryWrapper<FlyDictData>()
-                                .groupBy(FlyDictData::getType)
-                ).stream()
-                .map(i -> new FlyDictionary(getType(), i.getLabel(), i.getValue()))
+        return service.list().stream()
+                .map(i -> new FlyDictionary(getType(), i.getRoleName(), i.getRoleNo()))
                 .collect(Collectors.toList());
     }
 
