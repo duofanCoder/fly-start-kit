@@ -1,4 +1,4 @@
-package com.duofan.fly.framework.mvc.initRunner;
+package com.duofan.fly.commons.swagger.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
