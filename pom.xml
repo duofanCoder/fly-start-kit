@@ -24,8 +24,8 @@
         <version>3.1.4</version>
     </parent>
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hutool.version>5.8.10</hutool.version>
         <poi-ooxml>4.1.2</poi-ooxml>
