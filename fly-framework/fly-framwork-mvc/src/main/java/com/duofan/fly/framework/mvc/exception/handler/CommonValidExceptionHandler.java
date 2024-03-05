@@ -6,8 +6,12 @@ import com.duofan.fly.core.base.domain.exception.FlyBizException;
 import com.duofan.fly.core.base.domain.exception.FlyConstraintException;
 import com.duofan.fly.core.base.domain.exception.FlyInternalException;
 import com.duofan.fly.core.base.enums.web.FlyHttpStatus;
+import com.duofan.fly.framework.security.exception.LoginValidException;
+import com.duofan.fly.framework.security.exception.loginValid.TokenExpiredException;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -31,6 +35,7 @@ import java.util.Objects;
  * @date 2023/10/8
  */
 @Slf4j
+@Order(Ordered.LOWEST_PRECEDENCE)
 @RestControllerAdvice
 public class CommonValidExceptionHandler {
 

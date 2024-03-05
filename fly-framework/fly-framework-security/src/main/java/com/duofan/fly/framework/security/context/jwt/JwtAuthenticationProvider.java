@@ -61,8 +61,12 @@ public class JwtAuthenticationProvider implements InitializingBean {
             throw new FlySuspiciousSecurityException("JWT篡改");
         }
         // expired
-        if (!tokenService.validate(token)) {
+        if (!tokenService.validate(token) ) {
             throw new TokenExpiredException("JWT过期");
+        }
+        // redis是否存在
+        if (!cacheService.hasKey(token)){
+            throw new TokenExpiredException("Token过期");
         }
         return true;
     }
@@ -94,7 +98,6 @@ public class JwtAuthenticationProvider implements InitializingBean {
         if (!checkToken(token)) {
             return;
         }
-        tokenService.refresh(token);
         Map<String, Object> info = tokenService.parse(token);
         // TODO use cache 、 JWT 配置化控制登录认证方式
 
@@ -113,5 +116,6 @@ public class JwtAuthenticationProvider implements InitializingBean {
         SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
         context.setAuthentication(result);
         SecurityContextHolder.getContextHolderStrategy().setContext(context);
+        tokenService.refresh(token);
     }
 }
