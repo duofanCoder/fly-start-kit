@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableConfigurationProperties(SecurityProperties.class)
 public class FlySecurityConfig {
 
     @Bean

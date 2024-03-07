@@ -67,9 +67,10 @@ fly:
     login:
       captchaEnabled: false
       errorCountEnabled: false
+      authentication-method: jwt
     filter:
       malicious-request-lockout:
-        enabled: false
+        enabled: true
   jpa:
     enabled: true
     scanPackages:

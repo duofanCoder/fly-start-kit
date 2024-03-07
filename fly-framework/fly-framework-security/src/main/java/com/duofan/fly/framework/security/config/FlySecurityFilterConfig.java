@@ -68,9 +68,9 @@ public class FlySecurityFilterConfig {
 
         
         // 搭配需要真实认证的资源拦截操作
-        if (maliciousRequestLockoutFilterEnabled) {
-            http.addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class);
-        }
+//        if (maliciousRequestLockoutFilterEnabled) {
+//            http.addFilterBefore(maliciousRequestLockoutFilter(), UsernamePasswordAuthenticationFilter.class);
+//        }
 
         whiteApiConfig(http);
 
@@ -88,7 +88,7 @@ public class FlySecurityFilterConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetails)
-                .addFilterBefore(jwtAuthenticationFilter(userDetails), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtAuthenticationFilter(userDetails), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
                                 .accessDeniedHandler((request, response, accessDeniedException) ->
@@ -138,16 +138,5 @@ public class FlySecurityFilterConfig {
                         .permitAll();
             });
         }
-    }
-
-    private JwtAuthenticationFilter jwtAuthenticationFilter(UserDetailsService userDetails) {
-        return new JwtAuthenticationFilter(new JwtAuthenticationProvider(tokenService, userDetails, cacheService));
-    }
-
-    @Bean
-    // 配置项为false或者不配置都不会生效
-    @ConditionalOnProperty(name = "fly.security.filter.malicious-request-lockout.enabled", matchIfMissing = true)
-    MaliciousRequestLockoutFilter maliciousRequestLockoutFilter() {
-        return new MaliciousRequestLockoutFilter(cacheService);
     }
 }

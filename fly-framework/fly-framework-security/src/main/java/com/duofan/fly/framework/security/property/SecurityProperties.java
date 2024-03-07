@@ -1,5 +1,6 @@
 package com.duofan.fly.framework.security.property;
 
+import com.duofan.fly.framework.security.context.AuthenticationMethod;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,7 +39,7 @@ public class SecurityProperties {
         private String usernameParameter = "username";
         private String passwordParameter = "password";
         private String isRememberParameter = "isRemember";
-
+        private AuthenticationMethod[] authenticationMethod = new AuthenticationMethod[]{AuthenticationMethod.JWT};
     }
 
     @Data
@@ -50,7 +51,7 @@ public class SecurityProperties {
         // 配置文件malicious-request-lockout.ignored-url
         @Value("${fly.security.filter.debounce-request-lockout.ignored-url:}")
         private List<String> debounceRequestLockoutIgnoredUrl = List.of("/api/v1/dict/list");
-        
+
 
     }
 
