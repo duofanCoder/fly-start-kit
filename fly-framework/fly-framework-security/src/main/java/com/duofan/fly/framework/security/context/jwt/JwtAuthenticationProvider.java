@@ -65,7 +65,7 @@ public class JwtAuthenticationProvider implements InitializingBean {
             throw new TokenExpiredException("JWT过期");
         }
         // redis是否存在
-        if (!cacheService.hasKey(token)){
+        if (!cacheService.hasKey(CacheKeyUtils.getLoginTokenKey(token))){
             throw new TokenExpiredException("Token过期");
         }
         return true;
@@ -116,6 +116,6 @@ public class JwtAuthenticationProvider implements InitializingBean {
         SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
         context.setAuthentication(result);
         SecurityContextHolder.getContextHolderStrategy().setContext(context);
-        tokenService.refresh(token);
+        tokenService.refresh(CacheKeyUtils.getLoginTokenKey(token));
     }
 }

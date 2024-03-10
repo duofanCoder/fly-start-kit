@@ -2,6 +2,7 @@ package com.duofan.fly.core.utils;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.jwt.JWT;
 import com.duofan.fly.core.base.constant.cache.CacheKey;
 import com.duofan.fly.core.base.constant.security.FlyVerificationLevel;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,7 +79,24 @@ public class CacheKeyUtils {
         return StrUtil.format(CacheKey.LOGIN_ERROR_COUNT, ip, username);
     }
 
+    /**
+     * 登录token缓存key
+     *
+     * @param username 标识
+     * @param token
+     * @return
+     */
     public static String getLoginTokenKey(String username, String token) {
+        return StrUtil.format(CacheKey.LOGIN_TOKEN, username, token);
+    }
+
+    /**
+     * 登录token缓存key
+     * @param token
+     * @return
+     */
+    public static String getLoginTokenKey(String token) {
+        String username = JWT.of(token).getPayload("sub").toString();
         return StrUtil.format(CacheKey.LOGIN_TOKEN, username, token);
     }
 }
