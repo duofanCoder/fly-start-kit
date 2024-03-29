@@ -99,12 +99,12 @@ public class CommonValidExceptionHandler {
         return FlyResult.of(FlyHttpStatus.BAD_REQUEST).setMsg("请求类型Content-Type不支持");
     }
 
-    @ResponseBody
-    @ExceptionHandler(ServletException.class)
-    public FlyResult handleServletException(ServletException e) {
-        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
-        return FlyResult.of(FlyHttpStatus.FAIL);
-    }
+//    @ResponseBody
+//    @ExceptionHandler(ServletException.class)
+//    public FlyResult handleServletException(ServletException e) {
+//        log.warn(VALID_EXCEPTION_LOG, e.getMessage());
+//        return FlyResult.of(FlyHttpStatus.FAIL);
+//    }
 
     @ResponseBody
     @ExceptionHandler(IllegalStateException.class)

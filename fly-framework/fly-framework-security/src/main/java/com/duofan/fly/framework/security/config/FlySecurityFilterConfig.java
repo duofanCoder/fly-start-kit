@@ -124,13 +124,14 @@ public class FlySecurityFilterConfig {
      * @throws Exception
      */
     private static void doAnnotationWhiteApi(HttpSecurity http) throws Exception {
-        if (CollUtil.isNotEmpty(AuthenticationEndpointAnalysis.getWhiteApis())) {
-            Collection<FlyApi> whiteApis = AuthenticationEndpointAnalysis.getWhiteApis();
+        Collection<FlyApi> whiteApis = AuthenticationEndpointAnalysis.getWhiteApis();
+        if (CollUtil.isNotEmpty(whiteApis)) {
             http.authorizeHttpRequests(req -> {
                 req.requestMatchers(whiteApis.stream().map(whiteApi ->
                                         new AntPathRequestMatcher(
                                                 SecurityUrlUtils.pathVariable(whiteApi.getRequestUrl()),
-                                                whiteApi.getRequestMethod().name()
+                                                whiteApi.getRequestMethod() != null ? whiteApi.getRequestMethod().name() :
+                                                        "*"
                                         )
                                 )
                                 .toList()

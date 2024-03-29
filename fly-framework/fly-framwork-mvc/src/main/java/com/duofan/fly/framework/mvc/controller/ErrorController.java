@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FlyAccessInfo(moduleName = "内部错误回调模块", system = "FLY BOOT")
 public class ErrorController {
     
-    @GetMapping("/jwtFilter")
+    @RequestMapping("/jwtFilter")
     @FlyAccessInfo(opName = "jwt错误回调", needAuthenticated = false)
     public void jwtFilterException(HttpServletRequest request) throws Exception {
         throw (Exception) request.getAttribute("jwtFilter.error");

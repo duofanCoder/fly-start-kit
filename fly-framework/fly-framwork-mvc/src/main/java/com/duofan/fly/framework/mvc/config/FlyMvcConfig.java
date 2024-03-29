@@ -49,9 +49,9 @@ public class FlyMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+                .allowedOrigins(properties.getCorsOrigin())
                 .allowedHeaders("*")
                 .allowedMethods("*")
-                .allowedOriginPatterns(properties.getCorsOrigin())
                 .allowCredentials(true)
                 .maxAge(3600);
     }

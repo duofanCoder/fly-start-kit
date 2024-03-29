@@ -102,3 +102,7 @@ fly:
         maxFileSize: 200MB
         keep-suffix: true
         resource-map-root-prefix-url: http://172.20.10.6:9000/
+  web:
+    cors-origin: http://172.20.10.3:4000
+
+
