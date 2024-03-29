@@ -90,7 +90,7 @@ public class SecurityExceptionHandler {
         }
 
         if (e instanceof  TokenExpiredException){
-            return FlyResult.of(FlyHttpStatus.TOKEN_INVALID, e.getMessage());
+            return FlyResult.of(FlyHttpStatus.TOKEN_INVALID);
         }
 
         return FlyResult.of(FlyHttpStatus.FAIL);
