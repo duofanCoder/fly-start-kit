@@ -49,7 +49,7 @@ public class FlyMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(properties.getCorsOrigin())
+                .allowedOriginPatterns(properties.getCorsOrigin())
                 .allowedHeaders("*")
                 .allowedMethods("*")
                 .allowCredentials(true)
